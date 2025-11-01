@@ -1,0 +1,2183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pamoja Cyber Cafe - Digital Solutions for Kenyans</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #006400;
+            --secondary: #FFD700;
+            --accent: #FF0000;
+            --light: #F5F5F5;
+            --dark: #333333;
+            --text: #333333;
+            --bg: #FFFFFF;
+            --card-bg: #F9F9F9;
+            --shadow: rgba(0, 0, 0, 0.1);
+            --transition: all 0.3s ease;
+        }
+
+        .dark-theme {
+            --primary: #4CAF50;
+            --secondary: #FFC107;
+            --accent: #F44336;
+            --light: #424242;
+            --dark: #F5F5F5;
+            --text: #F5F5F5;
+            --bg: #121212;
+            --card-bg: #1E1E1E;
+            --shadow: rgba(255, 255, 255, 0.1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg);
+            color: var(--text);
+            transition: var(--transition);
+            overflow-x: hidden;
+            padding-top: 140px; /* Space for fixed header */
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* Fixed Header */
+        .fixed-header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            z-index: 1000;
+            background: var(--bg);
+            box-shadow: 0 2px 10px var(--shadow);
+        }
+
+        /* Header Controls */
+        .header-controls {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 20px;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+        }
+
+        .logo-section {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .logo-section i {
+            font-size: 1.8rem;
+        }
+
+        .logo-text h1 {
+            font-size: 1.3rem;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+            line-height: 1.2;
+        }
+
+        .slogan {
+            font-style: italic;
+            font-size: 0.8rem;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
+        }
+
+        .controls-right {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .clock-container {
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            padding: 8px 12px;
+            border-radius: 5px;
+            font-size: 0.8rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: var(--transition);
+            text-align: center;
+            min-width: 140px;
+        }
+
+        .clock-container:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
+
+        .calendar-popup {
+            position: absolute;
+            top: 100%;
+            right: 0;
+            background: var(--card-bg);
+            border-radius: 8px;
+            box-shadow: 0 5px 15px var(--shadow);
+            padding: 15px;
+            width: 250px;
+            display: none;
+            z-index: 1001;
+        }
+
+        .calendar-popup.show {
+            display: block;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .calendar-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .calendar-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 5px;
+        }
+
+        .calendar-day {
+            text-align: center;
+            padding: 5px;
+            font-size: 0.7rem;
+            font-weight: bold;
+        }
+
+        .calendar-date {
+            text-align: center;
+            padding: 6px 3px;
+            font-size: 0.7rem;
+            border-radius: 3px;
+            cursor: pointer;
+        }
+
+        .calendar-date.current {
+            background: var(--primary);
+            color: white;
+        }
+
+        .calendar-date:hover:not(.current) {
+            background: var(--light);
+        }
+
+        .control-buttons {
+            display: flex;
+            gap: 8px;
+        }
+
+        .theme-toggle, .search-toggle {
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .theme-toggle:hover, .search-toggle:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: scale(1.05);
+        }
+
+        /* Sticky Navigation */
+        nav {
+            background: var(--card-bg);
+            box-shadow: 0 2px 5px var(--shadow);
+        }
+
+        .nav-container {
+            display: flex;
+            justify-content: center;
+        }
+
+        .nav-tabs {
+            display: flex;
+            list-style: none;
+            overflow-x: auto;
+            white-space: nowrap;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        .nav-tab {
+            padding: 12px 20px;
+            cursor: pointer;
+            transition: var(--transition);
+            font-weight: 500;
+            border-bottom: 3px solid transparent;
+            flex-shrink: 0;
+        }
+
+        .nav-tab.active {
+            border-bottom: 3px solid var(--primary);
+            color: var(--primary);
+        }
+
+        .nav-tab:hover:not(.active) {
+            background: var(--light);
+        }
+
+        /* Notification Bell */
+        .notification-container {
+            position: fixed;
+            top: 90px;
+            right: 20px;
+            z-index: 1000;
+        }
+
+        .notification-bell {
+            background: var(--primary);
+            color: white;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: 0 2px 5px var(--shadow);
+            transition: var(--transition);
+            position: relative;
+        }
+
+        .notification-bell:hover {
+            transform: scale(1.1);
+        }
+
+        .notification-badge {
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            background: var(--accent);
+            color: white;
+            border-radius: 50%;
+            width: 18px;
+            height: 18px;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.7rem;
+            font-weight: bold;
+        }
+
+        .notification-panel {
+            position: absolute;
+            top: 50px;
+            right: 0;
+            width: 350px;
+            background: var(--card-bg);
+            border-radius: 10px;
+            box-shadow: 0 5px 20px var(--shadow);
+            padding: 15px;
+            display: none;
+            max-height: 400px;
+            overflow-y: auto;
+        }
+
+        .notification-item {
+            padding: 10px;
+            border-bottom: 1px solid var(--shadow);
+            display: flex;
+            gap: 10px;
+        }
+
+        .notification-item i {
+            color: var(--primary);
+            margin-top: 5px;
+        }
+
+        .notification-time {
+            font-size: 0.8rem;
+            color: var(--accent);
+            margin-top: 5px;
+        }
+
+        .no-notifications {
+            text-align: center;
+            padding: 20px;
+            color: var(--text);
+            opacity: 0.7;
+        }
+
+        /* Search Panel */
+        .search-panel {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            display: none;
+            justify-content: center;
+            align-items: flex-start;
+            padding-top: 100px;
+            z-index: 2000;
+        }
+
+        .search-panel.show {
+            display: flex;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .search-container {
+            background: var(--bg);
+            width: 90%;
+            max-width: 600px;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 5px 25px rgba(0,0,0,0.3);
+        }
+
+        .search-box {
+            display: flex;
+            margin-bottom: 20px;
+        }
+
+        .search-box input {
+            flex: 1;
+            padding: 15px 20px;
+            border: 1px solid var(--shadow);
+            border-radius: 50px 0 0 50px;
+            outline: none;
+            font-size: 1rem;
+            background: var(--card-bg);
+            color: var(--text);
+        }
+
+        .search-box button {
+            padding: 0 25px;
+            background: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 0 50px 50px 0;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .search-box button:hover {
+            background: var(--accent);
+        }
+
+        .search-results {
+            max-height: 300px;
+            overflow-y: auto;
+        }
+
+        .search-result-item {
+            padding: 15px;
+            border-bottom: 1px solid var(--shadow);
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .search-result-item:hover {
+            background: var(--light);
+        }
+
+        /* Tab Content */
+        .tab-content {
+            display: none;
+            padding: 30px 0;
+            animation: fadeIn 0.5s ease;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        /* Hero Section */
+        .hero {
+            background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), url('https://images.unsplash.com/photo-1525547719578-101ce3d1f5e3?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80');
+            background-size: cover;
+            background-position: center;
+            color: white;
+            padding: 60px 0;
+            text-align: center;
+            border-radius: 10px;
+            margin: 20px 0;
+        }
+
+        .hero h2 {
+            font-size: 2.2rem;
+            margin-bottom: 20px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+        }
+
+        .hero p {
+            font-size: 1.1rem;
+            max-width: 700px;
+            margin: 0 auto 30px;
+        }
+
+        .cta-button {
+            display: inline-block;
+            background: var(--secondary);
+            color: var(--dark);
+            padding: 12px 30px;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: bold;
+            transition: var(--transition);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+        }
+
+        .cta-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.3);
+        }
+
+        /* About Section */
+        .about-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
+            align-items: center;
+        }
+
+        .about-text h2 {
+            margin-bottom: 20px;
+            color: var(--primary);
+        }
+
+        .about-text p {
+            margin-bottom: 15px;
+            line-height: 1.6;
+        }
+
+        .about-image {
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px var(--shadow);
+        }
+
+        .about-image img {
+            width: 100%;
+            height: auto;
+            display: block;
+        }
+
+        /* Services Section */
+        .section-title {
+            text-align: center;
+            margin-bottom: 40px;
+            position: relative;
+        }
+
+        .section-title::after {
+            content: "";
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100px;
+            height: 4px;
+            background: var(--primary);
+            border-radius: 2px;
+        }
+
+        .category-tabs {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .category-tab {
+            padding: 10px 20px;
+            background: var(--card-bg);
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: var(--transition);
+            font-weight: 500;
+            color: var(--text);
+            box-shadow: 0 2px 5px var(--shadow);
+        }
+
+        .category-tab.active {
+            background: var(--primary);
+            color: white;
+        }
+
+        .category-tab:hover:not(.active) {
+            background: var(--light);
+        }
+
+        .services-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 25px;
+        }
+
+        .service-card {
+            background: var(--card-bg);
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px var(--shadow);
+            transition: var(--transition);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .service-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px var(--shadow);
+        }
+
+        .service-header {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            padding: 20px;
+            text-align: center;
+        }
+
+        .service-header i {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+        }
+
+        .service-content {
+            padding: 20px;
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .service-description {
+            margin-bottom: 15px;
+            line-height: 1.5;
+            flex-grow: 1;
+        }
+
+        .service-price {
+            color: var(--accent);
+            font-weight: bold;
+            font-size: 1.2rem;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+
+        .service-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        .detail-btn, .request-btn {
+            flex: 1;
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: var(--transition);
+            font-weight: bold;
+        }
+
+        .detail-btn {
+            background: var(--light);
+            color: var(--text);
+        }
+
+        .detail-btn:hover {
+            background: var(--primary);
+            color: white;
+        }
+
+        .request-btn {
+            background: var(--primary);
+            color: white;
+        }
+
+        .request-btn:hover {
+            background: var(--accent);
+        }
+
+        .view-all-container {
+            text-align: center;
+            margin-top: 30px;
+        }
+
+        .view-all-btn {
+            background: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 5px;
+            padding: 12px 25px;
+            cursor: pointer;
+            transition: var(--transition);
+            font-weight: bold;
+            font-size: 1rem;
+        }
+
+        .view-all-btn:hover {
+            background: var(--accent);
+            transform: translateY(-2px);
+        }
+
+        .hidden-services {
+            display: none;
+        }
+
+        /* Service Detail Modal */
+        .service-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 3000;
+        }
+
+        .service-modal.show {
+            display: flex;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .modal-content {
+            background: var(--bg);
+            width: 90%;
+            max-width: 600px;
+            border-radius: 10px;
+            padding: 30px;
+            box-shadow: 0 5px 25px rgba(0,0,0,0.3);
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid var(--shadow);
+        }
+
+        .modal-header h3 {
+            color: var(--primary);
+            margin: 0;
+        }
+
+        .close-modal {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: var(--text);
+        }
+
+        .modal-body {
+            margin-bottom: 20px;
+        }
+
+        .modal-footer {
+            display: flex;
+            gap: 10px;
+        }
+
+        .modal-request-btn {
+            flex: 1;
+            padding: 12px;
+            background: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: var(--transition);
+            font-weight: bold;
+        }
+
+        .modal-request-btn:hover {
+            background: var(--accent);
+        }
+
+        /* Request Service Form */
+        .request-form {
+            background: var(--card-bg);
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px var(--shadow);
+            margin: 40px 0;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+            display: none;
+        }
+
+        .request-form.show {
+            display: block;
+            animation: fadeIn 0.5s ease;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+        }
+
+        .form-group input, .form-group select, .form-group textarea {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid var(--shadow);
+            border-radius: 5px;
+            background: var(--bg);
+            color: var(--text);
+            font-size: 1rem;
+        }
+
+        .form-group textarea {
+            height: 100px;
+            resize: vertical;
+        }
+
+        .submit-btn {
+            background: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 5px;
+            padding: 15px 30px;
+            cursor: pointer;
+            transition: var(--transition);
+            font-size: 1rem;
+            font-weight: bold;
+            width: 100%;
+        }
+
+        .submit-btn:hover {
+            background: var(--accent);
+        }
+
+        /* Gallery Section */
+        .gallery-container {
+            position: relative;
+            max-width: 100%;
+            margin: 0 auto;
+            overflow: hidden;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px var(--shadow);
+        }
+
+        .gallery-slides {
+            display: flex;
+            transition: transform 0.5s ease;
+        }
+
+        .gallery-slide {
+            min-width: 100%;
+            position: relative;
+        }
+
+        .gallery-slide img {
+            width: 100%;
+            height: 400px;
+            object-fit: cover;
+            display: block;
+        }
+
+        .slide-caption {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: rgba(0, 0, 0, 0.7);
+            color: white;
+            padding: 15px;
+            text-align: center;
+        }
+
+        .gallery-nav {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background: rgba(0, 0, 0, 0.5);
+            color: white;
+            border: none;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .gallery-nav:hover {
+            background: rgba(0, 0, 0, 0.8);
+        }
+
+        .gallery-prev {
+            left: 10px;
+        }
+
+        .gallery-next {
+            right: 10px;
+        }
+
+        .gallery-dots {
+            display: flex;
+            justify-content: center;
+            margin-top: 15px;
+            gap: 10px;
+        }
+
+        .gallery-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: var(--shadow);
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .gallery-dot.active {
+            background: var(--primary);
+        }
+
+        /* Contact Section */
+        .contact-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
+        }
+
+        .contact-info {
+            background: var(--card-bg);
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px var(--shadow);
+        }
+
+        .contact-info h3 {
+            margin-bottom: 20px;
+            color: var(--primary);
+        }
+
+        .contact-details {
+            list-style: none;
+        }
+
+        .contact-details li {
+            margin-bottom: 15px;
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+        }
+
+        .contact-details i {
+            color: var(--primary);
+            margin-top: 3px;
+        }
+
+        .contact-form {
+            background: var(--card-bg);
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px var(--shadow);
+        }
+
+        /* Floating WhatsApp Button */
+        .whatsapp-float {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: #25D366;
+            color: white;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+            cursor: pointer;
+            z-index: 1000;
+            transition: var(--transition);
+            animation: bounce 2s infinite;
+        }
+
+        .whatsapp-float:hover {
+            transform: scale(1.1);
+        }
+
+        .whatsapp-float i {
+            font-size: 1.8rem;
+        }
+
+        /* Footer */
+        footer {
+            background: var(--dark);
+            color: var(--light);
+            padding: 30px 0 20px;
+            margin-top: 50px;
+        }
+
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 30px;
+            margin-bottom: 20px;
+        }
+
+        .footer-column h3 {
+            margin-bottom: 15px;
+            color: var(--secondary);
+        }
+
+        .footer-column ul {
+            list-style: none;
+        }
+
+        .footer-column ul li {
+            margin-bottom: 10px;
+        }
+
+        .footer-column ul li a {
+            color: var(--light);
+            text-decoration: none;
+            transition: var(--transition);
+        }
+
+        .footer-column ul li a:hover {
+            color: var(--secondary);
+        }
+
+        .copyright {
+            text-align: center;
+            padding-top: 20px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        /* Animations */
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
+            40% { transform: translateY(-10px); }
+            60% { transform: translateY(-5px); }
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            body {
+                padding-top: 120px;
+            }
+            
+            .header-controls {
+                flex-direction: column;
+                gap: 10px;
+                padding: 10px;
+            }
+            
+            .controls-right {
+                width: 100%;
+                justify-content: space-between;
+            }
+            
+            .clock-container {
+                min-width: 130px;
+                font-size: 0.75rem;
+                padding: 6px 10px;
+            }
+            
+            .logo-text h1 {
+                font-size: 1.1rem;
+            }
+            
+            .slogan {
+                font-size: 0.7rem;
+            }
+            
+            .nav-tabs {
+                justify-content: flex-start;
+            }
+            
+            .nav-tab {
+                padding: 10px 15px;
+                font-size: 0.9rem;
+            }
+            
+            .about-content, .contact-content {
+                grid-template-columns: 1fr;
+            }
+            
+            .services-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .notification-panel {
+                width: 300px;
+                right: 10px;
+            }
+            
+            .hero h2 {
+                font-size: 1.8rem;
+            }
+            
+            .hero p {
+                font-size: 1rem;
+            }
+            
+            .gallery-slide img {
+                height: 250px;
+            }
+            
+            .service-actions {
+                flex-direction: column;
+            }
+            
+            .notification-container {
+                top: 80px;
+                right: 10px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            body {
+                padding-top: 130px;
+            }
+            
+            .logo-section {
+                flex-direction: column;
+                text-align: center;
+                gap: 5px;
+            }
+            
+            .controls-right {
+                flex-direction: column;
+                gap: 8px;
+            }
+            
+            .clock-container {
+                width: 100%;
+            }
+            
+            .control-buttons {
+                width: 100%;
+                justify-content: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Fixed Header with Logo, Slogan, Time and Controls -->
+    <div class="fixed-header">
+        <div class="header-controls">
+            <div class="logo-section">
+                <i class="fas fa-laptop-code"></i>
+                <div class="logo-text">
+                    <h1>Pamoja Cyber Cafe</h1>
+                    <div class="slogan">"Connecting Kenya, One Click at a Time!"</div>
+                </div>
+            </div>
+            <div class="controls-right">
+                <div class="clock-container" id="clockContainer">
+                    <div id="realTimeClock">Loading...</div>
+                    <div class="calendar-popup" id="calendarPopup">
+                        <div class="calendar-header">
+                            <button id="prevMonth"><i class="fas fa-chevron-left"></i></button>
+                            <h4 id="calendarMonth">Month Year</h4>
+                            <button id="nextMonth"><i class="fas fa-chevron-right"></i></button>
+                        </div>
+                        <div class="calendar-grid" id="calendarDays">
+                            <!-- Calendar days will be generated here -->
+                        </div>
+                    </div>
+                </div>
+                <div class="control-buttons">
+                    <button class="theme-toggle" id="themeToggle">
+                        <i class="fas fa-moon"></i>
+                    </button>
+                    <button class="search-toggle" id="searchToggle">
+                        <i class="fas fa-search"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Sticky Navigation -->
+        <nav>
+            <div class="container">
+                <div class="nav-container">
+                    <ul class="nav-tabs">
+                        <li class="nav-tab active" data-tab="home">Home</li>
+                        <li class="nav-tab" data-tab="about">About Us</li>
+                        <li class="nav-tab" data-tab="services">Services</li>
+                        <li class="nav-tab" data-tab="gallery">Gallery</li>
+                        <li class="nav-tab" data-tab="contact">Contact</li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+    </div>
+
+    <!-- Notification Bell -->
+    <div class="notification-container">
+        <div class="notification-bell" id="notificationBell">
+            <i class="fas fa-bell"></i>
+            <div class="notification-badge" id="notificationBadge">0</div>
+        </div>
+        <div class="notification-panel" id="notificationPanel">
+            <div class="no-notifications" id="noNotifications">
+                <i class="fas fa-bell-slash"></i>
+                <p>No notifications yet</p>
+            </div>
+            <!-- Notifications will be added here dynamically -->
+        </div>
+    </div>
+
+    <!-- Search Panel -->
+    <div class="search-panel" id="searchPanel">
+        <div class="search-container">
+            <div class="search-box">
+                <input type="text" id="searchInput" placeholder="Search for services...">
+                <button id="searchButton"><i class="fas fa-search"></i></button>
+            </div>
+            <div class="search-results" id="searchResults">
+                <!-- Search results will appear here -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Service Detail Modal -->
+    <div class="service-modal" id="serviceModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="modalServiceName">Service Name</h3>
+                <button class="close-modal" id="closeModal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <p id="modalServiceDescription">Service description will appear here.</p>
+                <div class="service-price" id="modalServicePrice">KSh 0</div>
+                <div id="modalServiceRequirements"></div>
+            </div>
+            <div class="modal-footer">
+                <button class="modal-request-btn" id="modalRequestBtn">Request This Service</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Request Service Form -->
+    <div class="request-form" id="requestForm">
+        <h2 class="section-title">Request Service</h2>
+        <form id="serviceRequestForm">
+            <div class="form-group">
+                <label for="customerName">Full Name</label>
+                <input type="text" id="customerName" required>
+            </div>
+            <div class="form-group">
+                <label for="customerPhone">Phone Number</label>
+                <input type="tel" id="customerPhone" required>
+            </div>
+            <div class="form-group">
+                <label for="customerEmail">Email Address</label>
+                <input type="email" id="customerEmail">
+            </div>
+            <div class="form-group">
+                <label for="serviceType">Service Type</label>
+                <input type="text" id="serviceType" readonly>
+            </div>
+            <div class="form-group" id="idNumberGroup" style="display: none;">
+                <label for="idNumber">ID Number / KRA PIN</label>
+                <input type="text" id="idNumber" placeholder="Enter your ID Number or KRA PIN">
+            </div>
+            <div class="form-group">
+                <label for="specialInstructions">Special Instructions</label>
+                <textarea id="specialInstructions" placeholder="Any special requirements or instructions"></textarea>
+            </div>
+            <button type="submit" class="submit-btn">Submit Request</button>
+        </form>
+    </div>
+
+    <!-- Main Content -->
+    <main class="container">
+        <!-- Home Tab -->
+        <div class="tab-content active" id="home-tab">
+            <div class="hero">
+                <h2>Professional Digital Services in Kenya</h2>
+                <p>Your one-stop solution for all digital needs - from student assignments to government services and personal printing</p>
+                <a href="#" class="cta-button" data-tab="services">Explore Our Services</a>
+            </div>
+
+            <div class="services-preview">
+                <h2 class="section-title">Our Popular Services</h2>
+                <div class="services-grid" id="servicesPreview">
+                    <!-- Services will be populated by JavaScript -->
+                </div>
+                <div class="view-all-container">
+                    <button class="view-all-btn" data-tab="services">View All Services</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- About Us Tab -->
+        <div class="tab-content" id="about-tab">
+            <h2 class="section-title">About Pamoja Cyber Cafe</h2>
+            <div class="about-content">
+                <div class="about-text">
+                    <h2>Your Trusted Digital Partner</h2>
+                    <p>Pamoja Cyber Cafe has been serving the Kenyan community since 2025, providing reliable and affordable digital services to students, professionals, and individuals.</p>
+                    <p>Our mission is to bridge the digital divide by making technology accessible to everyone, regardless of their technical expertise.</p>
+                    <p>With a team of experienced professionals, we ensure that all our services are delivered with the highest quality and efficiency.</p>
+                    <p>We pride ourselves on our customer-centric approach, always putting our clients' needs first and ensuring complete satisfaction with every service.</p>
+                </div>
+                <div class="about-image">
+                    <img src="https://images.unsplash.com/photo-1522071820081-009f0129c71c?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80" alt="Cyber Cafe Interior">
+                </div>
+            </div>
+        </div>
+
+        <!-- Services Tab -->
+        <div class="tab-content" id="services-tab">
+            <h2 class="section-title">Our Comprehensive Services</h2>
+            
+            <div class="category-tabs">
+                <button class="category-tab active" data-category="all">All Services</button>
+                <button class="category-tab" data-category="student">Student Services</button>
+                <button class="category-tab" data-category="government">Government Services</button>
+                <button class="category-tab" data-category="individual">Individual Services</button>
+            </div>
+            
+            <div class="services-content">
+                <div class="services-grid" id="servicesGrid">
+                    <!-- Services will be populated by JavaScript -->
+                </div>
+                <div class="view-all-container">
+                    <button class="view-all-btn" id="viewAllBtn">View All Services</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Gallery Tab -->
+        <div class="tab-content" id="gallery-tab">
+            <h2 class="section-title">Our Gallery</h2>
+            <div class="gallery-container">
+                <div class="gallery-slides" id="gallerySlides">
+                    <div class="gallery-slide">
+                        <img src="https://images.unsplash.com/photo-1525547719578-101ce3d1f5e3?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80" alt="Cyber Cafe Interior">
+                        <div class="slide-caption">
+                            <h3>Modern Workspace</h3>
+                            <p>Our comfortable and well-equipped cyber cafe</p>
+                        </div>
+                    </div>
+                    <div class="gallery-slide">
+                        <img src="https://images.unsplash.com/photo-1558655146-9f40138edfeb?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80" alt="Printing Services">
+                        <div class="slide-caption">
+                            <h3>High-Quality Printing</h3>
+                            <p>Color and black & white printing services</p>
+                        </div>
+                    </div>
+                    <div class="gallery-slide">
+                        <img src="https://images.unsplash.com/photo-1581094794329-c8112a89af12?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80" alt="Document Services">
+                        <div class="slide-caption">
+                            <h3>Document Services</h3>
+                            <p>Scanning, photocopying, and lamination</p>
+                        </div>
+                    </div>
+                    <div class="gallery-slide">
+                        <img src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80" alt="Customer Assistance">
+                        <div class="slide-caption">
+                            <h3>Professional Assistance</h3>
+                            <p>Our team is always ready to help</p>
+                        </div>
+                    </div>
+                </div>
+                <button class="gallery-nav gallery-prev" id="galleryPrev">
+                    <i class="fas fa-chevron-left"></i>
+                </button>
+                <button class="gallery-nav gallery-next" id="galleryNext">
+                    <i class="fas fa-chevron-right"></i>
+                </button>
+                <div class="gallery-dots" id="galleryDots">
+                    <!-- Dots will be generated by JavaScript -->
+                </div>
+            </div>
+        </div>
+
+        <!-- Contact Tab -->
+        <div class="tab-content" id="contact-tab">
+            <h2 class="section-title">Get In Touch</h2>
+            <div class="contact-content">
+                <div class="contact-info">
+                    <h3>Contact Information</h3>
+                    <ul class="contact-details">
+                        <li>
+                            <i class="fas fa-map-marker-alt"></i>
+                            <div>
+                                <strong>Address</strong><br>
+                                Nairobi CBD, Moi Avenue<br>
+                                Prime Plaza, 3rd Floor
+                            </div>
+                        </li>
+                        <li>
+                            <i class="fas fa-phone"></i>
+                            <div>
+                                <strong>Phone</strong><br>
+                                +254 711 923 477
+                            </div>
+                        </li>
+                        <li>
+                            <i class="fab fa-whatsapp"></i>
+                            <div>
+                                <strong>WhatsApp</strong><br>
+                                0111923477
+                            </div>
+                        </li>
+                        <li>
+                            <i class="fas fa-envelope"></i>
+                            <div>
+                                <strong>Email</strong><br>
+                                cybercafe@kenya.co.ke
+                            </div>
+                        </li>
+                        <li>
+                            <i class="fas fa-clock"></i>
+                            <div>
+                                <strong>Opening Hours</strong><br>
+                                Mon-Fri: 8:00 AM - 8:00 PM<br>
+                                Sat: 9:00 AM - 6:00 PM<br>
+                                Sun: 10:00 AM - 4:00 PM
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+                <div class="contact-form">
+                    <h3>Send Us a Message</h3>
+                    <form id="contactForm">
+                        <div class="form-group">
+                            <label for="contactName">Full Name</label>
+                            <input type="text" id="contactName" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="contactPhone">Phone Number</label>
+                            <input type="tel" id="contactPhone" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="contactEmail">Email Address</label>
+                            <input type="email" id="contactEmail">
+                        </div>
+                        <div class="form-group">
+                            <label for="contactMessage">Message</label>
+                            <textarea id="contactMessage" placeholder="How can we help you?" required></textarea>
+                        </div>
+                        <button type="submit" class="submit-btn">Send Message</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Floating WhatsApp Button -->
+    <div class="whatsapp-float" id="whatsappFloat">
+        <i class="fab fa-whatsapp"></i>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-column">
+                    <h3>Pamoja Cyber Cafe</h3>
+                    <p>Your trusted partner for all digital solutions in Kenya. Professional, reliable, and affordable services.</p>
+                </div>
+                <div class="footer-column">
+                    <h3>Quick Links</h3>
+                    <ul>
+                        <li><a href="#" data-tab="home">Home</a></li>
+                        <li><a href="#" data-tab="about">About Us</a></li>
+                        <li><a href="#" data-tab="services">Services</a></li>
+                        <li><a href="#" data-tab="gallery">Gallery</a></li>
+                        <li><a href="#" data-tab="contact">Contact</a></li>
+                    </ul>
+                </div>
+                <div class="footer-column">
+                    <h3>Connect With Us</h3>
+                    <ul>
+                        <li><a href="https://wa.me/254111923477" target="_blank"><i class="fab fa-whatsapp"></i> WhatsApp</a></li>
+                        <li><a href="mailto:cybercafe@kenya.co.ke"><i class="fas fa-envelope"></i> Email</a></li>
+                        <li><a href="tel:+254711923477"><i class="fas fa-phone"></i> Call Us</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="copyright">
+                <p>&copy; 2025 Pamoja Cyber Cafe. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Service Data - Expanded with more services
+        const services = [
+            {
+                id: 1,
+                name: "Assignment Typing & Printing",
+                description: "Professional typing and formatting of academic assignments with proofreading. We ensure your assignments meet all academic standards with proper formatting, citations, and structure.",
+                price: "KSh 50/page",
+                icon: "fas fa-file-alt",
+                category: "student",
+                requiresId: false
+            },
+            {
+                id: 2,
+                name: "Research Paper Formatting",
+                description: "APA, MLA, Chicago, and Harvard formatting services with citation management. Our experts will format your research paper according to the required style guide.",
+                price: "KSh 200",
+                icon: "fas fa-book",
+                category: "student",
+                requiresId: false
+            },
+            {
+                id: 3,
+                name: "KRA PIN Registration",
+                description: "Assistance with KRA PIN registration and online services including iTax. We help individuals and businesses register for KRA PIN and navigate the online portal.",
+                price: "KSh 300",
+                icon: "fas fa-id-card",
+                category: "government",
+                requiresId: true
+            },
+            {
+                id: 4,
+                name: "Passport Application",
+                description: "Help with eCitizen passport application process and document preparation. We guide you through the entire passport application process from start to finish.",
+                price: "KSh 500",
+                icon: "fas fa-passport",
+                category: "government",
+                requiresId: true
+            },
+            {
+                id: 5,
+                name: "Printing (Color)",
+                description: "High-quality color printing for documents, photos, and presentations. We use professional-grade printers to ensure vibrant and crisp color prints.",
+                price: "KSh 30/page",
+                icon: "fas fa-print",
+                category: "individual",
+                requiresId: false
+            },
+            {
+                id: 6,
+                name: "Scanning Services",
+                description: "Document and photo scanning services with various format options. We can scan documents and convert them to PDF, JPG, or other digital formats.",
+                price: "KSh 10/page",
+                icon: "fas fa-scanner",
+                category: "individual",
+                requiresId: false
+            },
+            {
+                id: 7,
+                name: "CV & Cover Letter",
+                description: "Professional CV and cover letter design tailored to your career goals. Our experts will create a compelling CV that highlights your skills and experience.",
+                price: "KSh 500",
+                icon: "fas fa-file-contract",
+                category: "student",
+                requiresId: false
+            },
+            {
+                id: 8,
+                name: "Business Registration",
+                description: "Assistance with business name registration, company incorporation, and licensing. We help entrepreneurs register their businesses with the relevant authorities.",
+                price: "KSh 800",
+                icon: "fas fa-briefcase",
+                category: "government",
+                requiresId: true
+            },
+            {
+                id: 9,
+                name: "Internet Browsing",
+                description: "High-speed internet access with printing facilities. Enjoy fast and reliable internet connection for all your browsing needs.",
+                price: "KSh 1/min",
+                icon: "fas fa-wifi",
+                category: "individual",
+                requiresId: false
+            },
+            {
+                id: 10,
+                name: "Thesis Binding",
+                description: "Professional thesis and dissertation binding services with various binding options. We ensure your academic work is presented professionally.",
+                price: "KSh 800",
+                icon: "fas fa-book-open",
+                category: "student",
+                requiresId: false
+            },
+            {
+                id: 11,
+                name: "Online Application Assistance",
+                description: "Help with university, college, and scholarship online applications. We guide you through the entire application process.",
+                price: "KSh 300",
+                icon: "fas fa-laptop",
+                category: "student",
+                requiresId: false
+            },
+            {
+                id: 12,
+                name: "NHIF Registration",
+                description: "Assistance with NHIF registration and contribution management. We help you navigate the NHIF online portal and registration process.",
+                price: "KSh 200",
+                icon: "fas fa-heartbeat",
+                category: "government",
+                requiresId: true
+            },
+            {
+                id: 13,
+                name: "NSSF Online Services",
+                description: "Help with NSSF registration, statement checking, and claims processing. We assist with all NSSF-related online services.",
+                price: "KSh 250",
+                icon: "fas fa-hand-holding-usd",
+                category: "government",
+                requiresId: true
+            },
+            {
+                id: 14,
+                name: "Photocopy (B&W)",
+                description: "High-quality black and white photocopying services for all your document needs.",
+                price: "KSh 5/page",
+                icon: "fas fa-copy",
+                category: "individual",
+                requiresId: false
+            },
+            {
+                id: 15,
+                name: "Lamination",
+                description: "Document and ID card lamination for protection and durability. We offer various lamination sizes and thickness options.",
+                price: "KSh 50",
+                icon: "fas fa-id-badge",
+                category: "individual",
+                requiresId: false
+            },
+            {
+                id: 16,
+                name: "PPT Creation",
+                description: "Professional PowerPoint presentation design with templates and animations. We create visually appealing presentations for all purposes.",
+                price: "KSh 400",
+                icon: "fas fa-desktop",
+                category: "student",
+                requiresId: false
+            },
+            {
+                id: 17,
+                name: "Land Search & Rates",
+                description: "Assistance with land search processes and land rates payment. We help you navigate the land registry and payment systems.",
+                price: "KSh 600",
+                icon: "fas fa-map-marked-alt",
+                category: "government",
+                requiresId: true
+            },
+            {
+                id: 18,
+                name: "Photo Printing",
+                description: "High-quality photo printing in various sizes. We use professional photo paper for vibrant and long-lasting prints.",
+                price: "KSh 50-200",
+                icon: "fas fa-images",
+                category: "individual",
+                requiresId: false
+            }
+        ];
+
+        // Theme Toggle
+        const themeToggle = document.getElementById('themeToggle');
+        const themeIcon = themeToggle.querySelector('i');
+
+        themeToggle.addEventListener('click', () => {
+            document.body.classList.toggle('dark-theme');
+            
+            if (document.body.classList.contains('dark-theme')) {
+                themeIcon.className = 'fas fa-sun';
+            } else {
+                themeIcon.className = 'fas fa-moon';
+            }
+        });
+
+        // Real-time Clock and Calendar - Fixed to show real time
+        const clockContainer = document.getElementById('clockContainer');
+        const realTimeClock = document.getElementById('realTimeClock');
+        const calendarPopup = document.getElementById('calendarPopup');
+        const calendarMonth = document.getElementById('calendarMonth');
+        const calendarDays = document.getElementById('calendarDays');
+        const prevMonthBtn = document.getElementById('prevMonth');
+        const nextMonthBtn = document.getElementById('nextMonth');
+
+        let currentDate = new Date();
+        let currentMonth = currentDate.getMonth();
+        let currentYear = currentDate.getFullYear();
+
+        function updateClock() {
+            const now = new Date();
+            const options = { 
+                weekday: 'short',
+                year: 'numeric',
+                month: 'short',
+                day: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit',
+                second: '2-digit',
+                timeZone: 'Africa/Nairobi'
+            };
+            const dateString = now.toLocaleDateString('en-KE', options);
+            realTimeClock.textContent = dateString;
+        }
+
+        function renderCalendar(month, year) {
+            const monthNames = ["January", "February", "March", "April", "May", "June",
+                "July", "August", "September", "October", "November", "December"];
+            
+            calendarMonth.textContent = `${monthNames[month]} ${year}`;
+            
+            // Clear previous calendar
+            calendarDays.innerHTML = '';
+            
+            // Add day headers
+            const dayNames = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+            dayNames.forEach(day => {
+                const dayElement = document.createElement('div');
+                dayElement.className = 'calendar-day';
+                dayElement.textContent = day;
+                calendarDays.appendChild(dayElement);
+            });
+            
+            // Get first day of month and number of days
+            const firstDay = new Date(year, month, 1).getDay();
+            const daysInMonth = new Date(year, month + 1, 0).getDate();
+            
+            // Add empty cells for days before the first day of the month
+            for (let i = 0; i < firstDay; i++) {
+                const emptyCell = document.createElement('div');
+                emptyCell.className = 'calendar-date';
+                calendarDays.appendChild(emptyCell);
+            }
+            
+            // Add days of the month
+            const today = new Date();
+            for (let day = 1; day <= daysInMonth; day++) {
+                const dateElement = document.createElement('div');
+                dateElement.className = 'calendar-date';
+                dateElement.textContent = day;
+                
+                // Highlight current date
+                if (day === today.getDate() && month === today.getMonth() && year === today.getFullYear()) {
+                    dateElement.classList.add('current');
+                }
+                
+                calendarDays.appendChild(dateElement);
+            }
+        }
+
+        clockContainer.addEventListener('click', () => {
+            calendarPopup.classList.toggle('show');
+        });
+
+        prevMonthBtn.addEventListener('click', () => {
+            currentMonth--;
+            if (currentMonth < 0) {
+                currentMonth = 11;
+                currentYear--;
+            }
+            renderCalendar(currentMonth, currentYear);
+        });
+
+        nextMonthBtn.addEventListener('click', () => {
+            currentMonth++;
+            if (currentMonth > 11) {
+                currentMonth = 0;
+                currentYear++;
+            }
+            renderCalendar(currentMonth, currentYear);
+        });
+
+        // Initialize clock and calendar
+        setInterval(updateClock, 1000);
+        updateClock();
+        renderCalendar(currentDate.getMonth(), currentDate.getFullYear());
+
+        // Close calendar when clicking outside
+        document.addEventListener('click', (e) => {
+            if (!clockContainer.contains(e.target)) {
+                calendarPopup.classList.remove('show');
+            }
+        });
+
+        // Search Panel Toggle
+        const searchToggle = document.getElementById('searchToggle');
+        const searchPanel = document.getElementById('searchPanel');
+
+        searchToggle.addEventListener('click', () => {
+            searchPanel.classList.add('show');
+        });
+
+        // Close search panel when clicking outside
+        searchPanel.addEventListener('click', (e) => {
+            if (e.target === searchPanel) {
+                searchPanel.classList.remove('show');
+            }
+        });
+
+        // Notification System
+        const notificationBell = document.getElementById('notificationBell');
+        const notificationPanel = document.getElementById('notificationPanel');
+        const notificationBadge = document.getElementById('notificationBadge');
+        const noNotifications = document.getElementById('noNotifications');
+
+        let notifications = JSON.parse(localStorage.getItem('cyberCafeNotifications')) || [];
+        let notificationCount = notifications.length;
+
+        function updateNotificationBadge() {
+            if (notificationCount > 0) {
+                notificationBadge.textContent = notificationCount;
+                notificationBadge.style.display = 'flex';
+                noNotifications.style.display = 'none';
+            } else {
+                notificationBadge.style.display = 'none';
+                noNotifications.style.display = 'block';
+            }
+        }
+
+        function renderNotifications() {
+            // Clear existing notifications (except the no notifications message)
+            const notificationItems = notificationPanel.querySelectorAll('.notification-item');
+            notificationItems.forEach(item => item.remove());
+            
+            // Add notifications in reverse order (newest first)
+            notifications.slice().reverse().forEach(notification => {
+                const notificationItem = document.createElement('div');
+                notificationItem.className = 'notification-item';
+                notificationItem.innerHTML = `
+                    <i class="fas fa-bell"></i>
+                    <div>
+                        <p>${notification.message}</p>
+                        <div class="notification-time">${notification.time}</div>
+                    </div>
+                `;
+                notificationPanel.insertBefore(notificationItem, noNotifications);
+            });
+        }
+
+        notificationBell.addEventListener('click', () => {
+            notificationPanel.style.display = notificationPanel.style.display === 'block' ? 'none' : 'block';
+        });
+
+        // Close notification panel when clicking outside
+        document.addEventListener('click', (e) => {
+            if (!notificationBell.contains(e.target) && !notificationPanel.contains(e.target)) {
+                notificationPanel.style.display = 'none';
+            }
+        });
+
+        // Initialize notifications
+        updateNotificationBadge();
+        renderNotifications();
+
+        // Tab Navigation
+        const navTabs = document.querySelectorAll('.nav-tab');
+        const tabContents = document.querySelectorAll('.tab-content');
+
+        navTabs.forEach(tab => {
+            tab.addEventListener('click', () => {
+                const tabId = tab.getAttribute('data-tab');
+                
+                // Remove active class from all tabs and contents
+                navTabs.forEach(t => t.classList.remove('active'));
+                tabContents.forEach(tc => tc.classList.remove('active'));
+                
+                // Add active class to clicked tab and corresponding content
+                tab.classList.add('active');
+                document.getElementById(`${tabId}-tab`).classList.add('active');
+            });
+        });
+
+        // Category Tabs for Services
+        const categoryTabs = document.querySelectorAll('.category-tab');
+        let servicesLimit = 6; // Initial limit for services display
+        let currentCategory = 'all';
+
+        // Render Services with category filtering
+        function renderServices(containerId, category = 'all', limit = null) {
+            const container = document.getElementById(containerId);
+            container.innerHTML = '';
+            
+            let servicesToRender = services;
+            
+            // Filter by category if not 'all'
+            if (category !== 'all') {
+                servicesToRender = services.filter(service => service.category === category);
+            }
+            
+            // Apply limit if specified
+            if (limit) {
+                servicesToRender = servicesToRender.slice(0, limit);
+            }
+            
+            servicesToRender.forEach(service => {
+                const serviceCard = document.createElement('div');
+                serviceCard.className = 'service-card';
+                serviceCard.innerHTML = `
+                    <div class="service-header">
+                        <i class="${service.icon}"></i>
+                        <h3>${service.name}</h3>
+                    </div>
+                    <div class="service-content">
+                        <p class="service-description">${service.description.substring(0, 100)}...</p>
+                        <div class="service-price">${service.price}</div>
+                        <div class="service-actions">
+                            <button class="detail-btn" data-id="${service.id}">Details</button>
+                            <button class="request-btn" data-id="${service.id}">Request</button>
+                        </div>
+                    </div>
+                `;
+                container.appendChild(serviceCard);
+            });
+            
+            // Add event listeners to buttons
+            document.querySelectorAll(`#${containerId} .detail-btn`).forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    const serviceId = parseInt(e.target.getAttribute('data-id'));
+                    showServiceDetails(serviceId);
+                });
+            });
+            
+            document.querySelectorAll(`#${containerId} .request-btn`).forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    const serviceId = parseInt(e.target.getAttribute('data-id'));
+                    requestService(serviceId);
+                });
+            });
+        }
+
+        // Initialize services
+        renderServices('servicesGrid', 'all', servicesLimit);
+        renderServices('servicesPreview', 'all', 6);
+
+        // Category tab functionality
+        categoryTabs.forEach(tab => {
+            tab.addEventListener('click', () => {
+                const category = tab.getAttribute('data-category');
+                
+                // Remove active class from all category tabs
+                categoryTabs.forEach(t => t.classList.remove('active'));
+                
+                // Add active class to clicked tab
+                tab.classList.add('active');
+                
+                // Update current category
+                currentCategory = category;
+                
+                // Reset limit when changing category
+                servicesLimit = 6;
+                
+                // Render services for the selected category
+                renderServices('servicesGrid', category, servicesLimit);
+                
+                // Update view all button text
+                updateViewAllButton();
+            });
+        });
+
+        // View All functionality
+        const viewAllBtn = document.getElementById('viewAllBtn');
+        
+        function updateViewAllButton() {
+            const categoryServices = currentCategory === 'all' 
+                ? services 
+                : services.filter(service => service.category === currentCategory);
+            
+            if (servicesLimit >= categoryServices.length) {
+                viewAllBtn.textContent = 'View All Services';
+                viewAllBtn.disabled = true;
+            } else {
+                viewAllBtn.textContent = 'View More Services';
+                viewAllBtn.disabled = false;
+            }
+        }
+        
+        viewAllBtn.addEventListener('click', () => {
+            const categoryServices = currentCategory === 'all' 
+                ? services 
+                : services.filter(service => service.category === currentCategory);
+            
+            // Increase limit or show all
+            if (servicesLimit < categoryServices.length) {
+                servicesLimit += 6;
+                if (servicesLimit >= categoryServices.length) {
+                    servicesLimit = categoryServices.length;
+                }
+                renderServices('servicesGrid', currentCategory, servicesLimit);
+                updateViewAllButton();
+            }
+        });
+
+        // Service Detail Modal
+        const serviceModal = document.getElementById('serviceModal');
+        const modalServiceName = document.getElementById('modalServiceName');
+        const modalServiceDescription = document.getElementById('modalServiceDescription');
+        const modalServicePrice = document.getElementById('modalServicePrice');
+        const modalServiceRequirements = document.getElementById('modalServiceRequirements');
+        const modalRequestBtn = document.getElementById('modalRequestBtn');
+        const closeModal = document.getElementById('closeModal');
+
+        function showServiceDetails(serviceId) {
+            const service = services.find(s => s.id === serviceId);
+            if (!service) return;
+            
+            modalServiceName.textContent = service.name;
+            modalServiceDescription.textContent = service.description;
+            modalServicePrice.textContent = service.price;
+            
+            if (service.requiresId) {
+                modalServiceRequirements.innerHTML = '<p><strong>Requirements:</strong> Valid ID Number or KRA PIN required for this service.</p>';
+            } else {
+                modalServiceRequirements.innerHTML = '';
+            }
+            
+            modalRequestBtn.setAttribute('data-id', serviceId);
+            serviceModal.classList.add('show');
+        }
+
+        closeModal.addEventListener('click', () => {
+            serviceModal.classList.remove('show');
+        });
+
+        serviceModal.addEventListener('click', (e) => {
+            if (e.target === serviceModal) {
+                serviceModal.classList.remove('show');
+            }
+        });
+
+        modalRequestBtn.addEventListener('click', () => {
+            const serviceId = parseInt(modalRequestBtn.getAttribute('data-id'));
+            serviceModal.classList.remove('show');
+            requestService(serviceId);
+        });
+
+        // Request Service
+        const requestForm = document.getElementById('requestForm');
+        const serviceTypeInput = document.getElementById('serviceType');
+        const idNumberGroup = document.getElementById('idNumberGroup');
+        const serviceRequestForm = document.getElementById('serviceRequestForm');
+
+        function requestService(serviceId) {
+            const service = services.find(s => s.id === serviceId);
+            if (!service) return;
+            
+            // Show request form
+            requestForm.classList.add('show');
+            
+            // Scroll to request form
+            requestForm.scrollIntoView({ behavior: 'smooth' });
+            
+            // Prefill service type
+            serviceTypeInput.value = service.name;
+            
+            // Show/hide ID number field
+            if (service.requiresId) {
+                idNumberGroup.style.display = 'block';
+            } else {
+                idNumberGroup.style.display = 'none';
+            }
+        }
+
+        // Service Request Form Submission
+        serviceRequestForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            
+            // Collect form data
+            const formData = {
+                name: document.getElementById('customerName').value,
+                phone: document.getElementById('customerPhone').value,
+                email: document.getElementById('customerEmail').value,
+                service: document.getElementById('serviceType').value,
+                idNumber: document.getElementById('idNumber').value,
+                instructions: document.getElementById('specialInstructions').value,
+                timestamp: new Date().toLocaleString('en-KE')
+            };
+            
+            // In a real application, you would send this data to a server
+            // For this demo, we'll just show an alert and add a notification
+            alert(`Thank you, ${formData.name}! Your request for "${formData.service}" has been submitted. We'll contact you at ${formData.phone} shortly.`);
+            
+            // Add a new notification
+            const notificationMessage = `New request: ${formData.service} for ${formData.name}`;
+            const newNotification = {
+                message: notificationMessage,
+                time: 'Just now'
+            };
+            
+            notifications.unshift(newNotification);
+            notificationCount = notifications.length;
+            
+            // Save to localStorage
+            localStorage.setItem('cyberCafeNotifications', JSON.stringify(notifications));
+            
+            // Update UI
+            updateNotificationBadge();
+            renderNotifications();
+            
+            // Reset form and hide it
+            serviceRequestForm.reset();
+            requestForm.classList.remove('show');
+        });
+
+        // Search Functionality
+        const searchInput = document.getElementById('searchInput');
+        const searchResults = document.getElementById('searchResults');
+
+        searchInput.addEventListener('input', () => {
+            const query = searchInput.value.toLowerCase();
+            searchResults.innerHTML = '';
+            
+            if (query.length > 0) {
+                const filteredServices = services.filter(service => 
+                    service.name.toLowerCase().includes(query) || 
+                    service.description.toLowerCase().includes(query)
+                );
+                
+                if (filteredServices.length > 0) {
+                    filteredServices.forEach(service => {
+                        const resultItem = document.createElement('div');
+                        resultItem.className = 'search-result-item';
+                        resultItem.innerHTML = `
+                            <div>
+                                <strong>${service.name}</strong>
+                            </div>
+                            <div class="service-price">${service.price}</div>
+                        `;
+                        resultItem.addEventListener('click', () => {
+                            // Show service details
+                            showServiceDetails(service.id);
+                            // Close search panel
+                            searchPanel.classList.remove('show');
+                            searchInput.value = '';
+                        });
+                        searchResults.appendChild(resultItem);
+                    });
+                } else {
+                    searchResults.innerHTML = '<div class="search-result-item">No services found</div>';
+                }
+            } else {
+                searchResults.innerHTML = '<div class="search-result-item">Start typing to search for services</div>';
+            }
+        });
+
+        // Gallery Carousel
+        const gallerySlides = document.getElementById('gallerySlides');
+        const galleryPrev = document.getElementById('galleryPrev');
+        const galleryNext = document.getElementById('galleryNext');
+        const galleryDots = document.getElementById('galleryDots');
+        
+        let currentSlide = 0;
+        const totalSlides = document.querySelectorAll('.gallery-slide').length;
+        
+        // Create dots
+        for (let i = 0; i < totalSlides; i++) {
+            const dot = document.createElement('div');
+            dot.className = 'gallery-dot';
+            if (i === 0) dot.classList.add('active');
+            dot.addEventListener('click', () => {
+                goToSlide(i);
+            });
+            galleryDots.appendChild(dot);
+        }
+        
+        function goToSlide(slideIndex) {
+            currentSlide = slideIndex;
+            gallerySlides.style.transform = `translateX(-${currentSlide * 100}%)`;
+            
+            // Update active dot
+            document.querySelectorAll('.gallery-dot').forEach((dot, index) => {
+                dot.classList.toggle('active', index === currentSlide);
+            });
+        }
+        
+        galleryPrev.addEventListener('click', () => {
+            currentSlide = (currentSlide - 1 + totalSlides) % totalSlides;
+            goToSlide(currentSlide);
+        });
+        
+        galleryNext.addEventListener('click', () => {
+            currentSlide = (currentSlide + 1) % totalSlides;
+            goToSlide(currentSlide);
+        });
+        
+        // Auto-advance slides
+        setInterval(() => {
+            currentSlide = (currentSlide + 1) % totalSlides;
+            goToSlide(currentSlide);
+        }, 5000);
+
+        // Contact Form Submission
+        const contactForm = document.getElementById('contactForm');
+        contactForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            
+            // Collect form data
+            const formData = {
+                name: document.getElementById('contactName').value,
+                phone: document.getElementById('contactPhone').value,
+                email: document.getElementById('contactEmail').value,
+                message: document.getElementById('contactMessage').value,
+                timestamp: new Date().toLocaleString('en-KE')
+            };
+            
+            // In a real application, you would send this data to a server
+            // For this demo, we'll just show an alert
+            alert(`Thank you, ${formData.name}! Your message has been sent. We'll contact you shortly.`);
+            
+            // Reset form
+            contactForm.reset();
+        });
+
+        // Floating WhatsApp Button
+        document.getElementById('whatsappFloat').addEventListener('click', () => {
+            window.open('https://wa.me/254111923477', '_blank');
+        });
+
+        // Footer navigation
+        document.querySelectorAll('footer a[data-tab]').forEach(link => {
+            link.addEventListener('click', (e) => {
+                e.preventDefault();
+                const tabName = link.getAttribute('data-tab');
+                document.querySelector(`.nav-tab[data-tab="${tabName}"]`).click();
+            });
+        });
+
+        // CTA buttons navigation
+        document.querySelectorAll('.cta-button, .view-all-btn').forEach(button => {
+            button.addEventListener('click', (e) => {
+                e.preventDefault();
+                const tabName = button.getAttribute('data-tab');
+                if (tabName) {
+                    document.querySelector(`.nav-tab[data-tab="${tabName}"]`).click();
+                }
+            });
+        });
+
+        // Initialize view all button
+        updateViewAllButton();
+    </script>
+</body>
+</html>
