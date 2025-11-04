@@ -24,7 +24,7 @@
             --secondary: #FFC107;
             --accent: #F44336;
             --light: #424242;
-            --dark: #F5F5F5;
+            --dark: #121212;
             --text: #F5F5F5;
             --bg: #121212;
             --card-bg: #1E1E1E;
@@ -99,6 +99,7 @@
             display: flex;
             align-items: center;
             gap: 10px;
+            position: relative;
         }
 
         .clock-container {
@@ -112,6 +113,7 @@
             transition: var(--transition);
             text-align: center;
             min-width: 140px;
+            position: relative;
         }
 
         .clock-container:hover {
@@ -125,10 +127,11 @@
             background: var(--card-bg);
             border-radius: 8px;
             box-shadow: 0 5px 15px var(--shadow);
-            padding: 15px;
-            width: 250px;
+            padding: 25px;
+            width: 300px;
             display: none;
             z-index: 1001;
+            margin-top: 5px;
         }
 
         .calendar-popup.show {
@@ -137,10 +140,23 @@
         }
 
         .calendar-header {
+            color: #f38908;
             display: flex;
             justify-content: space-between;
             align-items: center;
             margin-bottom: 10px;
+            position: relative;
+        }
+
+        .calendar-close {
+            background: none;
+            border: none;
+            font-size: 1.2rem;
+            cursor: pointer;
+            color: var(--text);
+            position: absolute;
+            right: 1px;
+            top: 10px;
         }
 
         .calendar-grid {
@@ -154,14 +170,17 @@
             padding: 5px;
             font-size: 0.7rem;
             font-weight: bold;
+            color:rgb(242, 202, 2);
         }
 
         .calendar-date {
             text-align: center;
+            color: #dd700a;
             padding: 6px 3px;
             font-size: 0.7rem;
             border-radius: 3px;
             cursor: pointer;
+            transition: var(--transition);
         }
 
         .calendar-date.current {
@@ -169,8 +188,55 @@
             color: white;
         }
 
-        .calendar-date:hover:not(.current) {
+        .calendar-date.selected {
+            background: var(--secondary);
+            color: var(--dark);
+        }
+
+        .calendar-date.has-note {
+            border: 2px solid var(--secondary);
+        }
+
+        .calendar-date:hover:not(.current):not(.selected) {
             background: var(--light);
+        }
+
+        .date-notes-container {
+            margin-top: 15px;
+            display: block; /* Always visible now */
+        }
+
+        .date-notes-container h4 {
+            margin-bottom: 10px;
+            color: var(--primary);
+        }
+
+        .date-notes-input {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid var(--shadow);
+            border-radius: 5px;
+            background: var(--bg);
+            color: var(--text);
+            font-size: 0.9rem;
+            resize: vertical;
+            min-height: 60px;
+        }
+
+        .save-note-btn {
+            margin-top: 10px;
+            padding: 8px 15px;
+            background: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: var(--transition);
+            font-weight: bold;
+        }
+
+        .save-note-btn:hover {
+            background: var(--accent);
         }
 
         .control-buttons {
@@ -222,6 +288,9 @@
             font-weight: 500;
             border-bottom: 3px solid transparent;
             flex-shrink: 0;
+            display: flex;
+            align-items: center;
+            gap: 8px;
         }
 
         .nav-tab.active {
@@ -280,14 +349,15 @@
             position: absolute;
             top: 50px;
             right: 0;
-            width: 350px;
+            width: 400px;
             background: var(--card-bg);
             border-radius: 10px;
             box-shadow: 0 5px 20px var(--shadow);
             padding: 15px;
             display: none;
-            max-height: 400px;
+            max-height: 500px;
             overflow-y: auto;
+            z-index: 1002;
         }
 
         .notification-item {
@@ -295,6 +365,12 @@
             border-bottom: 1px solid var(--shadow);
             display: flex;
             gap: 10px;
+            position: relative;
+        }
+
+        .notification-item.pinned {
+            background: rgba(255, 215, 0, 0.1);
+            border-left: 3px solid var(--secondary);
         }
 
         .notification-item i {
@@ -306,6 +382,31 @@
             font-size: 0.8rem;
             color: var(--accent);
             margin-top: 5px;
+        }
+
+        .notification-actions {
+            position: absolute;
+            top: 5px;
+            right: 5px;
+            display: flex;
+            gap: 5px;
+        }
+
+        .notification-pin, .notification-close {
+            background: none;
+            border: none;
+            color: var(--text);
+            cursor: pointer;
+            font-size: 0.8rem;
+            transition: var(--transition);
+        }
+
+        .notification-pin:hover {
+            color: var(--secondary);
+        }
+
+        .notification-close:hover {
+            color: var(--accent);
         }
 
         .no-notifications {
@@ -548,11 +649,31 @@
             color: white;
             padding: 20px;
             text-align: center;
+            position: relative;
+            height: 180px;
+            overflow: hidden;
         }
 
         .service-header i {
             font-size: 2.5rem;
             margin-bottom: 10px;
+            z-index: 2;
+            position: relative;
+        }
+
+        .service-header h3 {
+            z-index: 2;
+            position: relative;
+        }
+
+        .service-image {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            opacity: 0.3;
         }
 
         .service-content {
@@ -902,6 +1023,33 @@
             box-shadow: 0 5px 15px var(--shadow);
         }
 
+        .contact-buttons {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        .contact-btn {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 15px;
+            background: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: var(--transition);
+            font-weight: bold;
+            text-decoration: none;
+        }
+
+        .contact-btn:hover {
+            background: var(--accent);
+            transform: translateY(-2px);
+        }
+
         /* Floating WhatsApp Button */
         .whatsapp-float {
             position: fixed;
@@ -919,15 +1067,168 @@
             cursor: pointer;
             z-index: 1000;
             transition: var(--transition);
-            animation: bounce 2s infinite;
+            animation: pulse 2s infinite;
         }
 
         .whatsapp-float:hover {
             transform: scale(1.1);
+            animation: none;
         }
 
         .whatsapp-float i {
             font-size: 1.8rem;
+        }
+
+        /* WhatsApp Loading Animation */
+        .whatsapp-loading {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 3000;
+        }
+
+        .whatsapp-loading.show {
+            display: flex;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .loading-content {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            text-align: center;
+            box-shadow: 0 5px 25px rgba(0,0,0,0.3);
+        }
+
+        .loading-spinner {
+            width: 50px;
+            height: 50px;
+            border: 5px solid #f3f3f3;
+            border-top: 5px solid #25D366;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 20px;
+        }
+
+        .loading-content p {
+            margin-top: 10px;
+            font-weight: bold;
+            color: #333;
+        }
+
+        /* Success Animation */
+        .success-animation {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 3000;
+        }
+
+        .success-animation.show {
+            display: flex;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .success-content {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            text-align: center;
+            color: #dd700a;
+            box-shadow: 0 5px 25px rgba(0,0,0,0.3);
+        }
+
+        .success-checkmark {
+            width: 80px;
+            height: 80px;
+            margin: 0 auto 20px;
+            position: relative;
+        }
+
+        .success-checkmark .check-icon {
+            width: 80px;
+            height: 80px;
+            position: relative;
+            border-radius: 50%;
+            box-sizing: content-box;
+            border: 4px solid #4CAF50;
+        }
+
+        .success-checkmark .check-icon::before {
+            top: 3px;
+            left: -2px;
+            width: 30px;
+            transform-origin: 100% 50%;
+            border-radius: 100px 0 0 100px;
+        }
+
+        .success-checkmark .check-icon::after {
+            top: 0;
+            left: 30px;
+            width: 60px;
+            transform-origin: 0 50%;
+            border-radius: 0 100px 100px 0;
+            animation: rotate-circle 4.25s ease-in;
+        }
+
+        .success-checkmark .check-icon .icon-line {
+            height: 5px;
+            background-color: #4CAF50;
+            display: block;
+            border-radius: 2px;
+            position: absolute;
+            z-index: 10;
+        }
+
+        .success-checkmark .check-icon .icon-line.line-tip {
+            top: 46px;
+            left: 14px;
+            width: 25px;
+            transform: rotate(45deg);
+            animation: icon-line-tip 0.75s;
+        }
+
+        .success-checkmark .check-icon .icon-line.line-long {
+            top: 38px;
+            right: 8px;
+            width: 47px;
+            transform: rotate(-45deg);
+            animation: icon-line-long 0.75s;
+        }
+
+        .success-checkmark .check-icon .icon-circle {
+            top: -4px;
+            left: -4px;
+            z-index: 10;
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            position: absolute;
+            box-sizing: content-box;
+            border: 4px solid rgba(76, 175, 80, .5);
+        }
+
+        .success-checkmark .check-icon .icon-fix {
+            top: 8px;
+            width: 5px;
+            left: 26px;
+            z-index: 1;
+            height: 85px;
+            position: absolute;
+            transform: rotate(-45deg);
+            background-color: white;
         }
 
         /* Footer */
@@ -980,10 +1281,37 @@
             to { opacity: 1; }
         }
 
-        @keyframes bounce {
-            0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
-            40% { transform: translateY(-10px); }
-            60% { transform: translateY(-5px); }
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        @keyframes icon-line-tip {
+            0% { width: 0; left: 1px; top: 19px; }
+            54% { width: 0; left: 1px; top: 19px; }
+            70% { width: 50px; left: -8px; top: 37px; }
+            84% { width: 17px; left: 21px; top: 48px; }
+            100% { width: 25px; left: 14px; top: 45px; }
+        }
+
+        @keyframes icon-line-long {
+            0% { width: 0; right: 46px; top: 54px; }
+            65% { width: 0; right: 46px; top: 54px; }
+            84% { width: 55px; right: 0px; top: 35px; }
+            100% { width: 47px; right: 8px; top: 38px; }
+        }
+
+        @keyframes rotate-circle {
+            0% { transform: rotate(-45deg); }
+            5% { transform: rotate(-45deg); }
+            12% { transform: rotate(-405deg); }
+            100% { transform: rotate(-405deg); }
         }
 
         /* Responsive Design */
@@ -1059,6 +1387,21 @@
                 top: 80px;
                 right: 10px;
             }
+            
+            .service-header {
+                height: 150px;
+            }
+            
+            .calendar-popup {
+                width: 280px;
+            }
+            
+            /* Mobile controls layout */
+            .mobile-controls {
+                display: flex;
+                gap: 10px;
+                align-items: center;
+            }
         }
 
         @media (max-width: 480px) {
@@ -1085,6 +1428,19 @@
                 width: 100%;
                 justify-content: center;
             }
+            
+            .notification-panel {
+                width: 280px;
+            }
+            
+            /* Mobile controls layout for small screens */
+            .mobile-controls {
+                display: flex;
+                gap: 8px;
+                align-items: center;
+                width: 100%;
+                justify-content: space-between;
+            }
         }
     </style>
 </head>
@@ -1107,19 +1463,40 @@
                             <button id="prevMonth"><i class="fas fa-chevron-left"></i></button>
                             <h4 id="calendarMonth">Month Year</h4>
                             <button id="nextMonth"><i class="fas fa-chevron-right"></i></button>
+                            <button class="calendar-close" id="calendarClose">&times;</button>
                         </div>
                         <div class="calendar-grid" id="calendarDays">
                             <!-- Calendar days will be generated here -->
                         </div>
+                        <div class="date-notes-container" id="dateNotesContainer">
+                            <h4>Notes for <span id="selectedDate"></span></h4>
+                            <textarea class="date-notes-input" id="dateNotesInput" placeholder="Add notes for this date..."></textarea>
+                            <button class="save-note-btn" id="saveNoteBtn">Save Note</button>
+                        </div>
                     </div>
                 </div>
-                <div class="control-buttons">
-                    <button class="theme-toggle" id="themeToggle">
-                        <i class="fas fa-moon"></i>
-                    </button>
-                    <button class="search-toggle" id="searchToggle">
-                        <i class="fas fa-search"></i>
-                    </button>
+                <div class="mobile-controls">
+                    <div class="control-buttons">
+                        <button class="theme-toggle" id="themeToggle">
+                            <i class="fas fa-moon"></i>
+                        </button>
+                        <button class="search-toggle" id="searchToggle">
+                            <i class="fas fa-search"></i>
+                        </button>
+                    </div>
+                    <div class="notification-container">
+                        <div class="notification-bell" id="notificationBell">
+                            <i class="fas fa-bell"></i>
+                            <div class="notification-badge" id="notificationBadge">0</div>
+                        </div>
+                        <div class="notification-panel" id="notificationPanel">
+                            <div class="no-notifications" id="noNotifications">
+                                <i class="fas fa-bell-slash"></i>
+                                <p>No notifications yet</p>
+                            </div>
+                            <!-- Notifications will be added here dynamically -->
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -1129,30 +1506,16 @@
             <div class="container">
                 <div class="nav-container">
                     <ul class="nav-tabs">
-                        <li class="nav-tab active" data-tab="home">Home</li>
-                        <li class="nav-tab" data-tab="about">About Us</li>
-                        <li class="nav-tab" data-tab="services">Services</li>
-                        <li class="nav-tab" data-tab="gallery">Gallery</li>
-                        <li class="nav-tab" data-tab="contact">Contact</li>
+                        <li class="nav-tab active" data-tab="home"><i class="fas fa-home"></i> Home</li>
+                        <li class="nav-tab" data-tab="about"><i class="fas fa-info-circle"></i> About Us</li>
+                        <li class="nav-tab" data-tab="services"><i class="fas fa-concierge-bell"></i> Services</li>
+                        <li class="nav-tab" data-tab="gallery"><i class="fas fa-images"></i> Gallery</li>
+                        <li class="nav-tab" data-tab="contact"><i class="fas fa-address-book"></i> Contact</li>
+                        <li class="nav-tab" data-tab="terms"><i class="fas fa-file-contract"></i> Terms</li>
                     </ul>
                 </div>
             </div>
         </nav>
-    </div>
-
-    <!-- Notification Bell -->
-    <div class="notification-container">
-        <div class="notification-bell" id="notificationBell">
-            <i class="fas fa-bell"></i>
-            <div class="notification-badge" id="notificationBadge">0</div>
-        </div>
-        <div class="notification-panel" id="notificationPanel">
-            <div class="no-notifications" id="noNotifications">
-                <i class="fas fa-bell-slash"></i>
-                <p>No notifications yet</p>
-            </div>
-            <!-- Notifications will be added here dynamically -->
-        </div>
     </div>
 
     <!-- Search Panel -->
@@ -1165,6 +1528,30 @@
             <div class="search-results" id="searchResults">
                 <!-- Search results will appear here -->
             </div>
+        </div>
+    </div>
+
+    <!-- WhatsApp Loading Animation -->
+    <div class="whatsapp-loading" id="whatsappLoading">
+        <div class="loading-content">
+            <div class="loading-spinner"></div>
+            <p>Opening WhatsApp...</p>
+        </div>
+    </div>
+
+    <!-- Success Animation -->
+    <div class="success-animation" id="successAnimation">
+        <div class="success-content">
+            <div class="success-checkmark">
+                <div class="check-icon">
+                    <span class="icon-line line-tip"></span>
+                    <span class="icon-line line-long"></span>
+                    <div class="icon-circle"></div>
+                    <div class="icon-fix"></div>
+                </div>
+            </div>
+            <h3>Success!</h3>
+            <p>Your note has been saved successfully.</p>
         </div>
     </div>
 
@@ -1207,12 +1594,24 @@
                 <input type="text" id="serviceType" readonly>
             </div>
             <div class="form-group" id="idNumberGroup" style="display: none;">
-                <label for="idNumber">ID Number / KRA PIN</label>
-                <input type="text" id="idNumber" placeholder="Enter your ID Number or KRA PIN">
+                <label for="idNumber">ID Number</label>
+                <input type="text" id="idNumber" placeholder="Enter your ID Number">
+            </div>
+            <div class="form-group" id="kraPinGroup" style="display: none;">
+                <label for="kraPin">KRA PIN</label>
+                <input type="text" id="kraPin" placeholder="Enter your KRA PIN">
             </div>
             <div class="form-group">
                 <label for="specialInstructions">Special Instructions</label>
                 <textarea id="specialInstructions" placeholder="Any special requirements or instructions"></textarea>
+            </div>
+            <div class="form-group">
+                <label for="preferredDate">Preferred Date (Optional)</label>
+                <input type="date" id="preferredDate">
+            </div>
+            <div class="form-group">
+                <label for="deliveryTime">Preferred Delivery Time (Optional)</label>
+                <input type="time" id="deliveryTime">
             </div>
             <button type="submit" class="submit-btn">Submit Request</button>
         </form>
@@ -1235,6 +1634,21 @@
                 </div>
                 <div class="view-all-container">
                     <button class="view-all-btn" data-tab="services">View All Services</button>
+                </div>
+            </div>
+
+            <div class="about-content" style="margin-top: 50px;">
+                <div class="about-text">
+                    <h2>Why Choose Pamoja Cyber Cafe?</h2>
+                    <p><i class="fas fa-check-circle" style="color: var(--primary);"></i> Fast and reliable internet connection</p>
+                    <p><i class="fas fa-check-circle" style="color: var(--primary);"></i> Professional and friendly staff</p>
+                    <p><i class="fas fa-check-circle" style="color: var(--primary);"></i> Affordable pricing for all services</p>
+                    <p><i class="fas fa-check-circle" style="color: var(--primary);"></i> Secure and confidential document handling</p>
+                    <p><i class="fas fa-check-circle" style="color: var(--primary);"></i> Convenient location in Nairobi CBD</p>
+                    <p><i class="fas fa-check-circle" style="color: var(--primary);"></i> Extended working hours for your convenience</p>
+                </div>
+                <div class="about-image">
+                    <img src="https://images.unsplash.com/photo-1522071820081-009f0129c71c?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80" alt="Cyber Cafe Interior">
                 </div>
             </div>
         </div>
@@ -1265,6 +1679,7 @@
                 <button class="category-tab" data-category="student">Student Services</button>
                 <button class="category-tab" data-category="government">Government Services</button>
                 <button class="category-tab" data-category="individual">Individual Services</button>
+                <button class="category-tab" data-category="business">Business Services</button>
             </div>
             
             <div class="services-content">
@@ -1369,6 +1784,21 @@
                             </div>
                         </li>
                     </ul>
+                    
+                    <div class="contact-buttons">
+                        <a href="tel:+254711923477" class="contact-btn">
+                            <i class="fas fa-phone"></i> Call Us
+                        </a>
+                        <a href="https://wa.me/254111923477" target="_blank" class="contact-btn" id="whatsappContactBtn">
+                            <i class="fab fa-whatsapp"></i> WhatsApp
+                        </a>
+                        <a href="mailto:cybercafe@kenya.co.ke" class="contact-btn">
+                            <i class="fas fa-envelope"></i> Email Us
+                        </a>
+                        <a href="#" class="contact-btn" id="getDirections">
+                            <i class="fas fa-map-marker-alt"></i> Get Directions
+                        </a>
+                    </div>
                 </div>
                 <div class="contact-form">
                     <h3>Send Us a Message</h3>
@@ -1394,6 +1824,43 @@
                 </div>
             </div>
         </div>
+
+        <!-- Terms and Conditions Tab -->
+        <div class="tab-content" id="terms-tab">
+            <h2 class="section-title">Terms and Conditions</h2>
+            <div class="about-content">
+                <div class="about-text">
+                    <h2>Pamoja Cyber Cafe Terms of Service</h2>
+                    <p>Welcome to Pamoja Cyber Cafe. By using our services, you agree to the following terms and conditions:</p>
+                    
+                    <h3>1. Service Usage</h3>
+                    <p>All services provided by Pamoja Cyber Cafe are subject to availability. We reserve the right to refuse service to anyone for any reason at any time.</p>
+                    
+                    <h3>2. Payment Terms</h3>
+                    <p>Payment for services is required upon completion. We accept cash and mobile money payments. All prices are in Kenyan Shillings (KSh).</p>
+                    
+                    <h3>3. Data Privacy</h3>
+                    <p>We respect your privacy and will handle your personal information in accordance with our Privacy Policy. We do not share your data with third parties without your consent.</p>
+                    
+                    <h3>4. Service Guarantee</h3>
+                    <p>While we strive for 100% accuracy, we cannot guarantee error-free services. We will make reasonable efforts to correct any errors at no additional cost.</p>
+                    
+                    <h3>5. Liability</h3>
+                    <p>Pamoja Cyber Cafe is not liable for any damages resulting from the use of our services, including but not limited to data loss, delays, or service interruptions.</p>
+                    
+                    <h3>6. Prohibited Activities</h3>
+                    <p>Users are prohibited from engaging in illegal activities, accessing inappropriate content, or disrupting other customers while using our services.</p>
+                    
+                    <h3>7. Changes to Terms</h3>
+                    <p>We reserve the right to update these terms at any time. Continued use of our services constitutes acceptance of the updated terms.</p>
+                    
+                    <p>If you have any questions about these Terms and Conditions, please contact us.</p>
+                </div>
+                <div class="about-image">
+                    <img src="https://images.unsplash.com/photo-1560472354-b33ff0c44a43?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80" alt="Terms and Conditions">
+                </div>
+            </div>
+        </div>
     </main>
 
     <!-- Floating WhatsApp Button -->
@@ -1412,17 +1879,18 @@
                 <div class="footer-column">
                     <h3>Quick Links</h3>
                     <ul>
-                        <li><a href="#" data-tab="home">Home</a></li>
-                        <li><a href="#" data-tab="about">About Us</a></li>
-                        <li><a href="#" data-tab="services">Services</a></li>
-                        <li><a href="#" data-tab="gallery">Gallery</a></li>
-                        <li><a href="#" data-tab="contact">Contact</a></li>
+                        <li><a href="#" data-tab="home"><i class="fas fa-home"></i> Home</a></li>
+                        <li><a href="#" data-tab="about"><i class="fas fa-info-circle"></i> About Us</a></li>
+                        <li><a href="#" data-tab="services"><i class="fas fa-concierge-bell"></i> Services</a></li>
+                        <li><a href="#" data-tab="gallery"><i class="fas fa-images"></i> Gallery</a></li>
+                        <li><a href="#" data-tab="contact"><i class="fas fa-address-book"></i> Contact</a></li>
+                        <li><a href="#" data-tab="terms"><i class="fas fa-file-contract"></i> Terms</a></li>
                     </ul>
                 </div>
                 <div class="footer-column">
                     <h3>Connect With Us</h3>
                     <ul>
-                        <li><a href="https://wa.me/254111923477" target="_blank"><i class="fab fa-whatsapp"></i> WhatsApp</a></li>
+                        <li><a href="https://wa.me/254111923477" target="_blank" class="whatsapp-footer-link"><i class="fab fa-whatsapp"></i> WhatsApp</a></li>
                         <li><a href="mailto:cybercafe@kenya.co.ke"><i class="fas fa-envelope"></i> Email</a></li>
                         <li><a href="tel:+254711923477"><i class="fas fa-phone"></i> Call Us</a></li>
                     </ul>
@@ -1444,7 +1912,8 @@
                 price: "KSh 50/page",
                 icon: "fas fa-file-alt",
                 category: "student",
-                requiresId: false
+                requiresId: false,
+                image: "https://images.unsplash.com/photo-1586075010923-2dd4570fb338?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80"
             },
             {
                 id: 2,
@@ -1453,7 +1922,8 @@
                 price: "KSh 200",
                 icon: "fas fa-book",
                 category: "student",
-                requiresId: false
+                requiresId: false,
+                image: "https://images.unsplash.com/photo-1456513080510-7bf3a84b82f8?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80"
             },
             {
                 id: 3,
@@ -1462,7 +1932,9 @@
                 price: "KSh 300",
                 icon: "fas fa-id-card",
                 category: "government",
-                requiresId: true
+                requiresId: true,
+                requiresKra: true,
+                image: "https://images.unsplash.com/photo-1554224155-6726b3ff858f?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80"
             },
             {
                 id: 4,
@@ -1471,7 +1943,9 @@
                 price: "KSh 500",
                 icon: "fas fa-passport",
                 category: "government",
-                requiresId: true
+                requiresId: true,
+                requiresKra: false,
+                image: "https://images.unsplash.com/photo-1569336415960-a05bd7d8b1e3?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80"
             },
             {
                 id: 5,
@@ -1480,7 +1954,8 @@
                 price: "KSh 30/page",
                 icon: "fas fa-print",
                 category: "individual",
-                requiresId: false
+                requiresId: false,
+                image: "https://images.unsplash.com/photo-1558655146-9f40138edfeb?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80"
             },
             {
                 id: 6,
@@ -1489,7 +1964,8 @@
                 price: "KSh 10/page",
                 icon: "fas fa-scanner",
                 category: "individual",
-                requiresId: false
+                requiresId: false,
+                image: "https://images.unsplash.com/photo-1581094794329-c8112a89af12?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80"
             },
             {
                 id: 7,
@@ -1498,7 +1974,8 @@
                 price: "KSh 500",
                 icon: "fas fa-file-contract",
                 category: "student",
-                requiresId: false
+                requiresId: false,
+                image: "https://images.unsplash.com/photo-1586281380349-632531db7ed4?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80"
             },
             {
                 id: 8,
@@ -1507,7 +1984,9 @@
                 price: "KSh 800",
                 icon: "fas fa-briefcase",
                 category: "government",
-                requiresId: true
+                requiresId: true,
+                requiresKra: true,
+                image: "https://images.unsplash.com/photo-1556761175-b413da4baf72?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80"
             },
             {
                 id: 9,
@@ -1516,7 +1995,8 @@
                 price: "KSh 1/min",
                 icon: "fas fa-wifi",
                 category: "individual",
-                requiresId: false
+                requiresId: false,
+                image: "https://images.unsplash.com/photo-1547658719-da2b51169166?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80"
             },
             {
                 id: 10,
@@ -1525,7 +2005,8 @@
                 price: "KSh 800",
                 icon: "fas fa-book-open",
                 category: "student",
-                requiresId: false
+                requiresId: false,
+                image: "https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80"
             },
             {
                 id: 11,
@@ -1534,7 +2015,8 @@
                 price: "KSh 300",
                 icon: "fas fa-laptop",
                 category: "student",
-                requiresId: false
+                requiresId: false,
+                image: "https://images.unsplash.com/photo-1516321318423-f06f85e504b3?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80"
             },
             {
                 id: 12,
@@ -1543,7 +2025,9 @@
                 price: "KSh 200",
                 icon: "fas fa-heartbeat",
                 category: "government",
-                requiresId: true
+                requiresId: true,
+                requiresKra: false,
+                image: "https://images.unsplash.com/photo-1576091160399-112ba8d25d1f?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80"
             },
             {
                 id: 13,
@@ -1552,7 +2036,9 @@
                 price: "KSh 250",
                 icon: "fas fa-hand-holding-usd",
                 category: "government",
-                requiresId: true
+                requiresId: true,
+                requiresKra: false,
+                image: "https://images.unsplash.com/photo-1554224155-8d04cb21cd6c?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80"
             },
             {
                 id: 14,
@@ -1561,7 +2047,8 @@
                 price: "KSh 5/page",
                 icon: "fas fa-copy",
                 category: "individual",
-                requiresId: false
+                requiresId: false,
+                image: "https://images.unsplash.com/photo-1581093458791-9d67b3d5d6c1?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80"
             },
             {
                 id: 15,
@@ -1570,7 +2057,8 @@
                 price: "KSh 50",
                 icon: "fas fa-id-badge",
                 category: "individual",
-                requiresId: false
+                requiresId: false,
+                image: "https://images.unsplash.com/photo-1581092580497-e0d23cbdf1dc?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80"
             },
             {
                 id: 16,
@@ -1579,7 +2067,8 @@
                 price: "KSh 400",
                 icon: "fas fa-desktop",
                 category: "student",
-                requiresId: false
+                requiresId: false,
+                image: "https://images.unsplash.com/photo-1547658719-da2b51169166?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80"
             },
             {
                 id: 17,
@@ -1588,7 +2077,9 @@
                 price: "KSh 600",
                 icon: "fas fa-map-marked-alt",
                 category: "government",
-                requiresId: true
+                requiresId: true,
+                requiresKra: true,
+                image: "https://images.unsplash.com/photo-1560518883-ce09059eeffa?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80"
             },
             {
                 id: 18,
@@ -1597,7 +2088,79 @@
                 price: "KSh 50-200",
                 icon: "fas fa-images",
                 category: "individual",
-                requiresId: false
+                requiresId: false,
+                image: "https://images.unsplash.com/photo-1516035069371-29a1b244cc32?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80"
+            },
+            {
+                id: 19,
+                name: "Graphic Design",
+                description: "Custom graphic design services for logos, flyers, banners, and social media content. Professional designs to enhance your brand.",
+                price: "KSh 800-2000",
+                icon: "fas fa-paint-brush",
+                category: "business",
+                requiresId: false,
+                image: "https://images.unsplash.com/photo-1561070791-2526d30994b5?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80"
+            },
+            {
+                id: 20,
+                name: "Email Setup",
+                description: "Professional email setup for individuals and businesses. We help you create and configure email accounts on various platforms.",
+                price: "KSh 300",
+                icon: "fas fa-envelope",
+                category: "business",
+                requiresId: false,
+                image: "https://images.unsplash.com/photo-1545235617-9465d2a55698?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80"
+            },
+            {
+                id: 21,
+                name: "Website Development",
+                description: "Custom website design and development for businesses and individuals. Responsive websites optimized for all devices.",
+                price: "KSh 5000+",
+                icon: "fas fa-code",
+                category: "business",
+                requiresId: false,
+                image: "https://images.unsplash.com/photo-1555066931-4365d14bab8c?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80"
+            },
+            {
+                id: 22,
+                name: "Social Media Management",
+                description: "Professional social media account setup and management services. We help businesses establish and grow their online presence.",
+                price: "KSh 1500/month",
+                icon: "fas fa-hashtag",
+                category: "business",
+                requiresId: false,
+                image: "https://images.unsplash.com/photo-1611162617474-5b21e879e113?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80"
+            },
+            {
+                id: 23,
+                name: "Video Editing",
+                description: "Professional video editing services for personal and business videos. We can edit, enhance, and add effects to your videos.",
+                price: "KSh 1000-5000",
+                icon: "fas fa-video",
+                category: "business",
+                requiresId: false,
+                image: "https://images.unsplash.com/photo-1591267990531-1e1d1b5c6c9a?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80"
+            },
+            {
+                id: 24,
+                name: "Online Tax Filing",
+                description: "Assistance with online tax filing for individuals and businesses. We help you navigate the KRA iTax platform.",
+                price: "KSh 400",
+                icon: "fas fa-file-invoice-dollar",
+                category: "government",
+                requiresId: true,
+                requiresKra: true,
+                image: "https://images.unsplash.com/photo-1554224155-8d04cb21cd6c?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80"
+            },
+            {
+                id: 25,
+                name: "Document Translation",
+                description: "Professional document translation services in multiple languages. We ensure accurate and culturally appropriate translations.",
+                price: "KSh 100/page",
+                icon: "fas fa-language",
+                category: "individual",
+                requiresId: false,
+                image: "https://images.unsplash.com/photo-1589652717521-10c0d092dea9?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80"
             }
         ];
 
@@ -1615,7 +2178,7 @@
             }
         });
 
-        // Real-time Clock and Calendar - Fixed to show real time
+        // Real-time Clock and Calendar - Fixed to prevent closing on date clicks
         const clockContainer = document.getElementById('clockContainer');
         const realTimeClock = document.getElementById('realTimeClock');
         const calendarPopup = document.getElementById('calendarPopup');
@@ -1623,10 +2186,18 @@
         const calendarDays = document.getElementById('calendarDays');
         const prevMonthBtn = document.getElementById('prevMonth');
         const nextMonthBtn = document.getElementById('nextMonth');
+        const calendarClose = document.getElementById('calendarClose');
+        const dateNotesContainer = document.getElementById('dateNotesContainer');
+        const selectedDate = document.getElementById('selectedDate');
+        const dateNotesInput = document.getElementById('dateNotesInput');
+        const saveNoteBtn = document.getElementById('saveNoteBtn');
+        const successAnimation = document.getElementById('successAnimation');
 
         let currentDate = new Date();
         let currentMonth = currentDate.getMonth();
         let currentYear = currentDate.getFullYear();
+        let selectedCalendarDate = null;
+        let dateNotes = JSON.parse(localStorage.getItem('cyberCafeDateNotes')) || {};
 
         function updateClock() {
             const now = new Date();
@@ -1685,15 +2256,54 @@
                     dateElement.classList.add('current');
                 }
                 
+                // Check if date has notes
+                const dateKey = `${year}-${month+1}-${day}`;
+                if (dateNotes[dateKey]) {
+                    dateElement.classList.add('has-note');
+                }
+                
+                dateElement.addEventListener('click', (e) => {
+                    e.stopPropagation(); // Prevent event from bubbling up
+                    
+                    // Remove selected class from all dates
+                    document.querySelectorAll('.calendar-date').forEach(d => {
+                        d.classList.remove('selected');
+                    });
+                    
+                    // Add selected class to clicked date
+                    dateElement.classList.add('selected');
+                    
+                    // Store selected date
+                    selectedCalendarDate = new Date(year, month, day);
+                    
+                    // Update selected date text
+                    selectedDate.textContent = selectedCalendarDate.toLocaleDateString('en-KE', { 
+                        weekday: 'long', 
+                        year: 'numeric', 
+                        month: 'long', 
+                        day: 'numeric' 
+                    });
+                    
+                    // Load existing notes if any
+                    dateNotesInput.value = dateNotes[dateKey] || '';
+                });
+                
                 calendarDays.appendChild(dateElement);
             }
         }
 
-        clockContainer.addEventListener('click', () => {
+        clockContainer.addEventListener('click', (e) => {
+            e.stopPropagation(); // Prevent event from bubbling up
             calendarPopup.classList.toggle('show');
         });
 
-        prevMonthBtn.addEventListener('click', () => {
+        calendarClose.addEventListener('click', (e) => {
+            e.stopPropagation(); // Prevent event from bubbling up
+            calendarPopup.classList.remove('show');
+        });
+
+        prevMonthBtn.addEventListener('click', (e) => {
+            e.stopPropagation(); // Prevent event from bubbling up
             currentMonth--;
             if (currentMonth < 0) {
                 currentMonth = 11;
@@ -1702,7 +2312,8 @@
             renderCalendar(currentMonth, currentYear);
         });
 
-        nextMonthBtn.addEventListener('click', () => {
+        nextMonthBtn.addEventListener('click', (e) => {
+            e.stopPropagation(); // Prevent event from bubbling up
             currentMonth++;
             if (currentMonth > 11) {
                 currentMonth = 0;
@@ -1711,16 +2322,82 @@
             renderCalendar(currentMonth, currentYear);
         });
 
+        saveNoteBtn.addEventListener('click', (e) => {
+            e.stopPropagation(); // Prevent event from bubbling up
+            
+            if (selectedCalendarDate) {
+                const dateKey = `${selectedCalendarDate.getFullYear()}-${selectedCalendarDate.getMonth()+1}-${selectedCalendarDate.getDate()}`;
+                const noteText = dateNotesInput.value.trim();
+                
+                if (noteText) {
+                    // Save note
+                    dateNotes[dateKey] = noteText;
+                    localStorage.setItem('cyberCafeDateNotes', JSON.stringify(dateNotes));
+                    
+                    // Add notification
+                    const now = new Date();
+                    const timeString = now.toLocaleTimeString('en-KE', { hour: '2-digit', minute: '2-digit' });
+                    const dateString = now.toLocaleDateString('en-KE', { weekday: 'short', month: 'short', day: 'numeric' });
+                    
+                    const notificationMessage = `Note added for ${selectedCalendarDate.toLocaleDateString('en-KE', { month: 'short', day: 'numeric' })}: ${noteText.substring(0, 50)}${noteText.length > 50 ? '...' : ''}`;
+                    const newNotification = {
+                        message: notificationMessage,
+                        time: `${timeString} • ${dateString}`,
+                        pinned: false
+                    };
+                    
+                    notifications.unshift(newNotification);
+                    notificationCount = notifications.length;
+                    
+                    // Save to localStorage
+                    localStorage.setItem('cyberCafeNotifications', JSON.stringify(notifications));
+                    
+                    // Update UI
+                    updateNotificationBadge();
+                    renderNotifications();
+                    
+                    // Re-render calendar to show updated date styling
+                    renderCalendar(currentMonth, currentYear);
+                    
+                    // Show success animation
+                    successAnimation.classList.add('show');
+                    setTimeout(() => {
+                        successAnimation.classList.remove('show');
+                    }, 3000);
+                    
+                    // Close the calendar popup
+                    calendarPopup.classList.remove('show');
+                } else {
+                    // Remove note if empty
+                    if (dateNotes[dateKey]) {
+                        delete dateNotes[dateKey];
+                        localStorage.setItem('cyberCafeDateNotes', JSON.stringify(dateNotes));
+                        
+                        // Re-render calendar to remove date styling
+                        renderCalendar(currentMonth, currentYear);
+                        
+                        alert('Note removed!');
+                    }
+                }
+            }
+        });
+
         // Initialize clock and calendar
         setInterval(updateClock, 1000);
         updateClock();
         renderCalendar(currentDate.getMonth(), currentDate.getFullYear());
 
-        // Close calendar when clicking outside
+        // Close calendar when clicking outside - FIXED VERSION
         document.addEventListener('click', (e) => {
-            if (!clockContainer.contains(e.target)) {
+            // Only close if clicking outside both clock container and calendar popup
+            if (!clockContainer.contains(e.target) && !calendarPopup.contains(e.target)) {
                 calendarPopup.classList.remove('show');
             }
+        });
+
+        // Prevent calendar from closing when clicking inside it
+        calendarPopup.addEventListener('click', (e) => {
+            e.stopPropagation(); // Prevent event from bubbling up to document
         });
 
         // Search Panel Toggle
@@ -1729,6 +2406,7 @@
 
         searchToggle.addEventListener('click', () => {
             searchPanel.classList.add('show');
+            document.getElementById('searchInput').focus();
         });
 
         // Close search panel when clicking outside
@@ -1763,22 +2441,92 @@
             const notificationItems = notificationPanel.querySelectorAll('.notification-item');
             notificationItems.forEach(item => item.remove());
             
-            // Add notifications in reverse order (newest first)
-            notifications.slice().reverse().forEach(notification => {
+            // Sort notifications - pinned first, then by date
+            const sortedNotifications = [...notifications].sort((a, b) => {
+                if (a.pinned && !b.pinned) return -1;
+                if (!a.pinned && b.pinned) return 1;
+                return 0;
+            });
+            
+            // Add notifications
+            sortedNotifications.forEach((notification, index) => {
                 const notificationItem = document.createElement('div');
                 notificationItem.className = 'notification-item';
+                if (notification.pinned) {
+                    notificationItem.classList.add('pinned');
+                }
+                
                 notificationItem.innerHTML = `
                     <i class="fas fa-bell"></i>
                     <div>
                         <p>${notification.message}</p>
                         <div class="notification-time">${notification.time}</div>
                     </div>
+                    <div class="notification-actions">
+                        <button class="notification-pin" data-index="${index}">
+                            <i class="fas fa-thumbtack"></i>
+                        </button>
+                        <button class="notification-close" data-index="${index}">&times;</button>
+                    </div>
                 `;
                 notificationPanel.insertBefore(notificationItem, noNotifications);
             });
+            
+            // Add event listeners to close buttons
+            document.querySelectorAll('.notification-close').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    const index = parseInt(e.target.closest('.notification-close').getAttribute('data-index'));
+                    removeNotification(index);
+                });
+            });
+            
+            // Add event listeners to pin buttons
+            document.querySelectorAll('.notification-pin').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    const index = parseInt(e.target.closest('.notification-pin').getAttribute('data-index'));
+                    togglePinNotification(index);
+                });
+            });
         }
 
-        notificationBell.addEventListener('click', () => {
+        function removeNotification(index) {
+            if (index >= 0 && index < notifications.length) {
+                notifications.splice(index, 1);
+                notificationCount = notifications.length;
+                
+                // Save to localStorage
+                localStorage.setItem('cyberCafeNotifications', JSON.stringify(notifications));
+                
+                // Update UI
+                updateNotificationBadge();
+                renderNotifications();
+            }
+        }
+
+        function togglePinNotification(index) {
+            if (index >= 0 && index < notifications.length) {
+                // Count currently pinned notifications
+                const pinnedCount = notifications.filter(n => n.pinned).length;
+                
+                // If trying to pin and already have 5 pinned, show alert
+                if (!notifications[index].pinned && pinnedCount >= 5) {
+                    alert('You can only pin up to 5 notifications');
+                    return;
+                }
+                
+                // Toggle pin status
+                notifications[index].pinned = !notifications[index].pinned;
+                
+                // Save to localStorage
+                localStorage.setItem('cyberCafeNotifications', JSON.stringify(notifications));
+                
+                // Update UI
+                renderNotifications();
+            }
+        }
+
+        notificationBell.addEventListener('click', (e) => {
+            e.stopPropagation(); // Prevent event from bubbling up
             notificationPanel.style.display = notificationPanel.style.display === 'block' ? 'none' : 'block';
         });
 
@@ -1838,6 +2586,7 @@
                 serviceCard.className = 'service-card';
                 serviceCard.innerHTML = `
                     <div class="service-header">
+                        <img src="${service.image}" alt="${service.name}" class="service-image">
                         <i class="${service.icon}"></i>
                         <h3>${service.name}</h3>
                     </div>
@@ -1949,7 +2698,10 @@
             modalServicePrice.textContent = service.price;
             
             if (service.requiresId) {
-                modalServiceRequirements.innerHTML = '<p><strong>Requirements:</strong> Valid ID Number or KRA PIN required for this service.</p>';
+                modalServiceRequirements.innerHTML = '<p><strong>Requirements:</strong> Valid ID Number required for this service.</p>';
+                if (service.requiresKra) {
+                    modalServiceRequirements.innerHTML += '<p><strong>Additional Requirement:</strong> KRA PIN required for this service.</p>';
+                }
             } else {
                 modalServiceRequirements.innerHTML = '';
             }
@@ -1978,7 +2730,10 @@
         const requestForm = document.getElementById('requestForm');
         const serviceTypeInput = document.getElementById('serviceType');
         const idNumberGroup = document.getElementById('idNumberGroup');
+        const kraPinGroup = document.getElementById('kraPinGroup');
         const serviceRequestForm = document.getElementById('serviceRequestForm');
+        const preferredDateInput = document.getElementById('preferredDate');
+        const deliveryTimeInput = document.getElementById('deliveryTime');
 
         function requestService(serviceId) {
             const service = services.find(s => s.id === serviceId);
@@ -1993,12 +2748,33 @@
             // Prefill service type
             serviceTypeInput.value = service.name;
             
-            // Show/hide ID number field
+            // Set minimum date for preferred date
+            const tomorrow = new Date();
+            tomorrow.setDate(tomorrow.getDate() + 1);
+            preferredDateInput.min = tomorrow.toISOString().split('T')[0];
+            
+            // Show/hide ID number and KRA PIN fields
             if (service.requiresId) {
                 idNumberGroup.style.display = 'block';
+                if (service.requiresKra) {
+                    kraPinGroup.style.display = 'block';
+                } else {
+                    kraPinGroup.style.display = 'none';
+                }
             } else {
                 idNumberGroup.style.display = 'none';
+                kraPinGroup.style.display = 'none';
             }
+        }
+
+        // WhatsApp Loading Animation
+        const whatsappLoading = document.getElementById('whatsappLoading');
+        
+        function showWhatsAppLoading() {
+            whatsappLoading.classList.add('show');
+            setTimeout(() => {
+                whatsappLoading.classList.remove('show');
+            }, 2000);
         }
 
         // Service Request Form Submission
@@ -2012,19 +2788,61 @@
                 email: document.getElementById('customerEmail').value,
                 service: document.getElementById('serviceType').value,
                 idNumber: document.getElementById('idNumber').value,
+                kraPin: document.getElementById('kraPin').value,
                 instructions: document.getElementById('specialInstructions').value,
+                preferredDate: document.getElementById('preferredDate').value,
+                deliveryTime: document.getElementById('deliveryTime').value,
                 timestamp: new Date().toLocaleString('en-KE')
             };
             
-            // In a real application, you would send this data to a server
-            // For this demo, we'll just show an alert and add a notification
-            alert(`Thank you, ${formData.name}! Your request for "${formData.service}" has been submitted. We'll contact you at ${formData.phone} shortly.`);
+            // Get service category
+            const service = services.find(s => s.name === formData.service);
+            const serviceCategory = service ? service.category : 'General';
             
-            // Add a new notification
-            const notificationMessage = `New request: ${formData.service} for ${formData.name}`;
+            // Format message for WhatsApp
+            let whatsappMessage = `*PAMOJA CYBER CAFE SERVICE REQUEST*%0A%0A`;
+            whatsappMessage += `*Customer Details:*%0A`;
+            whatsappMessage += `Name: ${formData.name}%0A`;
+            whatsappMessage += `Phone: ${formData.phone}%0A`;
+            if (formData.email) whatsappMessage += `Email: ${formData.email}%0A`;
+            whatsappMessage += `%0A*Service Details:*%0A`;
+            whatsappMessage += `Service: ${formData.service}%0A`;
+            whatsappMessage += `Category: ${serviceCategory}%0A`;
+            if (formData.idNumber) whatsappMessage += `ID Number: ${formData.idNumber}%0A`;
+            if (formData.kraPin) whatsappMessage += `KRA PIN: ${formData.kraPin}%0A`;
+            if (formData.preferredDate) {
+                whatsappMessage += `Preferred Date: ${formData.preferredDate}%0A`;
+                if (formData.deliveryTime) {
+                    whatsappMessage += `Preferred Time: ${formData.deliveryTime}%0A`;
+                }
+            }
+            if (formData.instructions) whatsappMessage += `Instructions: ${formData.instructions}%0A`;
+            whatsappMessage += `%0A*Request Details:*%0A`;
+            whatsappMessage += `Submitted: ${formData.timestamp}%0A`;
+            whatsappMessage += `%0A_Thank you for choosing Pamoja Cyber Cafe!_`;
+            
+            // Show loading animation
+            showWhatsAppLoading();
+            
+            // Send to WhatsApp after a short delay
+            setTimeout(() => {
+                window.open(`https://wa.me/254111923477?text=${whatsappMessage}`, '_blank');
+            }, 2000);
+            
+            // Add a new notification with real timestamp
+            const now = new Date();
+            const timeString = now.toLocaleTimeString('en-KE', { hour: '2-digit', minute: '2-digit' });
+            const dateString = now.toLocaleDateString('en-KE', { weekday: 'short', month: 'short', day: 'numeric' });
+            
+            let notificationMessage = `Service Request: ${formData.service} for ${formData.name}`;
+            if (formData.preferredDate) {
+                notificationMessage += ` (Preferred: ${formData.preferredDate})`;
+            }
+            
             const newNotification = {
                 message: notificationMessage,
-                time: 'Just now'
+                time: `${timeString} • ${dateString}`,
+                pinned: false
             };
             
             notifications.unshift(newNotification);
@@ -2040,6 +2858,9 @@
             // Reset form and hide it
             serviceRequestForm.reset();
             requestForm.classList.remove('show');
+            
+            // Show confirmation
+            alert(`Thank you, ${formData.name}! Your request for "${formData.service}" has been submitted. We'll contact you at ${formData.phone} shortly.`);
         });
 
         // Search Functionality
@@ -2143,17 +2964,61 @@
                 timestamp: new Date().toLocaleString('en-KE')
             };
             
-            // In a real application, you would send this data to a server
-            // For this demo, we'll just show an alert
-            alert(`Thank you, ${formData.name}! Your message has been sent. We'll contact you shortly.`);
+            // Format message for WhatsApp
+            let whatsappMessage = `*PAMOJA CYBER CAFE CONTACT MESSAGE*%0A%0A`;
+            whatsappMessage += `Name: ${formData.name}%0A`;
+            whatsappMessage += `Phone: ${formData.phone}%0A`;
+            if (formData.email) whatsappMessage += `Email: ${formData.email}%0A`;
+            whatsappMessage += `Message: ${formData.message}%0A`;
+            whatsappMessage += `Timestamp: ${formData.timestamp}`;
+            
+            // Show loading animation
+            showWhatsAppLoading();
+            
+            // Send to WhatsApp after a short delay
+            setTimeout(() => {
+                window.open(`https://wa.me/254111923477?text=${whatsappMessage}`, '_blank');
+            }, 2000);
             
             // Reset form
             contactForm.reset();
+            
+            // Show confirmation
+            alert(`Thank you, ${formData.name}! Your message has been sent. We'll contact you shortly.`);
+        });
+
+        // Get Directions Button
+        document.getElementById('getDirections').addEventListener('click', (e) => {
+            e.preventDefault();
+            window.open('https://www.google.com/maps/place/Nairobi+CBD,+Moi+Avenue,+Prime+Plaza/@-1.283333,36.816667,15z', '_blank');
         });
 
         // Floating WhatsApp Button
         document.getElementById('whatsappFloat').addEventListener('click', () => {
-            window.open('https://wa.me/254111923477', '_blank');
+            showWhatsAppLoading();
+            setTimeout(() => {
+                window.open('https://wa.me/254111923477', '_blank');
+            }, 2000);
+        });
+
+        // WhatsApp Contact Button
+        document.getElementById('whatsappContactBtn').addEventListener('click', (e) => {
+            e.preventDefault();
+            showWhatsAppLoading();
+            setTimeout(() => {
+                window.open('https://wa.me/254111923477', '_blank');
+            }, 2000);
+        });
+
+        // WhatsApp Footer Links
+        document.querySelectorAll('.whatsapp-footer-link').forEach(link => {
+            link.addEventListener('click', (e) => {
+                e.preventDefault();
+                showWhatsAppLoading();
+                setTimeout(() => {
+                    window.open('https://wa.me/254111923477', '_blank');
+                }, 2000);
+            });
         });
 
         // Footer navigation
