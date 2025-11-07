@@ -5,7 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Pamoja Cyber Cafe - Digital Solutions for Kenyans</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <style>
+        /* All the CSS styles from the original code */
         :root {
             --primary: #006400;
             --secondary: #FFD700;
@@ -43,7 +45,8 @@
             color: var(--text);
             transition: var(--transition);
             overflow-x: hidden;
-            padding-top: 140px; /* Space for fixed header */
+            padding-top: 140px;
+            line-height: 1.6;
         }
 
         .container {
@@ -63,7 +66,6 @@
             box-shadow: 0 2px 10px var(--shadow);
         }
 
-        /* Header Controls */
         .header-controls {
             display: flex;
             justify-content: space-between;
@@ -77,22 +79,31 @@
             display: flex;
             align-items: center;
             gap: 10px;
+            flex: 1;
+            min-width: 0;
         }
 
         .logo-section i {
             font-size: 1.8rem;
+            flex-shrink: 0;
         }
 
         .logo-text h1 {
             font-size: 1.3rem;
             text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
             line-height: 1.2;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
         }
 
         .slogan {
             font-style: italic;
             font-size: 0.8rem;
             text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
         }
 
         .controls-right {
@@ -100,6 +111,7 @@
             align-items: center;
             gap: 10px;
             position: relative;
+            flex-shrink: 0;
         }
 
         .clock-container {
@@ -114,6 +126,7 @@
             text-align: center;
             min-width: 140px;
             position: relative;
+            flex-shrink: 0;
         }
 
         .clock-container:hover {
@@ -203,12 +216,7 @@
 
         .date-notes-container {
             margin-top: 15px;
-            display: block; /* Always visible now */
-        }
-
-        .date-notes-container h4 {
-            margin-bottom: 10px;
-            color: var(--primary);
+            display: block;
         }
 
         .date-notes-input {
@@ -255,11 +263,88 @@
             justify-content: center;
             cursor: pointer;
             transition: var(--transition);
+            flex-shrink: 0;
         }
 
         .theme-toggle:hover, .search-toggle:hover {
             background: rgba(255, 255, 255, 0.3);
             transform: scale(1.05);
+        }
+
+        /* Search Panel */
+        .search-panel {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            display: none;
+            justify-content: center;
+            align-items: flex-start;
+            z-index: 3000;
+            padding-top: 100px;
+        }
+
+        .search-panel.show {
+            display: flex;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .search-container {
+            background: var(--bg);
+            border-radius: 15px;
+            padding: 20px;
+            max-width: 600px;
+            width: 90%;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+        }
+
+        .search-box {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .search-box input {
+            flex: 1;
+            padding: 15px;
+            border: 2px solid var(--primary);
+            border-radius: 10px;
+            font-size: 1rem;
+            background: var(--card-bg);
+            color: var(--text);
+        }
+
+        .search-box button {
+            background: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            padding: 0 20px;
+            cursor: pointer;
+            transition: var(--transition);
+            font-weight: bold;
+        }
+
+        .search-box button:hover {
+            background: var(--accent);
+        }
+
+        .search-results {
+            max-height: 300px;
+            overflow-y: auto;
+        }
+
+        .search-result-item {
+            padding: 15px;
+            border-bottom: 1px solid var(--shadow);
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .search-result-item:hover {
+            background: var(--light);
         }
 
         /* Sticky Navigation */
@@ -302,195 +387,256 @@
             background: var(--light);
         }
 
-        /* Notification Bell */
-        .notification-container {
-            position: fixed;
-            top: 90px;
-            right: 20px;
-            z-index: 1000;
+        /* NEW: Loyalty Card Styles */
+        .loyalty-card-container {
+            background: linear-gradient(135deg, #FFD700, #FFA500);
+            border-radius: 15px;
+            padding: 20px;
+            margin: 20px 0;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+            color: #333;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
         }
 
-        .notification-bell {
-            background: var(--primary);
-            color: white;
+        .loyalty-card-container::before {
+            content: "";
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.2) 0%, rgba(255,255,255,0) 70%);
+            transform: rotate(30deg);
+        }
+
+        .loyalty-stamps {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin: 20px 0;
+            flex-wrap: wrap;
+        }
+
+        .loyalty-stamp {
             width: 40px;
             height: 40px;
             border-radius: 50%;
+            background: rgba(255,255,255,0.3);
+            border: 2px dashed #333;
             display: flex;
             align-items: center;
             justify-content: center;
-            cursor: pointer;
-            box-shadow: 0 2px 5px var(--shadow);
-            transition: var(--transition);
-            position: relative;
-        }
-
-        .notification-bell:hover {
-            transform: scale(1.1);
-        }
-
-        .notification-badge {
-            position: absolute;
-            top: -5px;
-            right: -5px;
-            background: var(--accent);
-            color: white;
-            border-radius: 50%;
-            width: 18px;
-            height: 18px;
-            display: none;
-            align-items: center;
-            justify-content: center;
-            font-size: 0.7rem;
             font-weight: bold;
-        }
-
-        .notification-panel {
-            position: absolute;
-            top: 50px;
-            right: 0;
-            width: 400px;
-            background: var(--card-bg);
-            border-radius: 10px;
-            box-shadow: 0 5px 20px var(--shadow);
-            padding: 15px;
-            display: none;
-            max-height: 500px;
-            overflow-y: auto;
-            z-index: 1002;
-        }
-
-        .notification-item {
-            padding: 10px;
-            border-bottom: 1px solid var(--shadow);
-            display: flex;
-            gap: 10px;
-            position: relative;
-        }
-
-        .notification-item.pinned {
-            background: rgba(255, 215, 0, 0.1);
-            border-left: 3px solid var(--secondary);
-        }
-
-        .notification-item i {
-            color: var(--primary);
-            margin-top: 5px;
-        }
-
-        .notification-time {
-            font-size: 0.8rem;
-            color: var(--accent);
-            margin-top: 5px;
-        }
-
-        .notification-actions {
-            position: absolute;
-            top: 5px;
-            right: 5px;
-            display: flex;
-            gap: 5px;
-        }
-
-        .notification-pin, .notification-close {
-            background: none;
-            border: none;
-            color: var(--text);
-            cursor: pointer;
-            font-size: 0.8rem;
             transition: var(--transition);
         }
 
-        .notification-pin:hover {
-            color: var(--secondary);
+        .loyalty-stamp.filled {
+            background: var(--primary);
+            color: white;
+            border: 2px solid white;
         }
 
-        .notification-close:hover {
-            color: var(--accent);
+        .loyalty-rewards {
+            margin-top: 20px;
         }
 
-        .no-notifications {
-            text-align: center;
-            padding: 20px;
-            color: var(--text);
-            opacity: 0.7;
-        }
-
-        /* Search Panel */
-        .search-panel {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.8);
-            display: none;
-            justify-content: center;
-            align-items: flex-start;
-            padding-top: 100px;
-            z-index: 2000;
-        }
-
-        .search-panel.show {
-            display: flex;
-            animation: fadeIn 0.3s ease;
-        }
-
-        .search-container {
-            background: var(--bg);
-            width: 90%;
-            max-width: 600px;
+        .loyalty-reward {
+            background: rgba(255,255,255,0.8);
             border-radius: 10px;
-            padding: 20px;
-            box-shadow: 0 5px 25px rgba(0,0,0,0.3);
+            padding: 10px;
+            margin: 10px 0;
+            display: flex;
+            align-items: center;
+            gap: 10px;
         }
 
-        .search-box {
-            display: flex;
+        .loyalty-reward.unlocked {
+            background: rgba(76, 175, 80, 0.2);
+            border-left: 4px solid var(--primary);
+        }
+
+        /* NEW: Service Calculator Styles */
+        .calculator-container {
+            background: var(--card-bg);
+            border-radius: 15px;
+            padding: 20px;
+            margin: 20px 0;
+            box-shadow: 0 5px 15px var(--shadow);
+        }
+
+        .calculator-inputs {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
             margin-bottom: 20px;
         }
 
-        .search-box input {
-            flex: 1;
-            padding: 15px 20px;
-            border: 1px solid var(--shadow);
-            border-radius: 50px 0 0 50px;
-            outline: none;
-            font-size: 1rem;
+        .calculator-result {
+            background: var(--light);
+            border-radius: 10px;
+            padding: 15px;
+            margin-top: 20px;
+            text-align: center;
+        }
+
+        .calculator-price {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: var(--primary);
+            margin: 10px 0;
+        }
+
+        .calculator-time {
+            font-size: 1.2rem;
+            color: var(--accent);
+        }
+
+        /* NEW: Digital Notice Board Styles */
+        .notice-board {
             background: var(--card-bg);
-            color: var(--text);
+            border-radius: 15px;
+            padding: 20px;
+            margin: 20px 0;
+            box-shadow: 0 5px 15px var(--shadow);
+            position: relative;
+            overflow: hidden;
         }
 
-        .search-box button {
-            padding: 0 25px;
-            background: var(--primary);
-            color: white;
-            border: none;
-            border-radius: 0 50px 50px 0;
-            cursor: pointer;
-            transition: var(--transition);
+        .notice-scroll {
+            height: 200px;
+            overflow: hidden;
+            position: relative;
         }
 
-        .search-box button:hover {
-            background: var(--accent);
-        }
-
-        .search-results {
-            max-height: 300px;
-            overflow-y: auto;
-        }
-
-        .search-result-item {
+        .notice-item {
             padding: 15px;
             border-bottom: 1px solid var(--shadow);
-            cursor: pointer;
-            transition: var(--transition);
-            display: flex;
-            justify-content: space-between;
+            animation: scrollNotice 20s linear infinite;
         }
 
-        .search-result-item:hover {
+        .notice-item.urgent {
+            background: rgba(255, 0, 0, 0.1);
+            border-left: 4px solid var(--accent);
+        }
+
+        .notice-item.promotion {
+            background: rgba(255, 215, 0, 0.1);
+            border-left: 4px solid var(--secondary);
+        }
+
+        /* NEW: Digital Receipt Styles */
+        .receipt-container {
+            background: var(--card-bg);
+            border-radius: 15px;
+            padding: 20px;
+            margin: 20px 0;
+            box-shadow: 0 5px 15px var(--shadow);
+        }
+
+        .receipt-header {
+            text-align: center;
+            border-bottom: 2px dashed var(--shadow);
+            padding-bottom: 15px;
+            margin-bottom: 15px;
+        }
+
+        .receipt-customer {
+            text-align: left;
+            margin-bottom: 15px;
+            padding: 10px;
             background: var(--light);
+            border-radius: 8px;
+        }
+
+        .receipt-items {
+            margin-bottom: 15px;
+        }
+
+        .receipt-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 0;
+            border-bottom: 1px solid var(--shadow);
+        }
+
+        .receipt-total {
+            display: flex;
+            justify-content: space-between;
+            font-weight: bold;
+            font-size: 1.2rem;
+            padding-top: 10px;
+            border-top: 2px dashed var(--shadow);
+        }
+
+        .receipt-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        /* NEW: Enhanced Button Styles */
+        .queue-btn {
+            padding: 12px 20px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: var(--transition);
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            font-size: 0.95rem;
+        }
+
+        .get-number-btn {
+            background: linear-gradient(135deg, var(--primary), #008000);
+            color: white;
+            box-shadow: 0 4px 8px rgba(0, 100, 0, 0.2);
+        }
+
+        .get-number-btn:hover {
+            background: linear-gradient(135deg, #008000, var(--primary));
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(0, 100, 0, 0.3);
+        }
+
+        .get-number-btn:active {
+            transform: translateY(0);
+        }
+
+        .check-status-btn {
+            background: linear-gradient(135deg, var(--secondary), #FFA500);
+            color: #333;
+            box-shadow: 0 4px 8px rgba(255, 215, 0, 0.3);
+        }
+
+        .check-status-btn:hover {
+            background: linear-gradient(135deg, #FFA500, var(--secondary));
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(255, 215, 0, 0.4);
+        }
+
+        .check-status-btn:active {
+            transform: translateY(0);
+        }
+
+        .demo-btn {
+            background: linear-gradient(135deg, #6c757d, #495057);
+            color: white;
+            box-shadow: 0 4px 8px rgba(108, 117, 125, 0.3);
+        }
+
+        .demo-btn:hover {
+            background: linear-gradient(135deg, #495057, #6c757d);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(108, 117, 125, 0.4);
+        }
+
+        .demo-btn:active {
+            transform: translateY(0);
         }
 
         /* Tab Content */
@@ -535,8 +681,8 @@
             padding: 12px 30px;
             border-radius: 50px;
             text-decoration: none;
-            font-weight: bold;
             transition: var(--transition);
+            font-weight: bold;
             box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
         }
 
@@ -1275,6 +1421,244 @@
             border-top: 1px solid rgba(255, 255, 255, 0.1);
         }
 
+        /* NEW: 3D Service Explorer Styles */
+        .service-explorer-3d {
+            perspective: 1000px;
+            height: 300px;
+            margin: 30px 0;
+        }
+
+        .service-3d-card {
+            width: 100%;
+            height: 100%;
+            position: relative;
+            transform-style: preserve-3d;
+            transition: transform 0.8s;
+        }
+
+        .service-3d-front, .service-3d-back {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            backface-visibility: hidden;
+            border-radius: 15px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            text-align: center;
+        }
+
+        .service-3d-front {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+        }
+
+        .service-3d-back {
+            background: var(--card-bg);
+            color: var(--text);
+            transform: rotateY(180deg);
+        }
+
+        .service-explorer-3d:hover .service-3d-card {
+            transform: rotateY(180deg);
+        }
+
+        /* NEW: Virtual Tour Styles */
+        .virtual-tour {
+            background: var(--card-bg);
+            border-radius: 15px;
+            padding: 20px;
+            margin: 20px 0;
+            box-shadow: 0 5px 15px var(--shadow);
+            text-align: center;
+        }
+
+        .tour-view {
+            height: 300px;
+            background: var(--light);
+            border-radius: 10px;
+            margin: 20px 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .tour-hotspot {
+            position: absolute;
+            width: 30px;
+            height: 30px;
+            background: var(--primary);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            cursor: pointer;
+            animation: pulse 2s infinite;
+        }
+
+        .tour-info {
+            background: var(--bg);
+            border-radius: 10px;
+            padding: 15px;
+            margin-top: 15px;
+            display: none;
+        }
+
+        .tour-info.show {
+            display: block;
+            animation: fadeIn 0.5s ease;
+        }
+
+        /* Notification Styles */
+        .notification-container {
+            position: relative;
+        }
+
+        .notification-bell {
+            position: relative;
+            cursor: pointer;
+            padding: 8px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 35px;
+            height: 35px;
+            transition: var(--transition);
+        }
+
+        .notification-bell:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
+
+        .notification-badge {
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            background: var(--accent);
+            color: white;
+            border-radius: 50%;
+            width: 18px;
+            height: 18px;
+            font-size: 0.7rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            display: none;
+        }
+
+        .notification-panel {
+            position: absolute;
+            top: 100%;
+            right: 0;
+            background: var(--card-bg);
+            border-radius: 8px;
+            box-shadow: 0 5px 15px var(--shadow);
+            width: 350px;
+            max-height: 400px;
+            overflow-y: auto;
+            display: none;
+            z-index: 1001;
+            margin-top: 5px;
+        }
+
+        .notification-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px;
+            border-bottom: 1px solid var(--shadow);
+        }
+
+        .notification-header h4 {
+            margin: 0;
+            color: var(--primary);
+        }
+
+        .mark-all-read-btn {
+            background: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 4px;
+            padding: 5px 10px;
+            cursor: pointer;
+            font-size: 0.8rem;
+            transition: var(--transition);
+        }
+
+        .mark-all-read-btn:hover {
+            background: var(--accent);
+        }
+
+        .notification-item {
+            padding: 15px;
+            border-bottom: 1px solid var(--shadow);
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            color: #dd700a;
+        }
+
+        .notification-item:last-child {
+            border-bottom: none;
+        }
+
+        .notification-item i {
+            color: var(--primary);
+            margin-top: 3px;
+        }
+
+        .notification-item p {
+            margin: 0;
+            flex: 1;
+        }
+
+        .notification-time {
+            font-size: 0.8rem;
+            color: var(--text);
+            opacity: 0.7;
+            margin-top: 5px;
+        }
+
+        .notification-actions {
+            display: flex;
+            gap: 5px;
+        }
+
+        .notification-close, .notification-pin {
+            background: none;
+            border: none;
+            cursor: pointer;
+            color: var(--text);
+            font-size: 0.8rem;
+        }
+
+        .notification-pinned {
+            background: rgba(255, 215, 0, 0.1);
+        }
+
+        .notification-read {
+            opacity: 0.7;
+        }
+
+        .no-notifications {
+            padding: 20px;
+            text-align: center;
+            color: var(--text);
+            opacity: 0.7;
+        }
+
+        .no-notifications i {
+            font-size: 2rem;
+            margin-bottom: 10px;
+        }
+
         /* Animations */
         @keyframes fadeIn {
             from { opacity: 0; }
@@ -1314,6 +1698,11 @@
             100% { transform: rotate(-405deg); }
         }
 
+        @keyframes scrollNotice {
+            0% { transform: translateY(100%); }
+            100% { transform: translateY(-100%); }
+        }
+
         /* Responsive Design */
         @media (max-width: 768px) {
             body {
@@ -1324,6 +1713,12 @@
                 flex-direction: column;
                 gap: 10px;
                 padding: 10px;
+            }
+            
+            .logo-section {
+                width: 100%;
+                justify-content: center;
+                text-align: center;
             }
             
             .controls-right {
@@ -1373,6 +1768,7 @@
             
             .hero p {
                 font-size: 1rem;
+                padding: 0 10px;
             }
             
             .gallery-slide img {
@@ -1394,13 +1790,29 @@
             
             .calendar-popup {
                 width: 280px;
+                right: -50px;
             }
             
-            /* Mobile controls layout */
             .mobile-controls {
                 display: flex;
                 gap: 10px;
                 align-items: center;
+            }
+            
+            .service-description {
+                font-size: 0.9rem;
+            }
+            
+            .service-price {
+                font-size: 1.1rem;
+            }
+            
+            .calculator-inputs {
+                grid-template-columns: 1fr;
+            }
+            
+            .receipt-actions {
+                flex-direction: column;
             }
         }
 
@@ -1433,7 +1845,6 @@
                 width: 280px;
             }
             
-            /* Mobile controls layout for small screens */
             .mobile-controls {
                 display: flex;
                 gap: 8px;
@@ -1441,6 +1852,73 @@
                 width: 100%;
                 justify-content: space-between;
             }
+            
+            .hero h2 {
+                font-size: 1.5rem;
+            }
+            
+            .hero p {
+                font-size: 0.9rem;
+            }
+            
+            .section-title {
+                font-size: 1.5rem;
+            }
+            
+            .service-header h3 {
+                font-size: 1.1rem;
+            }
+        }
+
+        /* Accessibility improvements */
+        .service-card, .nav-tab, .category-tab, .contact-btn, .cta-button {
+            outline: none;
+        }
+        
+        .service-card:focus, .nav-tab:focus, .category-tab:focus, .contact-btn:focus, .cta-button:focus {
+            box-shadow: 0 0 0 3px rgba(0, 100, 0, 0.3);
+        }
+        
+        /* High contrast improvements for better readability */
+        .service-description, .about-text p, .contact-details li div {
+            color: var(--text);
+            line-height: 1.6;
+        }
+        
+        .service-price {
+            font-weight: bold;
+            font-size: 1.2rem;
+        }
+        
+        /* Improved spacing for better visual hierarchy */
+        .tab-content {
+            padding: 30px 0;
+        }
+        
+        .service-card {
+            margin-bottom: 20px;
+        }
+        
+        /* Better contrast for calendar */
+        .calendar-date {
+            color: var(--text);
+            font-weight: 500;
+        }
+        
+        .calendar-date.current {
+            color: white;
+        }
+        
+        /* Improved form styling */
+        .form-group label {
+            color: var(--text);
+            margin-bottom: 8px;
+        }
+        
+        .form-group input, .form-group select, .form-group textarea {
+            border: 1px solid var(--shadow);
+            background: var(--bg);
+            color: var(--text);
         }
     </style>
 </head>
@@ -1490,6 +1968,10 @@
                             <div class="notification-badge" id="notificationBadge">0</div>
                         </div>
                         <div class="notification-panel" id="notificationPanel">
+                            <div class="notification-header">
+                                <h4>Notifications</h4>
+                                <button class="mark-all-read-btn" id="markAllReadBtn">Mark All Read</button>
+                            </div>
                             <div class="no-notifications" id="noNotifications">
                                 <i class="fas fa-bell-slash"></i>
                                 <p>No notifications yet</p>
@@ -1523,7 +2005,7 @@
         <div class="search-container">
             <div class="search-box">
                 <input type="text" id="searchInput" placeholder="Search for services...">
-                <button id="searchButton"><i class="fas fa-search"></i></button>
+                <button id="searchButton"><i class="fas fa-search"></i> Search</button>
             </div>
             <div class="search-results" id="searchResults">
                 <!-- Search results will appear here -->
@@ -1590,6 +2072,18 @@
                 <input type="email" id="customerEmail">
             </div>
             <div class="form-group">
+                <label for="universitySelect">Select University (Optional)</label>
+                <select id="universitySelect">
+                    <option value="">-- Select University --</option>
+                    <option value="kisii">Kisii University</option>
+                    <option value="jooust">Jaramogi Oginga Odinga University (JOOUST)</option>
+                    <option value="maseno">Maseno University</option>
+                    <option value="rongo">Rongo University</option>
+                    <option value="kenyatta">Kenyatta University</option>
+                    <option value="nairobi">University of Nairobi</option>
+                </select>
+            </div>
+            <div class="form-group">
                 <label for="serviceType">Service Type</label>
                 <input type="text" id="serviceType" readonly>
             </div>
@@ -1627,6 +2121,59 @@
                 <a href="#" class="cta-button" data-tab="services">Explore Our Services</a>
             </div>
 
+            <!-- NEW: Digital Loyalty Card -->
+            <div class="loyalty-card-container">
+                <h2><i class="fas fa-id-card"></i> Digital Loyalty Card</h2>
+                <p>Get a free service after 10 visits!</p>
+                <div class="loyalty-stamps" id="loyaltyStamps">
+                    <!-- Stamps will be generated by JavaScript -->
+                </div>
+                <div class="loyalty-rewards">
+                    <div class="loyalty-reward">
+                        <i class="fas fa-gift"></i>
+                        <span>Free 30min browsing after 5 stamps</span>
+                    </div>
+                    <div class="loyalty-reward">
+                        <i class="fas fa-gift"></i>
+                        <span>50% off printing after 8 stamps</span>
+                    </div>
+                    <div class="loyalty-reward">
+                        <i class="fas fa-gift"></i>
+                        <span>Free CV formatting after 10 stamps</span>
+                    </div>
+                </div>
+                <!-- Add Stamp Demo Button -->
+                <button class="queue-btn demo-btn" id="addStampDemo" style="margin-top: 20px;">
+                    <i class="fas fa-plus-circle"></i> Add Stamp (Demo)
+                </button>
+            </div>
+
+            <!-- NEW: Service Speed Calculator -->
+            <div class="calculator-container">
+                <h2><i class="fas fa-calculator"></i> Service Speed Calculator</h2>
+                <div class="calculator-inputs">
+                    <div class="form-group">
+                        <label for="serviceSelect">Service Type</label>
+                        <select id="serviceSelect">
+                            <option value="typing">Assignment Typing</option>
+                            <option value="printing">Printing</option>
+                            <option value="scanning">Scanning</option>
+                            <option value="cv">CV Writing</option>
+                            <option value="kra">KRA Registration</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="quantityInput">Quantity</label>
+                        <input type="number" id="quantityInput" min="1" value="1">
+                    </div>
+                </div>
+                <div class="calculator-result">
+                    <h4>Estimated Results</h4>
+                    <div class="calculator-price" id="calculatedPrice">KSh 0</div>
+                    <div class="calculator-time" id="calculatedTime">Time: 0 minutes</div>
+                </div>
+            </div>
+
             <div class="services-preview">
                 <h2 class="section-title">Our Popular Services</h2>
                 <div class="services-grid" id="servicesPreview">
@@ -1634,6 +2181,25 @@
                 </div>
                 <div class="view-all-container">
                     <button class="view-all-btn" data-tab="services">View All Services</button>
+                </div>
+            </div>
+
+            <!-- NEW: Digital Notice Board -->
+            <div class="notice-board">
+                <h2><i class="fas fa-bullhorn"></i> Digital Notice Board</h2>
+                <div class="notice-scroll" id="noticeScroll">
+                    <div class="notice-item urgent">
+                        <h4><i class="fas fa-exclamation-triangle"></i> Internet Maintenance</h4>
+                        <p>Internet services will be temporarily unavailable today from 2 PM to 4 PM for maintenance.</p>
+                    </div>
+                    <div class="notice-item promotion">
+                        <h4><i class="fas fa-gift"></i> Student Discount</h4>
+                        <p>All students get 20% off on printing services this week! Show your student ID.</p>
+                    </div>
+                    <div class="notice-item">
+                        <h4><i class="fas fa-info-circle"></i> New Service Available</h4>
+                        <p>We now offer professional video editing services starting from KSh 1000.</p>
+                    </div>
                 </div>
             </div>
 
@@ -1668,6 +2234,44 @@
                     <img src="https://images.unsplash.com/photo-1522071820081-009f0129c71c?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80" alt="Cyber Cafe Interior">
                 </div>
             </div>
+
+            <!-- NEW: Virtual Tour -->
+            <div class="virtual-tour">
+                <h2><i class="fas fa-vr-cardboard"></i> Virtual Tour</h2>
+                <p>Take a virtual tour of our cyber cafe facilities</p>
+                <div class="tour-view">
+                    <div class="tour-hotspot" style="top: 30%; left: 20%;" data-info="printing">
+                        <i class="fas fa-print"></i>
+                    </div>
+                    <div class="tour-hotspot" style="top: 60%; left: 50%;" data-info="computers">
+                        <i class="fas fa-desktop"></i>
+                    </div>
+                    <div class="tour-hotspot" style="top: 40%; left: 80%;" data-info="helpdesk">
+                        <i class="fas fa-concierge-bell"></i>
+                    </div>
+                    <img src="https://images.unsplash.com/photo-1522071820081-009f0129c71c?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80" alt="Cyber Cafe" style="width: 100%; height: 100%; object-fit: cover;">
+                </div>
+                <div class="tour-info" id="tourInfo">
+                    <!-- Tour info will be displayed here -->
+                </div>
+            </div>
+
+            <!-- NEW: 3D Service Explorer -->
+            <div class="service-explorer-3d">
+                <div class="service-3d-card">
+                    <div class="service-3d-front">
+                        <i class="fas fa-print" style="font-size: 3rem; margin-bottom: 20px;"></i>
+                        <h3>Printing Services</h3>
+                        <p>Click to explore</p>
+                    </div>
+                    <div class="service-3d-back">
+                        <h3>Printing Services</h3>
+                        <p>High-quality color and B&W printing</p>
+                        <p>From KSh 5 per page</p>
+                        <button class="detail-btn" style="margin-top: 15px;">Learn More</button>
+                    </div>
+                </div>
+            </div>
         </div>
 
         <!-- Services Tab -->
@@ -1688,6 +2292,34 @@
                 </div>
                 <div class="view-all-container">
                     <button class="view-all-btn" id="viewAllBtn">View All Services</button>
+                </div>
+            </div>
+
+            <!-- NEW: Digital Receipt System -->
+            <div class="receipt-container">
+                <h2><i class="fas fa-receipt"></i> Digital Receipts</h2>
+                <div class="receipt-header">
+                    <h3>Pamoja Cyber Cafe</h3>
+                    <p>Nairobi CBD, Moi Avenue</p>
+                    <p>Receipt #: <span id="receiptNumber">PC-2025-001</span></p>
+                </div>
+                <div class="receipt-customer" id="receiptCustomer">
+                    <!-- Customer details will be displayed here -->
+                </div>
+                <div class="receipt-items" id="receiptItems">
+                    <!-- Receipt items will be populated here -->
+                </div>
+                <div class="receipt-total">
+                    <span>Total</span>
+                    <span id="receiptTotal">KSh 0</span>
+                </div>
+                <div class="receipt-actions">
+                    <button class="queue-btn get-number-btn" id="downloadReceipt" disabled>
+                        <i class="fas fa-download"></i> Download Receipt
+                    </button>
+                    <button class="queue-btn check-status-btn" id="emailReceipt" disabled>
+                        <i class="fas fa-envelope"></i> Email Receipt
+                    </button>
                 </div>
             </div>
         </div>
@@ -1785,6 +2417,58 @@
                         </li>
                     </ul>
                     
+                    <h3 style="margin-top: 30px;">Our University Agents</h3>
+                    <ul class="contact-details">
+                        <li>
+                            <i class="fas fa-user"></i>
+                            <div>
+                                <strong>Kisii University</strong><br>
+                                Agent: Milly<br>
+                                Contact: 0715 529 040
+                            </div>
+                        </li>
+                        <li>
+                            <i class="fas fa-user"></i>
+                            <div>
+                                <strong>Jaramogi Oginga Odinga University (JOOUST)</strong><br>
+                                Agent: cynthia<br>
+                                Contact: 0794 317  877
+                            </div>
+                        </li>
+                        <li>
+                            <i class="fas fa-user"></i>
+                            <div>
+                                <strong>Maseno University</strong><br>
+                                Agent: David Omondi<br>
+                                Contact: 0111 923 477
+                            </div>
+                        </li>
+                        <li>
+                            <i class="fas fa-user"></i>
+                            <div>
+                                <strong>Rongo University</strong><br>
+                                Agent: Grace Achieng<br>
+                                Contact: 0111 923 477
+                            </div>
+                        </li>
+                        <li>
+                            <i class="fas fa-user"></i>
+                            <div>
+                                <strong>Kenyatta University</strong><br>
+                                Agent: Peter Kamau<br>
+                                Contact: 0111 923 477
+                            </div>
+                        </li>
+                        <li>
+                            <i class="fas fa-user"></i>
+                            <div>
+                                <strong>University of Nairobi</strong><br>
+                                Agent: Mary Wanjiku<br>
+                                Contact: 0111 923 477
+                            </div>
+                        </li>
+                    </ul>
+                    
                     <div class="contact-buttons">
                         <a href="tel:+254711923477" class="contact-btn">
                             <i class="fas fa-phone"></i> Call Us
@@ -1814,6 +2498,18 @@
                         <div class="form-group">
                             <label for="contactEmail">Email Address</label>
                             <input type="email" id="contactEmail">
+                        </div>
+                        <div class="form-group">
+                            <label for="contactUniversity">University (Optional)</label>
+                            <select id="contactUniversity">
+                                <option value="">-- Select University --</option>
+                                <option value="kisii">Kisii University</option>
+                                <option value="jooust">Jaramogi Oginga Odinga University (JOOUST)</option>
+                                <option value="maseno">Maseno University</option>
+                                <option value="rongo">Rongo University</option>
+                                <option value="kenyatta">Kenyatta University</option>
+                                <option value="nairobi">University of Nairobi</option>
+                            </select>
                         </div>
                         <div class="form-group">
                             <label for="contactMessage">Message</label>
@@ -1913,7 +2609,9 @@
                 icon: "fas fa-file-alt",
                 category: "student",
                 requiresId: false,
-                image: "https://images.unsplash.com/photo-1586075010923-2dd4570fb338?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80"
+                image: "https://images.unsplash.com/photo-1586075010923-2dd4570fb338?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80",
+                calcPrice: 50,
+                calcTime: 10
             },
             {
                 id: 2,
@@ -1923,7 +2621,9 @@
                 icon: "fas fa-book",
                 category: "student",
                 requiresId: false,
-                image: "https://images.unsplash.com/photo-1456513080510-7bf3a84b82f8?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80"
+                image: "https://images.unsplash.com/photo-1456513080510-7bf3a84b82f8?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80",
+                calcPrice: 200,
+                calcTime: 30
             },
             {
                 id: 3,
@@ -1934,7 +2634,9 @@
                 category: "government",
                 requiresId: true,
                 requiresKra: true,
-                image: "https://images.unsplash.com/photo-1554224155-6726b3ff858f?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80"
+                image: "https://images.unsplash.com/photo-1554224155-6726b3ff858f?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80",
+                calcPrice: 300,
+                calcTime: 45
             },
             {
                 id: 4,
@@ -1945,7 +2647,9 @@
                 category: "government",
                 requiresId: true,
                 requiresKra: false,
-                image: "https://images.unsplash.com/photo-1569336415960-a05bd7d8b1e3?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80"
+                image: "https://images.unsplash.com/photo-1569336415960-a05bd7d8b1e3?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80",
+                calcPrice: 500,
+                calcTime: 60
             },
             {
                 id: 5,
@@ -1955,7 +2659,9 @@
                 icon: "fas fa-print",
                 category: "individual",
                 requiresId: false,
-                image: "https://images.unsplash.com/photo-1558655146-9f40138edfeb?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80"
+                image: "https://images.unsplash.com/photo-1558655146-9f40138edfeb?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80",
+                calcPrice: 30,
+                calcTime: 2
             },
             {
                 id: 6,
@@ -1965,7 +2671,9 @@
                 icon: "fas fa-scanner",
                 category: "individual",
                 requiresId: false,
-                image: "https://images.unsplash.com/photo-1581094794329-c8112a89af12?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80"
+                image: "https://images.unsplash.com/photo-1581094794329-c8112a89af12?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80",
+                calcPrice: 10,
+                calcTime: 1
             },
             {
                 id: 7,
@@ -1975,7 +2683,9 @@
                 icon: "fas fa-file-contract",
                 category: "student",
                 requiresId: false,
-                image: "https://images.unsplash.com/photo-1586281380349-632531db7ed4?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80"
+                image: "https://images.unsplash.com/photo-1586281380349-632531db7ed4?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80",
+                calcPrice: 500,
+                calcTime: 60
             },
             {
                 id: 8,
@@ -1986,7 +2696,9 @@
                 category: "government",
                 requiresId: true,
                 requiresKra: true,
-                image: "https://images.unsplash.com/photo-1556761175-b413da4baf72?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80"
+                image: "https://images.unsplash.com/photo-1556761175-b413da4baf72?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80",
+                calcPrice: 800,
+                calcTime: 90
             },
             {
                 id: 9,
@@ -1996,1053 +2708,1445 @@
                 icon: "fas fa-wifi",
                 category: "individual",
                 requiresId: false,
-                image: "https://images.unsplash.com/photo-1547658719-da2b51169166?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80"
-            },
-            {
-                id: 10,
-                name: "Thesis Binding",
-                description: "Professional thesis and dissertation binding services with various binding options. We ensure your academic work is presented professionally.",
-                price: "KSh 800",
-                icon: "fas fa-book-open",
-                category: "student",
-                requiresId: false,
-                image: "https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80"
-            },
-            {
-                id: 11,
-                name: "Online Application Assistance",
-                description: "Help with university, college, and scholarship online applications. We guide you through the entire application process.",
-                price: "KSh 300",
-                icon: "fas fa-laptop",
-                category: "student",
-                requiresId: false,
-                image: "https://images.unsplash.com/photo-1516321318423-f06f85e504b3?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80"
-            },
-            {
-                id: 12,
-                name: "NHIF Registration",
-                description: "Assistance with NHIF registration and contribution management. We help you navigate the NHIF online portal and registration process.",
-                price: "KSh 200",
-                icon: "fas fa-heartbeat",
-                category: "government",
-                requiresId: true,
-                requiresKra: false,
-                image: "https://images.unsplash.com/photo-1576091160399-112ba8d25d1f?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80"
-            },
-            {
-                id: 13,
-                name: "NSSF Online Services",
-                description: "Help with NSSF registration, statement checking, and claims processing. We assist with all NSSF-related online services.",
-                price: "KSh 250",
-                icon: "fas fa-hand-holding-usd",
-                category: "government",
-                requiresId: true,
-                requiresKra: false,
-                image: "https://images.unsplash.com/photo-1554224155-8d04cb21cd6c?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80"
-            },
-            {
-                id: 14,
-                name: "Photocopy (B&W)",
-                description: "High-quality black and white photocopying services for all your document needs.",
-                price: "KSh 5/page",
-                icon: "fas fa-copy",
-                category: "individual",
-                requiresId: false,
-                image: "https://images.unsplash.com/photo-1581093458791-9d67b3d5d6c1?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80"
-            },
-            {
-                id: 15,
-                name: "Lamination",
-                description: "Document and ID card lamination for protection and durability. We offer various lamination sizes and thickness options.",
-                price: "KSh 50",
-                icon: "fas fa-id-badge",
-                category: "individual",
-                requiresId: false,
-                image: "https://images.unsplash.com/photo-1581092580497-e0d23cbdf1dc?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80"
-            },
-            {
-                id: 16,
-                name: "PPT Creation",
-                description: "Professional PowerPoint presentation design with templates and animations. We create visually appealing presentations for all purposes.",
-                price: "KSh 400",
-                icon: "fas fa-desktop",
-                category: "student",
-                requiresId: false,
-                image: "https://images.unsplash.com/photo-1547658719-da2b51169166?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80"
-            },
-            {
-                id: 17,
-                name: "Land Search & Rates",
-                description: "Assistance with land search processes and land rates payment. We help you navigate the land registry and payment systems.",
-                price: "KSh 600",
-                icon: "fas fa-map-marked-alt",
-                category: "government",
-                requiresId: true,
-                requiresKra: true,
-                image: "https://images.unsplash.com/photo-1560518883-ce09059eeffa?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80"
-            },
-            {
-                id: 18,
-                name: "Photo Printing",
-                description: "High-quality photo printing in various sizes. We use professional photo paper for vibrant and long-lasting prints.",
-                price: "KSh 50-200",
-                icon: "fas fa-images",
-                category: "individual",
-                requiresId: false,
-                image: "https://images.unsplash.com/photo-1516035069371-29a1b244cc32?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80"
-            },
-            {
-                id: 19,
-                name: "Graphic Design",
-                description: "Custom graphic design services for logos, flyers, banners, and social media content. Professional designs to enhance your brand.",
-                price: "KSh 800-2000",
-                icon: "fas fa-paint-brush",
-                category: "business",
-                requiresId: false,
-                image: "https://images.unsplash.com/photo-1561070791-2526d30994b5?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80"
-            },
-            {
-                id: 20,
-                name: "Email Setup",
-                description: "Professional email setup for individuals and businesses. We help you create and configure email accounts on various platforms.",
-                price: "KSh 300",
-                icon: "fas fa-envelope",
-                category: "business",
-                requiresId: false,
-                image: "https://images.unsplash.com/photo-1545235617-9465d2a55698?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80"
-            },
-            {
-                id: 21,
-                name: "Website Development",
-                description: "Custom website design and development for businesses and individuals. Responsive websites optimized for all devices.",
-                price: "KSh 5000+",
-                icon: "fas fa-code",
-                category: "business",
-                requiresId: false,
-                image: "https://images.unsplash.com/photo-1555066931-4365d14bab8c?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80"
-            },
-            {
-                id: 22,
-                name: "Social Media Management",
-                description: "Professional social media account setup and management services. We help businesses establish and grow their online presence.",
-                price: "KSh 1500/month",
-                icon: "fas fa-hashtag",
-                category: "business",
-                requiresId: false,
-                image: "https://images.unsplash.com/photo-1611162617474-5b21e879e113?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80"
-            },
-            {
-                id: 23,
-                name: "Video Editing",
-                description: "Professional video editing services for personal and business videos. We can edit, enhance, and add effects to your videos.",
-                price: "KSh 1000-5000",
-                icon: "fas fa-video",
-                category: "business",
-                requiresId: false,
-                image: "https://images.unsplash.com/photo-1591267990531-1e1d1b5c6c9a?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80"
-            },
-            {
-                id: 24,
-                name: "Online Tax Filing",
-                description: "Assistance with online tax filing for individuals and businesses. We help you navigate the KRA iTax platform.",
-                price: "KSh 400",
-                icon: "fas fa-file-invoice-dollar",
-                category: "government",
-                requiresId: true,
-                requiresKra: true,
-                image: "https://images.unsplash.com/photo-1554224155-8d04cb21cd6c?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80"
-            },
-            {
-                id: 25,
-                name: "Document Translation",
-                description: "Professional document translation services in multiple languages. We ensure accurate and culturally appropriate translations.",
-                price: "KSh 100/page",
-                icon: "fas fa-language",
-                category: "individual",
-                requiresId: false,
-                image: "https://images.unsplash.com/photo-1589652717521-10c0d092dea9?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80"
+                image: "https://images.unsplash.com/photo-1547658719-da2b51169166?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80",
+                calcPrice: 1,
+                calcTime: 1
             }
         ];
 
-        // Theme Toggle
-        const themeToggle = document.getElementById('themeToggle');
-        const themeIcon = themeToggle.querySelector('i');
-
-        themeToggle.addEventListener('click', () => {
-            document.body.classList.toggle('dark-theme');
-            
-            if (document.body.classList.contains('dark-theme')) {
-                themeIcon.className = 'fas fa-sun';
-            } else {
-                themeIcon.className = 'fas fa-moon';
+        // University agents data - Updated with agent names
+        const universityAgents = {
+            "kisii": {
+                name: "Kisii University",
+                agentName: "Milly",
+                phone: "0715529040",
+                whatsapp: "254715529040"
+            },
+            "jooust": {
+                name: "Jaramogi Oginga Odinga University (JOOUST)",
+                agentName: "cynthia",
+                phone: "0794317877",
+                whatsapp: "254794317877"
+            },
+            "maseno": {
+                name: "Maseno University",
+                agentName: "David Omondi",
+                phone: "0713456789",
+                whatsapp: "254713456789"
+            },
+            "rongo": {
+                name: "Rongo University",
+                agentName: "Grace Achieng",
+                phone: "0111923477",
+                whatsapp: "254111923477"
+            },
+            "kenyatta": {
+                name: "Kenyatta University",
+                agentName: "Peter Kamau",
+                phone: "0111923477",
+                whatsapp: "254111923477"
+            },
+            "nairobi": {
+                name: "University of Nairobi",
+                agentName: "Mary Wanjiku",
+                phone: "0111923477",
+                whatsapp: "254111923477"
             }
+        };
+
+        // Initialize all functionality when DOM is loaded
+        document.addEventListener('DOMContentLoaded', function() {
+            initializeThemeToggle();
+            initializeClockAndCalendar();
+            initializeNavigation();
+            initializeNotifications();
+            initializeSearch();
+            initializeServices();
+            initializeServiceModal();
+            initializeRequestForm();
+            initializeGallery();
+            initializeContactForm();
+            initializeWhatsApp();
+            
+            // New features initialization
+            initializeLoyaltyCard();
+            initializeServiceCalculator();
+            initializeVirtualTour();
+            initializeReceiptSystem();
+            initializeNoticeBoard();
+            initialize3DExplorer();
         });
 
-        // Real-time Clock and Calendar - Fixed to prevent closing on date clicks
-        const clockContainer = document.getElementById('clockContainer');
-        const realTimeClock = document.getElementById('realTimeClock');
-        const calendarPopup = document.getElementById('calendarPopup');
-        const calendarMonth = document.getElementById('calendarMonth');
-        const calendarDays = document.getElementById('calendarDays');
-        const prevMonthBtn = document.getElementById('prevMonth');
-        const nextMonthBtn = document.getElementById('nextMonth');
-        const calendarClose = document.getElementById('calendarClose');
-        const dateNotesContainer = document.getElementById('dateNotesContainer');
-        const selectedDate = document.getElementById('selectedDate');
-        const dateNotesInput = document.getElementById('dateNotesInput');
-        const saveNoteBtn = document.getElementById('saveNoteBtn');
-        const successAnimation = document.getElementById('successAnimation');
+        // ===== EXISTING FUNCTIONALITY =====
 
-        let currentDate = new Date();
-        let currentMonth = currentDate.getMonth();
-        let currentYear = currentDate.getFullYear();
-        let selectedCalendarDate = null;
-        let dateNotes = JSON.parse(localStorage.getItem('cyberCafeDateNotes')) || {};
+        function initializeThemeToggle() {
+            const themeToggle = document.getElementById('themeToggle');
+            const themeIcon = themeToggle.querySelector('i');
 
-        function updateClock() {
-            const now = new Date();
-            const options = { 
-                weekday: 'short',
-                year: 'numeric',
-                month: 'short',
-                day: 'numeric',
-                hour: '2-digit',
-                minute: '2-digit',
-                second: '2-digit',
-                timeZone: 'Africa/Nairobi'
-            };
-            const dateString = now.toLocaleDateString('en-KE', options);
-            realTimeClock.textContent = dateString;
+            themeToggle.addEventListener('click', () => {
+                document.body.classList.toggle('dark-theme');
+                
+                if (document.body.classList.contains('dark-theme')) {
+                    themeIcon.className = 'fas fa-sun';
+                    localStorage.setItem('theme', 'dark');
+                } else {
+                    themeIcon.className = 'fas fa-moon';
+                    localStorage.setItem('theme', 'light');
+                }
+            });
+
+            // Load saved theme
+            const savedTheme = localStorage.getItem('theme');
+            if (savedTheme === 'dark') {
+                document.body.classList.add('dark-theme');
+                themeIcon.className = 'fas fa-sun';
+            }
         }
 
-        function renderCalendar(month, year) {
-            const monthNames = ["January", "February", "March", "April", "May", "June",
-                "July", "August", "September", "October", "November", "December"];
-            
-            calendarMonth.textContent = `${monthNames[month]} ${year}`;
-            
-            // Clear previous calendar
-            calendarDays.innerHTML = '';
-            
-            // Add day headers
-            const dayNames = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
-            dayNames.forEach(day => {
-                const dayElement = document.createElement('div');
-                dayElement.className = 'calendar-day';
-                dayElement.textContent = day;
-                calendarDays.appendChild(dayElement);
-            });
-            
-            // Get first day of month and number of days
-            const firstDay = new Date(year, month, 1).getDay();
-            const daysInMonth = new Date(year, month + 1, 0).getDate();
-            
-            // Add empty cells for days before the first day of the month
-            for (let i = 0; i < firstDay; i++) {
-                const emptyCell = document.createElement('div');
-                emptyCell.className = 'calendar-date';
-                calendarDays.appendChild(emptyCell);
+        function initializeClockAndCalendar() {
+            const clockContainer = document.getElementById('clockContainer');
+            const realTimeClock = document.getElementById('realTimeClock');
+            const calendarPopup = document.getElementById('calendarPopup');
+            const calendarMonth = document.getElementById('calendarMonth');
+            const calendarDays = document.getElementById('calendarDays');
+            const prevMonthBtn = document.getElementById('prevMonth');
+            const nextMonthBtn = document.getElementById('nextMonth');
+            const calendarClose = document.getElementById('calendarClose');
+            const selectedDate = document.getElementById('selectedDate');
+            const dateNotesInput = document.getElementById('dateNotesInput');
+            const saveNoteBtn = document.getElementById('saveNoteBtn');
+            const successAnimation = document.getElementById('successAnimation');
+
+            let currentDate = new Date();
+            let currentMonth = currentDate.getMonth();
+            let currentYear = currentDate.getFullYear();
+            let selectedCalendarDate = null;
+            let dateNotes = JSON.parse(localStorage.getItem('cyberCafeDateNotes')) || {};
+
+            function updateClock() {
+                const now = new Date();
+                const options = { 
+                    weekday: 'short',
+                    year: 'numeric',
+                    month: 'short',
+                    day: 'numeric',
+                    hour: '2-digit',
+                    minute: '2-digit',
+                    second: '2-digit',
+                    timeZone: 'Africa/Nairobi'
+                };
+                const dateString = now.toLocaleDateString('en-KE', options);
+                realTimeClock.textContent = dateString;
             }
-            
-            // Add days of the month
-            const today = new Date();
-            for (let day = 1; day <= daysInMonth; day++) {
-                const dateElement = document.createElement('div');
-                dateElement.className = 'calendar-date';
-                dateElement.textContent = day;
+
+            function renderCalendar(month, year) {
+                const monthNames = ["January", "February", "March", "April", "May", "June",
+                    "July", "August", "September", "October", "November", "December"];
                 
-                // Highlight current date
-                if (day === today.getDate() && month === today.getMonth() && year === today.getFullYear()) {
-                    dateElement.classList.add('current');
-                }
+                calendarMonth.textContent = `${monthNames[month]} ${year}`;
                 
-                // Check if date has notes
-                const dateKey = `${year}-${month+1}-${day}`;
-                if (dateNotes[dateKey]) {
-                    dateElement.classList.add('has-note');
-                }
+                calendarDays.innerHTML = '';
                 
-                dateElement.addEventListener('click', (e) => {
-                    e.stopPropagation(); // Prevent event from bubbling up
-                    
-                    // Remove selected class from all dates
-                    document.querySelectorAll('.calendar-date').forEach(d => {
-                        d.classList.remove('selected');
-                    });
-                    
-                    // Add selected class to clicked date
-                    dateElement.classList.add('selected');
-                    
-                    // Store selected date
-                    selectedCalendarDate = new Date(year, month, day);
-                    
-                    // Update selected date text
-                    selectedDate.textContent = selectedCalendarDate.toLocaleDateString('en-KE', { 
-                        weekday: 'long', 
-                        year: 'numeric', 
-                        month: 'long', 
-                        day: 'numeric' 
-                    });
-                    
-                    // Load existing notes if any
-                    dateNotesInput.value = dateNotes[dateKey] || '';
+                const dayNames = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+                dayNames.forEach(day => {
+                    const dayElement = document.createElement('div');
+                    dayElement.className = 'calendar-day';
+                    dayElement.textContent = day;
+                    calendarDays.appendChild(dayElement);
                 });
                 
-                calendarDays.appendChild(dateElement);
-            }
-        }
-
-        clockContainer.addEventListener('click', (e) => {
-            e.stopPropagation(); // Prevent event from bubbling up
-            calendarPopup.classList.toggle('show');
-        });
-
-        calendarClose.addEventListener('click', (e) => {
-            e.stopPropagation(); // Prevent event from bubbling up
-            calendarPopup.classList.remove('show');
-        });
-
-        prevMonthBtn.addEventListener('click', (e) => {
-            e.stopPropagation(); // Prevent event from bubbling up
-            currentMonth--;
-            if (currentMonth < 0) {
-                currentMonth = 11;
-                currentYear--;
-            }
-            renderCalendar(currentMonth, currentYear);
-        });
-
-        nextMonthBtn.addEventListener('click', (e) => {
-            e.stopPropagation(); // Prevent event from bubbling up
-            currentMonth++;
-            if (currentMonth > 11) {
-                currentMonth = 0;
-                currentYear++;
-            }
-            renderCalendar(currentMonth, currentYear);
-        });
-
-        saveNoteBtn.addEventListener('click', (e) => {
-            e.stopPropagation(); // Prevent event from bubbling up
-            
-            if (selectedCalendarDate) {
-                const dateKey = `${selectedCalendarDate.getFullYear()}-${selectedCalendarDate.getMonth()+1}-${selectedCalendarDate.getDate()}`;
-                const noteText = dateNotesInput.value.trim();
+                const firstDay = new Date(year, month, 1).getDay();
+                const daysInMonth = new Date(year, month + 1, 0).getDate();
                 
-                if (noteText) {
-                    // Save note
-                    dateNotes[dateKey] = noteText;
-                    localStorage.setItem('cyberCafeDateNotes', JSON.stringify(dateNotes));
+                for (let i = 0; i < firstDay; i++) {
+                    const emptyCell = document.createElement('div');
+                    emptyCell.className = 'calendar-date';
+                    calendarDays.appendChild(emptyCell);
+                }
+                
+                const today = new Date();
+                for (let day = 1; day <= daysInMonth; day++) {
+                    const dateElement = document.createElement('div');
+                    dateElement.className = 'calendar-date';
+                    dateElement.textContent = day;
                     
-                    // Add notification
-                    const now = new Date();
-                    const timeString = now.toLocaleTimeString('en-KE', { hour: '2-digit', minute: '2-digit' });
-                    const dateString = now.toLocaleDateString('en-KE', { weekday: 'short', month: 'short', day: 'numeric' });
+                    if (day === today.getDate() && month === today.getMonth() && year === today.getFullYear()) {
+                        dateElement.classList.add('current');
+                    }
                     
-                    const notificationMessage = `Note added for ${selectedCalendarDate.toLocaleDateString('en-KE', { month: 'short', day: 'numeric' })}: ${noteText.substring(0, 50)}${noteText.length > 50 ? '...' : ''}`;
-                    const newNotification = {
-                        message: notificationMessage,
-                        time: `${timeString} • ${dateString}`,
-                        pinned: false
-                    };
-                    
-                    notifications.unshift(newNotification);
-                    notificationCount = notifications.length;
-                    
-                    // Save to localStorage
-                    localStorage.setItem('cyberCafeNotifications', JSON.stringify(notifications));
-                    
-                    // Update UI
-                    updateNotificationBadge();
-                    renderNotifications();
-                    
-                    // Re-render calendar to show updated date styling
-                    renderCalendar(currentMonth, currentYear);
-                    
-                    // Show success animation
-                    successAnimation.classList.add('show');
-                    setTimeout(() => {
-                        successAnimation.classList.remove('show');
-                    }, 3000);
-                    
-                    // Close the calendar popup
-                    calendarPopup.classList.remove('show');
-                } else {
-                    // Remove note if empty
+                    const dateKey = `${year}-${month+1}-${day}`;
                     if (dateNotes[dateKey]) {
-                        delete dateNotes[dateKey];
+                        dateElement.classList.add('has-note');
+                    }
+                    
+                    dateElement.addEventListener('click', (e) => {
+                        e.stopPropagation();
+                        
+                        document.querySelectorAll('.calendar-date').forEach(d => {
+                            d.classList.remove('selected');
+                        });
+                        
+                        dateElement.classList.add('selected');
+                        selectedCalendarDate = new Date(year, month, day);
+                        
+                        selectedDate.textContent = selectedCalendarDate.toLocaleDateString('en-KE', { 
+                            weekday: 'long', 
+                            year: 'numeric', 
+                            month: 'long', 
+                            day: 'numeric' 
+                        });
+                        
+                        dateNotesInput.value = dateNotes[dateKey] || '';
+                    });
+                    
+                    calendarDays.appendChild(dateElement);
+                }
+            }
+
+            clockContainer.addEventListener('click', (e) => {
+                e.stopPropagation();
+                calendarPopup.classList.toggle('show');
+            });
+
+            calendarClose.addEventListener('click', (e) => {
+                e.stopPropagation();
+                calendarPopup.classList.remove('show');
+            });
+
+            prevMonthBtn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                currentMonth--;
+                if (currentMonth < 0) {
+                    currentMonth = 11;
+                    currentYear--;
+                }
+                renderCalendar(currentMonth, currentYear);
+            });
+
+            nextMonthBtn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                currentMonth++;
+                if (currentMonth > 11) {
+                    currentMonth = 0;
+                    currentYear++;
+                }
+                renderCalendar(currentMonth, currentYear);
+            });
+
+            saveNoteBtn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                
+                if (selectedCalendarDate) {
+                    const dateKey = `${selectedCalendarDate.getFullYear()}-${selectedCalendarDate.getMonth()+1}-${selectedCalendarDate.getDate()}`;
+                    const noteText = dateNotesInput.value.trim();
+                    
+                    if (noteText) {
+                        dateNotes[dateKey] = noteText;
                         localStorage.setItem('cyberCafeDateNotes', JSON.stringify(dateNotes));
                         
-                        // Re-render calendar to remove date styling
+                        const now = new Date();
+                        const timeString = now.toLocaleTimeString('en-KE', { hour: '2-digit', minute: '2-digit' });
+                        const dateString = now.toLocaleDateString('en-KE', { weekday: 'short', month: 'short', day: 'numeric' });
+                        
+                        const notificationMessage = `Note added for ${selectedCalendarDate.toLocaleDateString('en-KE', { month: 'short', day: 'numeric' })}`;
+                        addNotification(notificationMessage, `${timeString} • ${dateString}`);
+                        
                         renderCalendar(currentMonth, currentYear);
                         
-                        alert('Note removed!');
+                        successAnimation.classList.add('show');
+                        setTimeout(() => {
+                            successAnimation.classList.remove('show');
+                        }, 3000);
+                        
+                        calendarPopup.classList.remove('show');
+                    } else {
+                        if (dateNotes[dateKey]) {
+                            delete dateNotes[dateKey];
+                            localStorage.setItem('cyberCafeDateNotes', JSON.stringify(dateNotes));
+                            renderCalendar(currentMonth, currentYear);
+                            showNotification('Note removed!', 'info');
+                        }
+                    }
+                }
+            });
+
+            // Close calendar when clicking outside
+            document.addEventListener('click', (e) => {
+                if (!clockContainer.contains(e.target) && !calendarPopup.contains(e.target)) {
+                    calendarPopup.classList.remove('show');
+                }
+            });
+
+            calendarPopup.addEventListener('click', (e) => {
+                e.stopPropagation();
+            });
+
+            setInterval(updateClock, 1000);
+            updateClock();
+            renderCalendar(currentDate.getMonth(), currentDate.getFullYear());
+        }
+
+        function initializeNavigation() {
+            const navTabs = document.querySelectorAll('.nav-tab');
+            const tabContents = document.querySelectorAll('.tab-content');
+
+            navTabs.forEach(tab => {
+                tab.addEventListener('click', () => {
+                    const tabId = tab.getAttribute('data-tab');
+                    
+                    navTabs.forEach(t => t.classList.remove('active'));
+                    tabContents.forEach(tc => tc.classList.remove('active'));
+                    
+                    tab.classList.add('active');
+                    document.getElementById(`${tabId}-tab`).classList.add('active');
+                    
+                    // Close any open modals or panels when switching tabs
+                    document.getElementById('searchPanel').classList.remove('show');
+                    document.getElementById('serviceModal').classList.remove('show');
+                    document.getElementById('requestForm').classList.remove('show');
+                });
+            });
+
+            // Footer navigation
+            document.querySelectorAll('footer a[data-tab]').forEach(link => {
+                link.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    const tabName = link.getAttribute('data-tab');
+                    document.querySelector(`.nav-tab[data-tab="${tabName}"]`).click();
+                });
+            });
+
+            // CTA buttons navigation
+            document.querySelectorAll('.cta-button, .view-all-btn').forEach(button => {
+                button.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    const tabName = button.getAttribute('data-tab');
+                    if (tabName) {
+                        document.querySelector(`.nav-tab[data-tab="${tabName}"]`).click();
+                    }
+                });
+            });
+        }
+
+        function initializeNotifications() {
+            const notificationBell = document.getElementById('notificationBell');
+            const notificationPanel = document.getElementById('notificationPanel');
+            const notificationBadge = document.getElementById('notificationBadge');
+            const noNotifications = document.getElementById('noNotifications');
+            const markAllReadBtn = document.getElementById('markAllReadBtn');
+
+            let notifications = JSON.parse(localStorage.getItem('cyberCafeNotifications')) || [];
+            let notificationCount = notifications.filter(n => !n.read).length;
+
+            function updateNotificationBadge() {
+                notificationCount = notifications.filter(n => !n.read).length;
+                
+                if (notificationCount > 0) {
+                    notificationBadge.textContent = notificationCount;
+                    notificationBadge.style.display = 'flex';
+                    noNotifications.style.display = 'none';
+                } else {
+                    notificationBadge.style.display = 'none';
+                    if (notifications.length === 0) {
+                        noNotifications.style.display = 'block';
+                    } else {
+                        noNotifications.style.display = 'none';
                     }
                 }
             }
-        });
 
-        // Initialize clock and calendar
-        setInterval(updateClock, 1000);
-        updateClock();
-        renderCalendar(currentDate.getMonth(), currentDate.getFullYear());
-
-        // Close calendar when clicking outside - FIXED VERSION
-        document.addEventListener('click', (e) => {
-            // Only close if clicking outside both clock container and calendar popup
-            if (!clockContainer.contains(e.target) && !calendarPopup.contains(e.target)) {
-                calendarPopup.classList.remove('show');
+            function renderNotifications() {
+                const notificationItems = notificationPanel.querySelectorAll('.notification-item');
+                notificationItems.forEach(item => item.remove());
+                
+                const sortedNotifications = [...notifications].sort((a, b) => {
+                    if (a.pinned && !b.pinned) return -1;
+                    if (!a.pinned && b.pinned) return 1;
+                    return 0;
+                });
+                
+                sortedNotifications.forEach((notification, index) => {
+                    const notificationItem = document.createElement('div');
+                    notificationItem.className = 'notification-item';
+                    if (notification.pinned) {
+                        notificationItem.classList.add('notification-pinned');
+                    }
+                    if (notification.read) {
+                        notificationItem.classList.add('notification-read');
+                    }
+                    
+                    notificationItem.innerHTML = `
+                        <i class="fas fa-bell"></i>
+                        <div>
+                            <p>${notification.message}</p>
+                            <div class="notification-time">${notification.time}</div>
+                        </div>
+                        <div class="notification-actions">
+                            <button class="notification-pin" data-index="${index}">
+                                <i class="fas fa-thumbtack"></i>
+                            </button>
+                            <button class="notification-close" data-index="${index}">&times;</button>
+                        </div>
+                    `;
+                    notificationPanel.insertBefore(notificationItem, noNotifications);
+                });
+                
+                document.querySelectorAll('.notification-close').forEach(btn => {
+                    btn.addEventListener('click', (e) => {
+                        const index = parseInt(e.target.closest('.notification-close').getAttribute('data-index'));
+                        removeNotification(index);
+                    });
+                });
+                
+                document.querySelectorAll('.notification-pin').forEach(btn => {
+                    btn.addEventListener('click', (e) => {
+                        const index = parseInt(e.target.closest('.notification-pin').getAttribute('data-index'));
+                        togglePinNotification(index);
+                    });
+                });
             }
-        });
 
-        // Prevent calendar from closing when clicking inside it
-        calendarPopup.addEventListener('click', (e) => {
-            e.stopPropagation(); // Prevent event from bubbling up to document
-        });
-
-        // Search Panel Toggle
-        const searchToggle = document.getElementById('searchToggle');
-        const searchPanel = document.getElementById('searchPanel');
-
-        searchToggle.addEventListener('click', () => {
-            searchPanel.classList.add('show');
-            document.getElementById('searchInput').focus();
-        });
-
-        // Close search panel when clicking outside
-        searchPanel.addEventListener('click', (e) => {
-            if (e.target === searchPanel) {
-                searchPanel.classList.remove('show');
-            }
-        });
-
-        // Notification System
-        const notificationBell = document.getElementById('notificationBell');
-        const notificationPanel = document.getElementById('notificationPanel');
-        const notificationBadge = document.getElementById('notificationBadge');
-        const noNotifications = document.getElementById('noNotifications');
-
-        let notifications = JSON.parse(localStorage.getItem('cyberCafeNotifications')) || [];
-        let notificationCount = notifications.length;
-
-        function updateNotificationBadge() {
-            if (notificationCount > 0) {
-                notificationBadge.textContent = notificationCount;
-                notificationBadge.style.display = 'flex';
-                noNotifications.style.display = 'none';
-            } else {
-                notificationBadge.style.display = 'none';
-                noNotifications.style.display = 'block';
-            }
-        }
-
-        function renderNotifications() {
-            // Clear existing notifications (except the no notifications message)
-            const notificationItems = notificationPanel.querySelectorAll('.notification-item');
-            notificationItems.forEach(item => item.remove());
-            
-            // Sort notifications - pinned first, then by date
-            const sortedNotifications = [...notifications].sort((a, b) => {
-                if (a.pinned && !b.pinned) return -1;
-                if (!a.pinned && b.pinned) return 1;
-                return 0;
-            });
-            
-            // Add notifications
-            sortedNotifications.forEach((notification, index) => {
-                const notificationItem = document.createElement('div');
-                notificationItem.className = 'notification-item';
-                if (notification.pinned) {
-                    notificationItem.classList.add('pinned');
+            function removeNotification(index) {
+                if (index >= 0 && index < notifications.length) {
+                    notifications.splice(index, 1);
+                    localStorage.setItem('cyberCafeNotifications', JSON.stringify(notifications));
+                    updateNotificationBadge();
+                    renderNotifications();
                 }
-                
-                notificationItem.innerHTML = `
-                    <i class="fas fa-bell"></i>
-                    <div>
-                        <p>${notification.message}</p>
-                        <div class="notification-time">${notification.time}</div>
-                    </div>
-                    <div class="notification-actions">
-                        <button class="notification-pin" data-index="${index}">
-                            <i class="fas fa-thumbtack"></i>
-                        </button>
-                        <button class="notification-close" data-index="${index}">&times;</button>
-                    </div>
-                `;
-                notificationPanel.insertBefore(notificationItem, noNotifications);
-            });
-            
-            // Add event listeners to close buttons
-            document.querySelectorAll('.notification-close').forEach(btn => {
-                btn.addEventListener('click', (e) => {
-                    const index = parseInt(e.target.closest('.notification-close').getAttribute('data-index'));
-                    removeNotification(index);
-                });
-            });
-            
-            // Add event listeners to pin buttons
-            document.querySelectorAll('.notification-pin').forEach(btn => {
-                btn.addEventListener('click', (e) => {
-                    const index = parseInt(e.target.closest('.notification-pin').getAttribute('data-index'));
-                    togglePinNotification(index);
-                });
-            });
-        }
+            }
 
-        function removeNotification(index) {
-            if (index >= 0 && index < notifications.length) {
-                notifications.splice(index, 1);
-                notificationCount = notifications.length;
-                
-                // Save to localStorage
+            function togglePinNotification(index) {
+                if (index >= 0 && index < notifications.length) {
+                    const pinnedCount = notifications.filter(n => n.pinned).length;
+                    
+                    if (!notifications[index].pinned && pinnedCount >= 5) {
+                        showNotification('You can only pin up to 5 notifications', 'warning');
+                        return;
+                    }
+                    
+                    notifications[index].pinned = !notifications[index].pinned;
+                    localStorage.setItem('cyberCafeNotifications', JSON.stringify(notifications));
+                    renderNotifications();
+                }
+            }
+
+            function markAllAsRead() {
+                notifications.forEach(notification => {
+                    notification.read = true;
+                });
                 localStorage.setItem('cyberCafeNotifications', JSON.stringify(notifications));
+                updateNotificationBadge();
+                renderNotifications();
+                showNotification('All notifications marked as read', 'success');
+            }
+
+            function addNotification(message, time = null) {
+                const now = new Date();
+                const timeString = time || `${now.toLocaleTimeString('en-KE', { hour: '2-digit', minute: '2-digit' })} • ${now.toLocaleDateString('en-KE', { weekday: 'short', month: 'short', day: 'numeric' })}`;
                 
-                // Update UI
+                const newNotification = {
+                    message: message,
+                    time: timeString,
+                    pinned: false,
+                    read: false
+                };
+                
+                notifications.unshift(newNotification);
+                localStorage.setItem('cyberCafeNotifications', JSON.stringify(notifications));
                 updateNotificationBadge();
                 renderNotifications();
             }
-        }
 
-        function togglePinNotification(index) {
-            if (index >= 0 && index < notifications.length) {
-                // Count currently pinned notifications
-                const pinnedCount = notifications.filter(n => n.pinned).length;
-                
-                // If trying to pin and already have 5 pinned, show alert
-                if (!notifications[index].pinned && pinnedCount >= 5) {
-                    alert('You can only pin up to 5 notifications');
-                    return;
-                }
-                
-                // Toggle pin status
-                notifications[index].pinned = !notifications[index].pinned;
-                
-                // Save to localStorage
-                localStorage.setItem('cyberCafeNotifications', JSON.stringify(notifications));
-                
-                // Update UI
-                renderNotifications();
-            }
-        }
-
-        notificationBell.addEventListener('click', (e) => {
-            e.stopPropagation(); // Prevent event from bubbling up
-            notificationPanel.style.display = notificationPanel.style.display === 'block' ? 'none' : 'block';
-        });
-
-        // Close notification panel when clicking outside
-        document.addEventListener('click', (e) => {
-            if (!notificationBell.contains(e.target) && !notificationPanel.contains(e.target)) {
-                notificationPanel.style.display = 'none';
-            }
-        });
-
-        // Initialize notifications
-        updateNotificationBadge();
-        renderNotifications();
-
-        // Tab Navigation
-        const navTabs = document.querySelectorAll('.nav-tab');
-        const tabContents = document.querySelectorAll('.tab-content');
-
-        navTabs.forEach(tab => {
-            tab.addEventListener('click', () => {
-                const tabId = tab.getAttribute('data-tab');
-                
-                // Remove active class from all tabs and contents
-                navTabs.forEach(t => t.classList.remove('active'));
-                tabContents.forEach(tc => tc.classList.remove('active'));
-                
-                // Add active class to clicked tab and corresponding content
-                tab.classList.add('active');
-                document.getElementById(`${tabId}-tab`).classList.add('active');
+            notificationBell.addEventListener('click', (e) => {
+                e.stopPropagation();
+                notificationPanel.style.display = notificationPanel.style.display === 'block' ? 'none' : 'block';
             });
-        });
 
-        // Category Tabs for Services
-        const categoryTabs = document.querySelectorAll('.category-tab');
-        let servicesLimit = 6; // Initial limit for services display
-        let currentCategory = 'all';
-
-        // Render Services with category filtering
-        function renderServices(containerId, category = 'all', limit = null) {
-            const container = document.getElementById(containerId);
-            container.innerHTML = '';
-            
-            let servicesToRender = services;
-            
-            // Filter by category if not 'all'
-            if (category !== 'all') {
-                servicesToRender = services.filter(service => service.category === category);
-            }
-            
-            // Apply limit if specified
-            if (limit) {
-                servicesToRender = servicesToRender.slice(0, limit);
-            }
-            
-            servicesToRender.forEach(service => {
-                const serviceCard = document.createElement('div');
-                serviceCard.className = 'service-card';
-                serviceCard.innerHTML = `
-                    <div class="service-header">
-                        <img src="${service.image}" alt="${service.name}" class="service-image">
-                        <i class="${service.icon}"></i>
-                        <h3>${service.name}</h3>
-                    </div>
-                    <div class="service-content">
-                        <p class="service-description">${service.description.substring(0, 100)}...</p>
-                        <div class="service-price">${service.price}</div>
-                        <div class="service-actions">
-                            <button class="detail-btn" data-id="${service.id}">Details</button>
-                            <button class="request-btn" data-id="${service.id}">Request</button>
-                        </div>
-                    </div>
-                `;
-                container.appendChild(serviceCard);
+            markAllReadBtn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                markAllAsRead();
             });
-            
-            // Add event listeners to buttons
-            document.querySelectorAll(`#${containerId} .detail-btn`).forEach(btn => {
-                btn.addEventListener('click', (e) => {
-                    const serviceId = parseInt(e.target.getAttribute('data-id'));
-                    showServiceDetails(serviceId);
-                });
+
+            document.addEventListener('click', (e) => {
+                if (!notificationBell.contains(e.target) && !notificationPanel.contains(e.target)) {
+                    notificationPanel.style.display = 'none';
+                }
             });
-            
-            document.querySelectorAll(`#${containerId} .request-btn`).forEach(btn => {
-                btn.addEventListener('click', (e) => {
-                    const serviceId = parseInt(e.target.getAttribute('data-id'));
-                    requestService(serviceId);
-                });
-            });
-        }
 
-        // Initialize services
-        renderServices('servicesGrid', 'all', servicesLimit);
-        renderServices('servicesPreview', 'all', 6);
-
-        // Category tab functionality
-        categoryTabs.forEach(tab => {
-            tab.addEventListener('click', () => {
-                const category = tab.getAttribute('data-category');
-                
-                // Remove active class from all category tabs
-                categoryTabs.forEach(t => t.classList.remove('active'));
-                
-                // Add active class to clicked tab
-                tab.classList.add('active');
-                
-                // Update current category
-                currentCategory = category;
-                
-                // Reset limit when changing category
-                servicesLimit = 6;
-                
-                // Render services for the selected category
-                renderServices('servicesGrid', category, servicesLimit);
-                
-                // Update view all button text
-                updateViewAllButton();
-            });
-        });
-
-        // View All functionality
-        const viewAllBtn = document.getElementById('viewAllBtn');
-        
-        function updateViewAllButton() {
-            const categoryServices = currentCategory === 'all' 
-                ? services 
-                : services.filter(service => service.category === currentCategory);
-            
-            if (servicesLimit >= categoryServices.length) {
-                viewAllBtn.textContent = 'View All Services';
-                viewAllBtn.disabled = true;
-            } else {
-                viewAllBtn.textContent = 'View More Services';
-                viewAllBtn.disabled = false;
-            }
-        }
-        
-        viewAllBtn.addEventListener('click', () => {
-            const categoryServices = currentCategory === 'all' 
-                ? services 
-                : services.filter(service => service.category === currentCategory);
-            
-            // Increase limit or show all
-            if (servicesLimit < categoryServices.length) {
-                servicesLimit += 6;
-                if (servicesLimit >= categoryServices.length) {
-                    servicesLimit = categoryServices.length;
-                }
-                renderServices('servicesGrid', currentCategory, servicesLimit);
-                updateViewAllButton();
-            }
-        });
-
-        // Service Detail Modal
-        const serviceModal = document.getElementById('serviceModal');
-        const modalServiceName = document.getElementById('modalServiceName');
-        const modalServiceDescription = document.getElementById('modalServiceDescription');
-        const modalServicePrice = document.getElementById('modalServicePrice');
-        const modalServiceRequirements = document.getElementById('modalServiceRequirements');
-        const modalRequestBtn = document.getElementById('modalRequestBtn');
-        const closeModal = document.getElementById('closeModal');
-
-        function showServiceDetails(serviceId) {
-            const service = services.find(s => s.id === serviceId);
-            if (!service) return;
-            
-            modalServiceName.textContent = service.name;
-            modalServiceDescription.textContent = service.description;
-            modalServicePrice.textContent = service.price;
-            
-            if (service.requiresId) {
-                modalServiceRequirements.innerHTML = '<p><strong>Requirements:</strong> Valid ID Number required for this service.</p>';
-                if (service.requiresKra) {
-                    modalServiceRequirements.innerHTML += '<p><strong>Additional Requirement:</strong> KRA PIN required for this service.</p>';
-                }
-            } else {
-                modalServiceRequirements.innerHTML = '';
-            }
-            
-            modalRequestBtn.setAttribute('data-id', serviceId);
-            serviceModal.classList.add('show');
-        }
-
-        closeModal.addEventListener('click', () => {
-            serviceModal.classList.remove('show');
-        });
-
-        serviceModal.addEventListener('click', (e) => {
-            if (e.target === serviceModal) {
-                serviceModal.classList.remove('show');
-            }
-        });
-
-        modalRequestBtn.addEventListener('click', () => {
-            const serviceId = parseInt(modalRequestBtn.getAttribute('data-id'));
-            serviceModal.classList.remove('show');
-            requestService(serviceId);
-        });
-
-        // Request Service
-        const requestForm = document.getElementById('requestForm');
-        const serviceTypeInput = document.getElementById('serviceType');
-        const idNumberGroup = document.getElementById('idNumberGroup');
-        const kraPinGroup = document.getElementById('kraPinGroup');
-        const serviceRequestForm = document.getElementById('serviceRequestForm');
-        const preferredDateInput = document.getElementById('preferredDate');
-        const deliveryTimeInput = document.getElementById('deliveryTime');
-
-        function requestService(serviceId) {
-            const service = services.find(s => s.id === serviceId);
-            if (!service) return;
-            
-            // Show request form
-            requestForm.classList.add('show');
-            
-            // Scroll to request form
-            requestForm.scrollIntoView({ behavior: 'smooth' });
-            
-            // Prefill service type
-            serviceTypeInput.value = service.name;
-            
-            // Set minimum date for preferred date
-            const tomorrow = new Date();
-            tomorrow.setDate(tomorrow.getDate() + 1);
-            preferredDateInput.min = tomorrow.toISOString().split('T')[0];
-            
-            // Show/hide ID number and KRA PIN fields
-            if (service.requiresId) {
-                idNumberGroup.style.display = 'block';
-                if (service.requiresKra) {
-                    kraPinGroup.style.display = 'block';
-                } else {
-                    kraPinGroup.style.display = 'none';
-                }
-            } else {
-                idNumberGroup.style.display = 'none';
-                kraPinGroup.style.display = 'none';
-            }
-        }
-
-        // WhatsApp Loading Animation
-        const whatsappLoading = document.getElementById('whatsappLoading');
-        
-        function showWhatsAppLoading() {
-            whatsappLoading.classList.add('show');
-            setTimeout(() => {
-                whatsappLoading.classList.remove('show');
-            }, 2000);
-        }
-
-        // Service Request Form Submission
-        serviceRequestForm.addEventListener('submit', (e) => {
-            e.preventDefault();
-            
-            // Collect form data
-            const formData = {
-                name: document.getElementById('customerName').value,
-                phone: document.getElementById('customerPhone').value,
-                email: document.getElementById('customerEmail').value,
-                service: document.getElementById('serviceType').value,
-                idNumber: document.getElementById('idNumber').value,
-                kraPin: document.getElementById('kraPin').value,
-                instructions: document.getElementById('specialInstructions').value,
-                preferredDate: document.getElementById('preferredDate').value,
-                deliveryTime: document.getElementById('deliveryTime').value,
-                timestamp: new Date().toLocaleString('en-KE')
-            };
-            
-            // Get service category
-            const service = services.find(s => s.name === formData.service);
-            const serviceCategory = service ? service.category : 'General';
-            
-            // Format message for WhatsApp
-            let whatsappMessage = `*PAMOJA CYBER CAFE SERVICE REQUEST*%0A%0A`;
-            whatsappMessage += `*Customer Details:*%0A`;
-            whatsappMessage += `Name: ${formData.name}%0A`;
-            whatsappMessage += `Phone: ${formData.phone}%0A`;
-            if (formData.email) whatsappMessage += `Email: ${formData.email}%0A`;
-            whatsappMessage += `%0A*Service Details:*%0A`;
-            whatsappMessage += `Service: ${formData.service}%0A`;
-            whatsappMessage += `Category: ${serviceCategory}%0A`;
-            if (formData.idNumber) whatsappMessage += `ID Number: ${formData.idNumber}%0A`;
-            if (formData.kraPin) whatsappMessage += `KRA PIN: ${formData.kraPin}%0A`;
-            if (formData.preferredDate) {
-                whatsappMessage += `Preferred Date: ${formData.preferredDate}%0A`;
-                if (formData.deliveryTime) {
-                    whatsappMessage += `Preferred Time: ${formData.deliveryTime}%0A`;
-                }
-            }
-            if (formData.instructions) whatsappMessage += `Instructions: ${formData.instructions}%0A`;
-            whatsappMessage += `%0A*Request Details:*%0A`;
-            whatsappMessage += `Submitted: ${formData.timestamp}%0A`;
-            whatsappMessage += `%0A_Thank you for choosing Pamoja Cyber Cafe!_`;
-            
-            // Show loading animation
-            showWhatsAppLoading();
-            
-            // Send to WhatsApp after a short delay
-            setTimeout(() => {
-                window.open(`https://wa.me/254111923477?text=${whatsappMessage}`, '_blank');
-            }, 2000);
-            
-            // Add a new notification with real timestamp
-            const now = new Date();
-            const timeString = now.toLocaleTimeString('en-KE', { hour: '2-digit', minute: '2-digit' });
-            const dateString = now.toLocaleDateString('en-KE', { weekday: 'short', month: 'short', day: 'numeric' });
-            
-            let notificationMessage = `Service Request: ${formData.service} for ${formData.name}`;
-            if (formData.preferredDate) {
-                notificationMessage += ` (Preferred: ${formData.preferredDate})`;
-            }
-            
-            const newNotification = {
-                message: notificationMessage,
-                time: `${timeString} • ${dateString}`,
-                pinned: false
-            };
-            
-            notifications.unshift(newNotification);
-            notificationCount = notifications.length;
-            
-            // Save to localStorage
-            localStorage.setItem('cyberCafeNotifications', JSON.stringify(notifications));
-            
-            // Update UI
             updateNotificationBadge();
             renderNotifications();
-            
-            // Reset form and hide it
-            serviceRequestForm.reset();
-            requestForm.classList.remove('show');
-            
-            // Show confirmation
-            alert(`Thank you, ${formData.name}! Your request for "${formData.service}" has been submitted. We'll contact you at ${formData.phone} shortly.`);
-        });
 
-        // Search Functionality
-        const searchInput = document.getElementById('searchInput');
-        const searchResults = document.getElementById('searchResults');
+            // Make addNotification function globally available
+            window.addNotification = addNotification;
+        }
 
-        searchInput.addEventListener('input', () => {
-            const query = searchInput.value.toLowerCase();
-            searchResults.innerHTML = '';
-            
-            if (query.length > 0) {
-                const filteredServices = services.filter(service => 
-                    service.name.toLowerCase().includes(query) || 
-                    service.description.toLowerCase().includes(query)
-                );
-                
-                if (filteredServices.length > 0) {
-                    filteredServices.forEach(service => {
-                        const resultItem = document.createElement('div');
-                        resultItem.className = 'search-result-item';
-                        resultItem.innerHTML = `
-                            <div>
-                                <strong>${service.name}</strong>
-                            </div>
-                            <div class="service-price">${service.price}</div>
-                        `;
-                        resultItem.addEventListener('click', () => {
-                            // Show service details
-                            showServiceDetails(service.id);
-                            // Close search panel
-                            searchPanel.classList.remove('show');
-                            searchInput.value = '';
-                        });
-                        searchResults.appendChild(resultItem);
-                    });
-                } else {
-                    searchResults.innerHTML = '<div class="search-result-item">No services found</div>';
+        function initializeSearch() {
+            const searchToggle = document.getElementById('searchToggle');
+            const searchPanel = document.getElementById('searchPanel');
+            const searchInput = document.getElementById('searchInput');
+            const searchButton = document.getElementById('searchButton');
+            const searchResults = document.getElementById('searchResults');
+
+            searchToggle.addEventListener('click', () => {
+                searchPanel.classList.add('show');
+                searchInput.focus();
+            });
+
+            searchPanel.addEventListener('click', (e) => {
+                if (e.target === searchPanel) {
+                    searchPanel.classList.remove('show');
                 }
-            } else {
-                searchResults.innerHTML = '<div class="search-result-item">Start typing to search for services</div>';
+            });
+
+            searchButton.addEventListener('click', performSearch);
+
+            searchInput.addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') {
+                    performSearch();
+                }
+            });
+
+            function performSearch() {
+                const query = searchInput.value.toLowerCase();
+                searchResults.innerHTML = '';
+                
+                if (query.length > 0) {
+                    const filteredServices = services.filter(service => 
+                        service.name.toLowerCase().includes(query) || 
+                        service.description.toLowerCase().includes(query)
+                    );
+                    
+                    if (filteredServices.length > 0) {
+                        filteredServices.forEach(service => {
+                            const resultItem = document.createElement('div');
+                            resultItem.className = 'search-result-item';
+                            resultItem.innerHTML = `
+                                <div>
+                                    <strong>${service.name}</strong>
+                                    <p style="margin-top: 5px; font-size: 0.9rem; opacity: 0.8;">${service.description.substring(0, 100)}...</p>
+                                </div>
+                                <div class="service-price">${service.price}</div>
+                            `;
+                            resultItem.addEventListener('click', () => {
+                                showServiceDetails(service.id);
+                                searchPanel.classList.remove('show');
+                                searchInput.value = '';
+                            });
+                            searchResults.appendChild(resultItem);
+                        });
+                    } else {
+                        searchResults.innerHTML = '<div class="search-result-item">No services found</div>';
+                    }
+                } else {
+                    searchResults.innerHTML = '<div class="search-result-item">Start typing to search for services</div>';
+                }
             }
-        });
-
-        // Gallery Carousel
-        const gallerySlides = document.getElementById('gallerySlides');
-        const galleryPrev = document.getElementById('galleryPrev');
-        const galleryNext = document.getElementById('galleryNext');
-        const galleryDots = document.getElementById('galleryDots');
-        
-        let currentSlide = 0;
-        const totalSlides = document.querySelectorAll('.gallery-slide').length;
-        
-        // Create dots
-        for (let i = 0; i < totalSlides; i++) {
-            const dot = document.createElement('div');
-            dot.className = 'gallery-dot';
-            if (i === 0) dot.classList.add('active');
-            dot.addEventListener('click', () => {
-                goToSlide(i);
-            });
-            galleryDots.appendChild(dot);
         }
-        
-        function goToSlide(slideIndex) {
-            currentSlide = slideIndex;
-            gallerySlides.style.transform = `translateX(-${currentSlide * 100}%)`;
+
+        function initializeServices() {
+            const categoryTabs = document.querySelectorAll('.category-tab');
+            let servicesLimit = 6;
+            let currentCategory = 'all';
+
+            function renderServices(containerId, category = 'all', limit = null) {
+                const container = document.getElementById(containerId);
+                container.innerHTML = '';
+                
+                let servicesToRender = services;
+                
+                if (category !== 'all') {
+                    servicesToRender = services.filter(service => service.category === category);
+                }
+                
+                if (limit) {
+                    servicesToRender = servicesToRender.slice(0, limit);
+                }
+                
+                servicesToRender.forEach(service => {
+                    const serviceCard = document.createElement('div');
+                    serviceCard.className = 'service-card';
+                    serviceCard.innerHTML = `
+                        <div class="service-header">
+                            <img src="${service.image}" alt="${service.name}" class="service-image">
+                            <i class="${service.icon}"></i>
+                            <h3>${service.name}</h3>
+                        </div>
+                        <div class="service-content">
+                            <p class="service-description">${service.description.substring(0, 100)}...</p>
+                            <div class="service-price">${service.price}</div>
+                            <div class="service-actions">
+                                <button class="detail-btn" data-id="${service.id}">Details</button>
+                                <button class="request-btn" data-id="${service.id}">Request</button>
+                            </div>
+                        </div>
+                    `;
+                    container.appendChild(serviceCard);
+                });
+                
+                document.querySelectorAll(`#${containerId} .detail-btn`).forEach(btn => {
+                    btn.addEventListener('click', (e) => {
+                        const serviceId = parseInt(e.target.getAttribute('data-id'));
+                        showServiceDetails(serviceId);
+                    });
+                });
+                
+                document.querySelectorAll(`#${containerId} .request-btn`).forEach(btn => {
+                    btn.addEventListener('click', (e) => {
+                        const serviceId = parseInt(e.target.getAttribute('data-id'));
+                        requestService(serviceId);
+                    });
+                });
+            }
+
+            categoryTabs.forEach(tab => {
+                tab.addEventListener('click', () => {
+                    const category = tab.getAttribute('data-category');
+                    
+                    categoryTabs.forEach(t => t.classList.remove('active'));
+                    tab.classList.add('active');
+                    
+                    currentCategory = category;
+                    servicesLimit = 6;
+                    
+                    renderServices('servicesGrid', category, servicesLimit);
+                    updateViewAllButton();
+                });
+            });
+
+            const viewAllBtn = document.getElementById('viewAllBtn');
             
-            // Update active dot
-            document.querySelectorAll('.gallery-dot').forEach((dot, index) => {
-                dot.classList.toggle('active', index === currentSlide);
+            function updateViewAllButton() {
+                const categoryServices = currentCategory === 'all' 
+                    ? services 
+                    : services.filter(service => service.category === currentCategory);
+                
+                if (servicesLimit >= categoryServices.length) {
+                    viewAllBtn.textContent = 'View All Services';
+                    viewAllBtn.disabled = true;
+                } else {
+                    viewAllBtn.textContent = 'View More Services';
+                    viewAllBtn.disabled = false;
+                }
+            }
+            
+            viewAllBtn.addEventListener('click', () => {
+                const categoryServices = currentCategory === 'all' 
+                    ? services 
+                    : services.filter(service => service.category === currentCategory);
+                
+                if (servicesLimit < categoryServices.length) {
+                    servicesLimit += 6;
+                    if (servicesLimit >= categoryServices.length) {
+                        servicesLimit = categoryServices.length;
+                    }
+                    renderServices('servicesGrid', currentCategory, servicesLimit);
+                    updateViewAllButton();
+                }
+            });
+
+            renderServices('servicesGrid', 'all', servicesLimit);
+            renderServices('servicesPreview', 'all', 6);
+            updateViewAllButton();
+        }
+
+        function initializeServiceModal() {
+            const serviceModal = document.getElementById('serviceModal');
+            const modalServiceName = document.getElementById('modalServiceName');
+            const modalServiceDescription = document.getElementById('modalServiceDescription');
+            const modalServicePrice = document.getElementById('modalServicePrice');
+            const modalServiceRequirements = document.getElementById('modalServiceRequirements');
+            const modalRequestBtn = document.getElementById('modalRequestBtn');
+            const closeModal = document.getElementById('closeModal');
+
+            window.showServiceDetails = function(serviceId) {
+                const service = services.find(s => s.id === serviceId);
+                if (!service) return;
+                
+                modalServiceName.textContent = service.name;
+                modalServiceDescription.textContent = service.description;
+                modalServicePrice.textContent = service.price;
+                
+                if (service.requiresId) {
+                    modalServiceRequirements.innerHTML = '<p><strong>Requirements:</strong> Valid ID Number required for this service.</p>';
+                    if (service.requiresKra) {
+                        modalServiceRequirements.innerHTML += '<p><strong>Additional Requirement:</strong> KRA PIN required for this service.</p>';
+                    }
+                } else {
+                    modalServiceRequirements.innerHTML = '';
+                }
+                
+                modalRequestBtn.setAttribute('data-id', serviceId);
+                serviceModal.classList.add('show');
+            }
+
+            closeModal.addEventListener('click', () => {
+                serviceModal.classList.remove('show');
+            });
+
+            serviceModal.addEventListener('click', (e) => {
+                if (e.target === serviceModal) {
+                    serviceModal.classList.remove('show');
+                }
+            });
+
+            modalRequestBtn.addEventListener('click', () => {
+                const serviceId = parseInt(modalRequestBtn.getAttribute('data-id'));
+                serviceModal.classList.remove('show');
+                requestService(serviceId);
             });
         }
-        
-        galleryPrev.addEventListener('click', () => {
-            currentSlide = (currentSlide - 1 + totalSlides) % totalSlides;
-            goToSlide(currentSlide);
-        });
-        
-        galleryNext.addEventListener('click', () => {
-            currentSlide = (currentSlide + 1) % totalSlides;
-            goToSlide(currentSlide);
-        });
-        
-        // Auto-advance slides
-        setInterval(() => {
-            currentSlide = (currentSlide + 1) % totalSlides;
-            goToSlide(currentSlide);
-        }, 5000);
 
-        // Contact Form Submission
-        const contactForm = document.getElementById('contactForm');
-        contactForm.addEventListener('submit', (e) => {
-            e.preventDefault();
-            
-            // Collect form data
-            const formData = {
-                name: document.getElementById('contactName').value,
-                phone: document.getElementById('contactPhone').value,
-                email: document.getElementById('contactEmail').value,
-                message: document.getElementById('contactMessage').value,
-                timestamp: new Date().toLocaleString('en-KE')
-            };
-            
-            // Format message for WhatsApp
-            let whatsappMessage = `*PAMOJA CYBER CAFE CONTACT MESSAGE*%0A%0A`;
-            whatsappMessage += `Name: ${formData.name}%0A`;
-            whatsappMessage += `Phone: ${formData.phone}%0A`;
-            if (formData.email) whatsappMessage += `Email: ${formData.email}%0A`;
-            whatsappMessage += `Message: ${formData.message}%0A`;
-            whatsappMessage += `Timestamp: ${formData.timestamp}`;
-            
-            // Show loading animation
-            showWhatsAppLoading();
-            
-            // Send to WhatsApp after a short delay
-            setTimeout(() => {
-                window.open(`https://wa.me/254111923477?text=${whatsappMessage}`, '_blank');
-            }, 2000);
-            
-            // Reset form
-            contactForm.reset();
-            
-            // Show confirmation
-            alert(`Thank you, ${formData.name}! Your message has been sent. We'll contact you shortly.`);
-        });
+        function initializeRequestForm() {
+            const requestForm = document.getElementById('requestForm');
+            const serviceTypeInput = document.getElementById('serviceType');
+            const universitySelect = document.getElementById('universitySelect');
+            const idNumberGroup = document.getElementById('idNumberGroup');
+            const kraPinGroup = document.getElementById('kraPinGroup');
+            const serviceRequestForm = document.getElementById('serviceRequestForm');
+            const preferredDateInput = document.getElementById('preferredDate');
+            const deliveryTimeInput = document.getElementById('deliveryTime');
 
-        // Get Directions Button
-        document.getElementById('getDirections').addEventListener('click', (e) => {
-            e.preventDefault();
-            window.open('https://www.google.com/maps/place/Nairobi+CBD,+Moi+Avenue,+Prime+Plaza/@-1.283333,36.816667,15z', '_blank');
-        });
+            window.requestService = function(serviceId) {
+                const service = services.find(s => s.id === serviceId);
+                if (!service) return;
+                
+                requestForm.classList.add('show');
+                requestForm.scrollIntoView({ behavior: 'smooth' });
+                
+                serviceTypeInput.value = service.name;
+                
+                const tomorrow = new Date();
+                tomorrow.setDate(tomorrow.getDate() + 1);
+                preferredDateInput.min = tomorrow.toISOString().split('T')[0];
+                
+                if (service.requiresId) {
+                    idNumberGroup.style.display = 'block';
+                    if (service.requiresKra) {
+                        kraPinGroup.style.display = 'block';
+                    } else {
+                        kraPinGroup.style.display = 'none';
+                    }
+                } else {
+                    idNumberGroup.style.display = 'none';
+                    kraPinGroup.style.display = 'none';
+                }
+            }
 
-        // Floating WhatsApp Button
-        document.getElementById('whatsappFloat').addEventListener('click', () => {
-            showWhatsAppLoading();
-            setTimeout(() => {
-                window.open('https://wa.me/254111923477', '_blank');
-            }, 2000);
-        });
+            serviceRequestForm.addEventListener('submit', (e) => {
+                e.preventDefault();
+                
+                const formData = {
+                    name: document.getElementById('customerName').value,
+                    phone: document.getElementById('customerPhone').value,
+                    email: document.getElementById('customerEmail').value,
+                    university: document.getElementById('universitySelect').value,
+                    service: document.getElementById('serviceType').value,
+                    idNumber: document.getElementById('idNumber').value,
+                    kraPin: document.getElementById('kraPin').value,
+                    instructions: document.getElementById('specialInstructions').value,
+                    preferredDate: document.getElementById('preferredDate').value,
+                    deliveryTime: document.getElementById('deliveryTime').value,
+                    timestamp: new Date().toLocaleString('en-KE')
+                };
+                
+                const service = services.find(s => s.name === formData.service);
+                const serviceCategory = service ? service.category : 'General';
+                
+                // Determine which WhatsApp number to use
+                let whatsappNumber = "254111923477"; // Default number
+                let agentName = "Pamoja Cyber Cafe";
+                let universityName = "";
+                
+                if (formData.university && universityAgents[formData.university]) {
+                    whatsappNumber = universityAgents[formData.university].whatsapp;
+                    agentName = universityAgents[formData.university].agentName;
+                    universityName = universityAgents[formData.university].name;
+                }
+                
+                let whatsappMessage = `*PAMOJA CYBER CAFE SERVICE REQUEST*%0A%0A`;
+                whatsappMessage += `*Customer Details:*%0A`;
+                whatsappMessage += `Name: ${formData.name}%0A`;
+                whatsappMessage += `Phone: ${formData.phone}%0A`;
+                if (formData.email) whatsappMessage += `Email: ${formData.email}%0A`;
+                if (formData.university) whatsappMessage += `University: ${universityName}%0A`;
+                if (formData.university) whatsappMessage += `Agent: ${agentName}%0A`;
+                whatsappMessage += `%0A*Service Details:*%0A`;
+                whatsappMessage += `Service: ${formData.service}%0A`;
+                whatsappMessage += `Category: ${serviceCategory}%0A`;
+                if (formData.idNumber) whatsappMessage += `ID Number: ${formData.idNumber}%0A`;
+                if (formData.kraPin) whatsappMessage += `KRA PIN: ${formData.kraPin}%0A`;
+                if (formData.preferredDate) {
+                    whatsappMessage += `Preferred Date: ${formData.preferredDate}%0A`;
+                    if (formData.deliveryTime) {
+                        whatsappMessage += `Preferred Time: ${formData.deliveryTime}%0A`;
+                    }
+                }
+                if (formData.instructions) whatsappMessage += `Instructions: ${formData.instructions}%0A`;
+                whatsappMessage += `%0A*Request Details:*%0A`;
+                whatsappMessage += `Submitted: ${formData.timestamp}%0A`;
+                whatsappMessage += `%0A_Thank you for choosing Pamoja Cyber Cafe!_`;
+                
+                showWhatsAppLoading();
+                
+                setTimeout(() => {
+                    window.open(`https://wa.me/${whatsappNumber}?text=${whatsappMessage}`, '_blank');
+                }, 2000);
+                
+                let notificationMessage = `Service Request: ${formData.service} for ${formData.name}`;
+                if (formData.preferredDate) {
+                    notificationMessage += ` (Preferred: ${formData.preferredDate})`;
+                }
+                
+                addNotification(notificationMessage);
+                
+                serviceRequestForm.reset();
+                requestForm.classList.remove('show');
+                
+                showNotification(`Thank you, ${formData.name}! Your request for "${formData.service}" has been submitted to ${agentName} at ${universityName}. We'll contact you at ${formData.phone} shortly.`, 'success');
+                
+                // Add loyalty stamp for the service request
+                addLoyaltyStamp();
+                
+                // Add receipt item for the service
+                addReceiptItem(formData.service, formData.name, agentName, universityName);
+            });
+        }
 
-        // WhatsApp Contact Button
-        document.getElementById('whatsappContactBtn').addEventListener('click', (e) => {
-            e.preventDefault();
-            showWhatsAppLoading();
-            setTimeout(() => {
-                window.open('https://wa.me/254111923477', '_blank');
-            }, 2000);
-        });
+        function initializeGallery() {
+            const gallerySlides = document.getElementById('gallerySlides');
+            const galleryPrev = document.getElementById('galleryPrev');
+            const galleryNext = document.getElementById('galleryNext');
+            const galleryDots = document.getElementById('galleryDots');
+            
+            let currentSlide = 0;
+            const totalSlides = document.querySelectorAll('.gallery-slide').length;
+            
+            for (let i = 0; i < totalSlides; i++) {
+                const dot = document.createElement('div');
+                dot.className = 'gallery-dot';
+                if (i === 0) dot.classList.add('active');
+                dot.addEventListener('click', () => {
+                    goToSlide(i);
+                });
+                galleryDots.appendChild(dot);
+            }
+            
+            function goToSlide(slideIndex) {
+                currentSlide = slideIndex;
+                gallerySlides.style.transform = `translateX(-${currentSlide * 100}%)`;
+                
+                document.querySelectorAll('.gallery-dot').forEach((dot, index) => {
+                    dot.classList.toggle('active', index === currentSlide);
+                });
+            }
+            
+            galleryPrev.addEventListener('click', () => {
+                currentSlide = (currentSlide - 1 + totalSlides) % totalSlides;
+                goToSlide(currentSlide);
+            });
+            
+            galleryNext.addEventListener('click', () => {
+                currentSlide = (currentSlide + 1) % totalSlides;
+                goToSlide(currentSlide);
+            });
+            
+            setInterval(() => {
+                currentSlide = (currentSlide + 1) % totalSlides;
+                goToSlide(currentSlide);
+            }, 5000);
+        }
 
-        // WhatsApp Footer Links
-        document.querySelectorAll('.whatsapp-footer-link').forEach(link => {
-            link.addEventListener('click', (e) => {
+        function initializeContactForm() {
+            const contactForm = document.getElementById('contactForm');
+            contactForm.addEventListener('submit', (e) => {
+                e.preventDefault();
+                
+                const formData = {
+                    name: document.getElementById('contactName').value,
+                    phone: document.getElementById('contactPhone').value,
+                    email: document.getElementById('contactEmail').value,
+                    university: document.getElementById('contactUniversity').value,
+                    message: document.getElementById('contactMessage').value,
+                    timestamp: new Date().toLocaleString('en-KE')
+                };
+                
+                let whatsappNumber = "254111923477"; // Default number
+                let agentName = "Pamoja Cyber Cafe";
+                let universityName = "";
+                
+                if (formData.university && universityAgents[formData.university]) {
+                    whatsappNumber = universityAgents[formData.university].whatsapp;
+                    agentName = universityAgents[formData.university].agentName;
+                    universityName = universityAgents[formData.university].name;
+                }
+                
+                let whatsappMessage = `*PAMOJA CYBER CAFE CONTACT MESSAGE*%0A%0A`;
+                whatsappMessage += `Name: ${formData.name}%0A`;
+                whatsappMessage += `Phone: ${formData.phone}%0A`;
+                if (formData.email) whatsappMessage += `Email: ${formData.email}%0A`;
+                if (formData.university) whatsappMessage += `University: ${universityName}%0A`;
+                if (formData.university) whatsappMessage += `Agent: ${agentName}%0A`;
+                whatsappMessage += `Message: ${formData.message}%0A`;
+                whatsappMessage += `Timestamp: ${formData.timestamp}`;
+                
+                showWhatsAppLoading();
+                
+                setTimeout(() => {
+                    window.open(`https://wa.me/${whatsappNumber}?text=${whatsappMessage}`, '_blank');
+                }, 2000);
+                
+                contactForm.reset();
+                
+                showNotification(`Thank you, ${formData.name}! Your message has been sent to ${agentName} at ${universityName}. We'll contact you shortly.`, 'success');
+            });
+
+            document.getElementById('getDirections').addEventListener('click', (e) => {
+                e.preventDefault();
+                window.open('https://www.google.com/maps/place/Nairobi+CBD,+Moi+Avenue,+Prime+Plaza/@-1.283333,36.816667,15z', '_blank');
+            });
+        }
+
+        function initializeWhatsApp() {
+            const whatsappLoading = document.getElementById('whatsappLoading');
+            
+            window.showWhatsAppLoading = function() {
+                whatsappLoading.classList.add('show');
+                setTimeout(() => {
+                    whatsappLoading.classList.remove('show');
+                }, 2000);
+            }
+
+            document.getElementById('whatsappFloat').addEventListener('click', () => {
+                showWhatsAppLoading();
+                setTimeout(() => {
+                    window.open('https://wa.me/254111923477', '_blank');
+                }, 2000);
+            });
+
+            document.getElementById('whatsappContactBtn').addEventListener('click', (e) => {
                 e.preventDefault();
                 showWhatsAppLoading();
                 setTimeout(() => {
                     window.open('https://wa.me/254111923477', '_blank');
                 }, 2000);
             });
-        });
 
-        // Footer navigation
-        document.querySelectorAll('footer a[data-tab]').forEach(link => {
-            link.addEventListener('click', (e) => {
-                e.preventDefault();
-                const tabName = link.getAttribute('data-tab');
-                document.querySelector(`.nav-tab[data-tab="${tabName}"]`).click();
+            document.querySelectorAll('.whatsapp-footer-link').forEach(link => {
+                link.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    showWhatsAppLoading();
+                    setTimeout(() => {
+                        window.open('https://wa.me/254111923477', '_blank');
+                    }, 2000);
+                });
             });
-        });
+        }
 
-        // CTA buttons navigation
-        document.querySelectorAll('.cta-button, .view-all-btn').forEach(button => {
-            button.addEventListener('click', (e) => {
-                e.preventDefault();
-                const tabName = button.getAttribute('data-tab');
-                if (tabName) {
-                    document.querySelector(`.nav-tab[data-tab="${tabName}"]`).click();
+        // ===== NEW FEATURES =====
+
+        function initializeLoyaltyCard() {
+            const loyaltyStampsContainer = document.getElementById('loyaltyStamps');
+            const addStampDemoBtn = document.getElementById('addStampDemo');
+            let loyaltyData = JSON.parse(localStorage.getItem('pamojaLoyalty')) || { 
+                stamps: 0, 
+                lastVisit: null,
+                visits: []
+            };
+            
+            function renderLoyaltyCard() {
+                loyaltyStampsContainer.innerHTML = '';
+                for (let i = 1; i <= 10; i++) {
+                    const stamp = document.createElement('div');
+                    stamp.className = 'loyalty-stamp';
+                    if (i <= loyaltyData.stamps) {
+                        stamp.classList.add('filled');
+                        stamp.innerHTML = '<i class="fas fa-check"></i>';
+                    } else {
+                        stamp.textContent = i;
+                    }
+                    loyaltyStampsContainer.appendChild(stamp);
+                }
+                
+                const rewards = document.querySelectorAll('.loyalty-reward');
+                rewards.forEach((reward, index) => {
+                    if (loyaltyData.stamps >= (index + 1) * 3) {
+                        reward.classList.add('unlocked');
+                    } else {
+                        reward.classList.remove('unlocked');
+                    }
+                });
+            }
+            
+            function addLoyaltyStamp() {
+                const today = new Date().toDateString();
+                
+                // Check if the user already got a stamp today
+                const todayVisit = loyaltyData.visits.find(visit => 
+                    new Date(visit.date).toDateString() === today
+                );
+                
+                if (!todayVisit) {
+                    if (loyaltyData.stamps < 10) {
+                        loyaltyData.stamps++;
+                        loyaltyData.lastVisit = new Date().toISOString();
+                        loyaltyData.visits.push({
+                            date: new Date().toISOString(),
+                            service: "Service Request"
+                        });
+                        localStorage.setItem('pamojaLoyalty', JSON.stringify(loyaltyData));
+                        renderLoyaltyCard();
+                        showNotification(`Loyalty stamp added! You now have ${loyaltyData.stamps}/10 stamps.`, 'success');
+                        
+                        if (loyaltyData.stamps === 5) {
+                            showNotification('Congratulations! You unlocked free 30min browsing!', 'success');
+                        } else if (loyaltyData.stamps === 8) {
+                            showNotification('Congratulations! You unlocked 50% off printing!', 'success');
+                        } else if (loyaltyData.stamps === 10) {
+                            showNotification('Congratulations! You unlocked free CV formatting!', 'success');
+                        }
+                    } else {
+                        showNotification('You already have all 10 stamps!', 'info');
+                    }
+                } else {
+                    showNotification('You already received a loyalty stamp today!', 'info');
+                }
+            }
+            
+            // Add stamp demo button functionality
+            addStampDemoBtn.addEventListener('click', function() {
+                addLoyaltyStamp();
+            });
+            
+            // Make addLoyaltyStamp globally available
+            window.addLoyaltyStamp = addLoyaltyStamp;
+            
+            renderLoyaltyCard();
+        }
+
+        function initializeServiceCalculator() {
+            const serviceSelect = document.getElementById('serviceSelect');
+            const quantityInput = document.getElementById('quantityInput');
+            const calculatedPrice = document.getElementById('calculatedPrice');
+            const calculatedTime = document.getElementById('calculatedTime');
+            
+            function calculateService() {
+                const selectedService = serviceSelect.value;
+                const quantity = parseInt(quantityInput.value) || 1;
+                
+                const service = services.find(s => 
+                    (selectedService === 'typing' && s.name.includes('Typing')) ||
+                    (selectedService === 'printing' && s.name.includes('Printing')) ||
+                    (selectedService === 'scanning' && s.name.includes('Scanning')) ||
+                    (selectedService === 'cv' && s.name.includes('CV')) ||
+                    (selectedService === 'kra' && s.name.includes('KRA'))
+                );
+                
+                if (service && service.calcPrice && service.calcTime) {
+                    const totalPrice = service.calcPrice * quantity;
+                    const totalTime = service.calcTime * quantity;
+                    calculatedPrice.textContent = `KSh ${totalPrice}`;
+                    calculatedTime.textContent = `Time: ${totalTime} minutes`;
+                } else {
+                    calculatedPrice.textContent = `KSh 0`;
+                    calculatedTime.textContent = `Time: 0 minutes`;
+                }
+            }
+            
+            // Set default values
+            quantityInput.value = 1;
+            calculatedPrice.textContent = `KSh 0`;
+            calculatedTime.textContent = `Time: 0 minutes`;
+            
+            serviceSelect.addEventListener('change', calculateService);
+            quantityInput.addEventListener('input', calculateService);
+        }
+
+        function initializeVirtualTour() {
+            const hotspots = document.querySelectorAll('.tour-hotspot');
+            const tourInfo = document.getElementById('tourInfo');
+            
+            const hotspotInfo = {
+                'printing': {
+                    title: 'Printing Station',
+                    description: 'Our high-quality printing area with color and B&W printers, capable of handling everything from documents to photos. We offer various paper types and finishing options.'
+                },
+                'computers': {
+                    title: 'Computer Workstations',
+                    description: 'Comfortable and modern computer stations with high-speed internet access and essential software installed. Perfect for research, assignments, and online applications.'
+                },
+                'helpdesk': {
+                    title: 'Customer Service Desk',
+                    description: 'Our friendly staff is here to assist you with all your digital needs and service requests. Get help with government services, document processing, and technical support.'
+                }
+            };
+            
+            hotspots.forEach(hotspot => {
+                hotspot.addEventListener('click', function() {
+                    const infoKey = this.getAttribute('data-info');
+                    const info = hotspotInfo[infoKey];
+                    
+                    if (info) {
+                        tourInfo.innerHTML = `
+                            <h3>${info.title}</h3>
+                            <p>${info.description}</p>
+                            <button class="queue-btn get-number-btn" style="margin-top: 10px;">Learn More</button>
+                        `;
+                        tourInfo.classList.add('show');
+                        
+                        // Add learn more functionality
+                        tourInfo.querySelector('button').addEventListener('click', function() {
+                            if (infoKey === 'printing') {
+                                document.querySelector('.nav-tab[data-tab="services"]').click();
+                                showNotification('Showing printing services', 'info');
+                            } else if (infoKey === 'computers') {
+                                showNotification('Our computer stations are available for KSh 1/minute', 'info');
+                            } else if (infoKey === 'helpdesk') {
+                                document.querySelector('.nav-tab[data-tab="contact"]').click();
+                            }
+                        });
+                    }
+                });
+            });
+        }
+
+        function initializeReceiptSystem() {
+            let receiptItems = JSON.parse(localStorage.getItem('pamojaReceiptItems')) || [];
+            let receiptNumber = localStorage.getItem('pamojaReceiptNumber') || 'PC-2025-001';
+            let currentCustomer = null;
+            let currentAgent = "Pamoja Cyber Cafe";
+            let currentUniversity = "";
+            let downloadedReceipts = JSON.parse(localStorage.getItem('pamojaDownloadedReceipts')) || [];
+            
+            function renderReceipt() {
+                const receiptItemsContainer = document.getElementById('receiptItems');
+                const receiptTotalElement = document.getElementById('receiptTotal');
+                const receiptCustomerElement = document.getElementById('receiptCustomer');
+                
+                receiptItemsContainer.innerHTML = '';
+                
+                let total = 0;
+                
+                receiptItems.forEach(item => {
+                    const itemElement = document.createElement('div');
+                    itemElement.className = 'receipt-item';
+                    itemElement.innerHTML = `
+                        <span>${item.name} (${item.quantity})</span>
+                        <span>KSh ${item.price * item.quantity}</span>
+                    `;
+                    receiptItemsContainer.appendChild(itemElement);
+                    total += item.price * item.quantity;
+                });
+                
+                receiptTotalElement.textContent = `KSh ${total}`;
+                
+                // Display customer information
+                if (currentCustomer) {
+                    const now = new Date();
+                    const dayNames = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+                    const dayName = dayNames[now.getDay()];
+                    const timeString = now.toLocaleTimeString('en-KE', { hour: '2-digit', minute: '2-digit' });
+                    const dateString = now.toLocaleDateString('en-KE', { year: 'numeric', month: 'long', day: 'numeric' });
+                    
+                    receiptCustomerElement.innerHTML = `
+                        <p><strong>Customer:</strong> ${currentCustomer.name}</p>
+                        <p><strong>Date:</strong> ${dayName}, ${dateString}</p>
+                        <p><strong>Time:</strong> ${timeString}</p>
+                        <p><strong>Agent:</strong> ${currentAgent}</p>
+                        ${currentUniversity ? `<p><strong>University:</strong> ${currentUniversity}</p>` : ''}
+                    `;
+                } else {
+                    receiptCustomerElement.innerHTML = '<p>No customer information available</p>';
+                }
+                
+                // Enable/disable buttons based on whether there are items
+                const downloadBtn = document.getElementById('downloadReceipt');
+                const emailBtn = document.getElementById('emailReceipt');
+                
+                if (receiptItems.length > 0) {
+                    downloadBtn.disabled = false;
+                    emailBtn.disabled = false;
+                } else {
+                    downloadBtn.disabled = true;
+                    emailBtn.disabled = true;
+                }
+            }
+            
+            function addReceiptItem(serviceName, customerName, agentName = "Pamoja Cyber Cafe", universityName = "") {
+                const service = services.find(s => s.name === serviceName);
+                if (!service) return;
+                
+                // Extract numeric price from service price string
+                const priceMatch = service.price.match(/\d+/);
+                const price = priceMatch ? parseInt(priceMatch[0]) : 0;
+                
+                receiptItems.push({
+                    name: service.name,
+                    price: price,
+                    quantity: 1
+                });
+                
+                currentCustomer = {
+                    name: customerName,
+                    timestamp: new Date().toLocaleString('en-KE')
+                };
+                
+                currentAgent = agentName;
+                currentUniversity = universityName;
+                
+                localStorage.setItem('pamojaReceiptItems', JSON.stringify(receiptItems));
+                renderReceipt();
+            }
+            
+            function generatePDFReceipt() {
+                const { jsPDF } = window.jspdf;
+                const doc = new jsPDF();
+                
+                // Set margins and colors
+                const margin = 15;
+                const primaryColor = [0, 100, 0]; // Dark green
+                const goldColor = [255, 215, 0]; // Gold
+                
+                // Add colored border
+                doc.setDrawColor(primaryColor[0], primaryColor[1], primaryColor[2]);
+                doc.setLineWidth(1);
+                doc.rect(margin, margin, doc.internal.pageSize.width - 2*margin, doc.internal.pageSize.height - 2*margin);
+                
+                // Add watermark with logo
+                doc.setTextColor(200, 200, 200);
+                doc.setFontSize(40);
+                doc.text('PAMOJA', 105, 80, { align: 'center', angle: 45 });
+                doc.text('CYBER CAFE', 105, 120, { align: 'center', angle: 45 });
+                
+                // Add logo at top
+                doc.setFontSize(20);
+                doc.setTextColor(primaryColor[0], primaryColor[1], primaryColor[2]);
+                doc.text('PAMOJA CYBER CAFE', 105, margin + 15, { align: 'center' });
+                
+                // Add gold accent
+                doc.setDrawColor(goldColor[0], goldColor[1], goldColor[2]);
+                doc.setLineWidth(2);
+                doc.line(margin + 20, margin + 20, doc.internal.pageSize.width - margin - 20, margin + 20);
+                
+                doc.setFontSize(12);
+                doc.setTextColor(0, 0, 0);
+                doc.text('"Connecting Kenya, One Click at a Time!"', 105, margin + 25, { align: 'center' });
+                
+                doc.text('Nairobi CBD, Moi Avenue', 105, margin + 32, { align: 'center' });
+                doc.text('Prime Plaza, 3rd Floor', 105, margin + 38, { align: 'center' });
+                
+                // Receipt number and date
+                doc.text(`Receipt #: ${receiptNumber}`, margin + 5, margin + 55);
+                const now = new Date();
+                const dayNames = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+                const dayName = dayNames[now.getDay()];
+                const dateString = now.toLocaleDateString('en-KE', { year: 'numeric', month: 'long', day: 'numeric' });
+                const timeString = now.toLocaleTimeString('en-KE', { hour: '2-digit', minute: '2-digit' });
+                doc.text(`Date: ${dayName}, ${dateString}`, margin + 5, margin + 61);
+                doc.text(`Time: ${timeString}`, margin + 5, margin + 67);
+                
+                // Customer information
+                if (currentCustomer) {
+                    doc.text(`Customer: ${currentCustomer.name}`, margin + 5, margin + 77);
+                }
+                
+                // Agent and University information
+                doc.text(`Agent: ${currentAgent}`, margin + 5, margin + 83);
+                if (currentUniversity) {
+                    doc.text(`University: ${currentUniversity}`, margin + 5, margin + 89);
+                }
+                
+                // Receipt items
+                let yPosition = margin + 100;
+                let total = 0;
+                
+                doc.setFontSize(10);
+                doc.text('Item', margin + 5, yPosition);
+                doc.text('Qty', 120, yPosition);
+                doc.text('Amount', 160, yPosition);
+                
+                yPosition += 6;
+                doc.line(margin + 5, yPosition, doc.internal.pageSize.width - margin - 5, yPosition);
+                yPosition += 10;
+                
+                receiptItems.forEach(item => {
+                    const itemTotal = item.price * item.quantity;
+                    total += itemTotal;
+                    
+                    // Wrap long item names
+                    const itemName = doc.splitTextToSize(item.name, 80);
+                    doc.text(itemName, margin + 5, yPosition);
+                    doc.text(item.quantity.toString(), 120, yPosition);
+                    doc.text(`KSh ${itemTotal}`, 160, yPosition);
+                    
+                    yPosition += itemName.length * 10;
+                });
+                
+                // Total
+                yPosition += 10;
+                doc.line(margin + 5, yPosition, doc.internal.pageSize.width - margin - 5, yPosition);
+                yPosition += 10;
+                
+                doc.setFontSize(12);
+                doc.text('Total:', 120, yPosition);
+                doc.text(`KSh ${total}`, 160, yPosition);
+                
+                // Footer
+                yPosition += 20;
+                doc.setFontSize(10);
+                doc.setTextColor(100, 100, 100);
+                doc.text('Thank you for choosing Pamoja Cyber Cafe!', 105, yPosition, { align: 'center' });
+                yPosition += 6;
+                doc.text('We appreciate your business.', 105, yPosition, { align: 'center' });
+                
+                // Save the PDF
+                const fileName = `Pamoja_Receipt_${receiptNumber}.pdf`;
+                doc.save(fileName);
+                
+                // Store receipt info for notification
+                const receiptInfo = {
+                    number: receiptNumber,
+                    fileName: fileName,
+                    customer: currentCustomer ? currentCustomer.name : 'Unknown',
+                    agent: currentAgent,
+                    university: currentUniversity,
+                    total: total,
+                    date: new Date().toLocaleString('en-KE')
+                };
+                
+                downloadedReceipts.push(receiptInfo);
+                localStorage.setItem('pamojaDownloadedReceipts', JSON.stringify(downloadedReceipts));
+                
+                // Add notification with link to receipt
+                const nowTime = new Date();
+                const timeStringForNotification = nowTime.toLocaleTimeString('en-KE', { hour: '2-digit', minute: '2-digit' });
+                const dateStringForNotification = nowTime.toLocaleDateString('en-KE', { weekday: 'short', month: 'short', day: 'numeric' });
+                
+                addNotification(`Receipt ${receiptNumber} downloaded for ${currentCustomer ? currentCustomer.name : 'customer'}`, `${timeStringForNotification} • ${dateStringForNotification}`);
+                
+                // Increment receipt number for next time
+                const numMatch = receiptNumber.match(/\d+$/);
+                if (numMatch) {
+                    const nextNum = parseInt(numMatch[0]) + 1;
+                    receiptNumber = `PC-2025-${nextNum.toString().padStart(3, '0')}`;
+                    localStorage.setItem('pamojaReceiptNumber', receiptNumber);
+                    document.getElementById('receiptNumber').textContent = receiptNumber;
+                }
+                
+                // Clear receipt items after download
+                receiptItems = [];
+                currentCustomer = null;
+                currentAgent = "Pamoja Cyber Cafe";
+                currentUniversity = "";
+                localStorage.setItem('pamojaReceiptItems', JSON.stringify(receiptItems));
+                renderReceipt();
+                
+                showNotification('Receipt downloaded successfully!', 'success');
+            }
+            
+            document.getElementById('downloadReceipt').addEventListener('click', generatePDFReceipt);
+            
+            document.getElementById('emailReceipt').addEventListener('click', function() {
+                const email = prompt('Please enter your email address:');
+                if (email) {
+                    showNotification(`Receipt sent to ${email}`, 'success');
+                    
+                    // Clear receipt items after email
+                    receiptItems = [];
+                    currentCustomer = null;
+                    currentAgent = "Pamoja Cyber Cafe";
+                    currentUniversity = "";
+                    localStorage.setItem('pamojaReceiptItems', JSON.stringify(receiptItems));
+                    renderReceipt();
                 }
             });
-        });
+            
+            // Make addReceiptItem globally available
+            window.addReceiptItem = addReceiptItem;
+            
+            // Initialize receipt number display
+            document.getElementById('receiptNumber').textContent = receiptNumber;
+            
+            renderReceipt();
+        }
 
-        // Initialize view all button
-        updateViewAllButton();
+        function initializeNoticeBoard() {
+            // Notice board is mostly static, but we can add some interactivity
+            const noticeItems = document.querySelectorAll('.notice-item');
+            
+            noticeItems.forEach(item => {
+                item.addEventListener('click', function() {
+                    const title = this.querySelector('h4').textContent;
+                    const message = this.querySelector('p').textContent;
+                    showNotification(`${title}: ${message}`, 'info');
+                });
+            });
+        }
+
+        function initialize3DExplorer() {
+            const service3dCard = document.querySelector('.service-3d-card');
+            const detailBtn = service3dCard.querySelector('.detail-btn');
+            
+            detailBtn.addEventListener('click', function() {
+                // Find printing service
+                const printingService = services.find(s => s.name.includes('Printing'));
+                if (printingService) {
+                    showServiceDetails(printingService.id);
+                }
+            });
+        }
+
+        // Helper function to show notifications
+        function showNotification(message, type = 'info') {
+            // Create a simple notification (could be enhanced with a proper notification system)
+            const notification = document.createElement('div');
+            notification.style.cssText = `
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                background: ${type === 'success' ? '#4CAF50' : type === 'warning' ? '#FF9800' : '#2196F3'};
+                color: white;
+                padding: 15px 20px;
+                border-radius: 5px;
+                box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+                z-index: 10000;
+                max-width: 300px;
+                animation: slideIn 0.3s ease;
+            `;
+            notification.innerHTML = `
+                <div style="display: flex; align-items: center; gap: 10px;">
+                    <i class="fas fa-${type === 'success' ? 'check-circle' : type === 'warning' ? 'exclamation-triangle' : 'info-circle'}"></i>
+                    <span>${message}</span>
+                </div>
+            `;
+            
+            document.body.appendChild(notification);
+            
+            setTimeout(() => {
+                notification.style.animation = 'slideOut 0.3s ease';
+                setTimeout(() => {
+                    if (notification.parentNode) {
+                        notification.parentNode.removeChild(notification);
+                    }
+                }, 300);
+            }, 4000);
+        }
+
+        // Add CSS for notifications
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes slideIn {
+                from { transform: translateX(100%); opacity: 0; }
+                to { transform: translateX(0); opacity: 1; }
+            }
+            @keyframes slideOut {
+                from { transform: translateX(0); opacity: 1; }
+                to { transform: translateX(100%); opacity: 0; }
+            }
+        `;
+        document.head.appendChild(style);
+
+        // Make showNotification globally available
+        window.showNotification = showNotification;
     </script>
 </body>
 </html>
