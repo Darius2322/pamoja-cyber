@@ -387,6 +387,151 @@
             background: var(--light);
         }
 
+        /* Notification Styles - FIXED FOR MOBILE */
+        .notification-container {
+            position: relative;
+        }
+
+        .notification-bell {
+            position: relative;
+            cursor: pointer;
+            padding: 8px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 35px;
+            height: 35px;
+            transition: var(--transition);
+        }
+
+        .notification-bell:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
+
+        .notification-badge {
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            background: var(--accent);
+            color: white;
+            border-radius: 50%;
+            width: 18px;
+            height: 18px;
+            font-size: 0.7rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            display: none;
+        }
+
+        .notification-panel {
+            position: absolute;
+            top: 100%;
+            right: 0;
+            background: var(--card-bg);
+            border-radius: 8px;
+            box-shadow: 0 5px 15px var(--shadow);
+            width: 350px;
+            max-height: 400px;
+            overflow-y: auto;
+            display: none;
+            z-index: 1001;
+            margin-top: 5px;
+        }
+
+        .notification-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px;
+            border-bottom: 1px solid var(--shadow);
+        }
+
+        .notification-header h4 {
+            margin: 0;
+            color: var(--primary);
+        }
+
+        .mark-all-read-btn {
+            background: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 4px;
+            padding: 5px 10px;
+            cursor: pointer;
+            font-size: 0.8rem;
+            transition: var(--transition);
+        }
+
+        .mark-all-read-btn:hover {
+            background: var(--accent);
+        }
+
+        .notification-item {
+            padding: 15px;
+            border-bottom: 1px solid var(--shadow);
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            color: var(--text); /* FIXED: Changed from hardcoded color to use CSS variable */
+        }
+
+        .notification-item:last-child {
+            border-bottom: none;
+        }
+
+        .notification-item i {
+            color: var(--primary);
+            margin-top: 3px;
+        }
+
+        .notification-item p {
+            margin: 0;
+            flex: 1;
+        }
+
+        .notification-time {
+            font-size: 0.8rem;
+            color: var(--text);
+            opacity: 0.7;
+            margin-top: 5px;
+        }
+
+        .notification-actions {
+            display: flex;
+            gap: 5px;
+        }
+
+        .notification-close, .notification-pin {
+            background: none;
+            border: none;
+            cursor: pointer;
+            color: var(--text);
+            font-size: 0.8rem;
+        }
+
+        .notification-pinned {
+            background: rgba(255, 215, 0, 0.1);
+        }
+
+        .notification-read {
+            opacity: 0.7;
+        }
+
+        .no-notifications {
+            padding: 20px;
+            text-align: center;
+            color: var(--text);
+            opacity: 0.7;
+        }
+
+        .no-notifications i {
+            font-size: 2rem;
+            margin-bottom: 10px;
+        }
+
         /* NEW: Loyalty Card Styles */
         .loyalty-card-container {
             background: linear-gradient(135deg, #FFD700, #FFA500);
@@ -1514,151 +1659,6 @@
             animation: fadeIn 0.5s ease;
         }
 
-        /* Notification Styles */
-        .notification-container {
-            position: relative;
-        }
-
-        .notification-bell {
-            position: relative;
-            cursor: pointer;
-            padding: 8px;
-            border-radius: 50%;
-            background: rgba(255, 255, 255, 0.2);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            width: 35px;
-            height: 35px;
-            transition: var(--transition);
-        }
-
-        .notification-bell:hover {
-            background: rgba(255, 255, 255, 0.3);
-        }
-
-        .notification-badge {
-            position: absolute;
-            top: -5px;
-            right: -5px;
-            background: var(--accent);
-            color: white;
-            border-radius: 50%;
-            width: 18px;
-            height: 18px;
-            font-size: 0.7rem;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            display: none;
-        }
-
-        .notification-panel {
-            position: absolute;
-            top: 100%;
-            right: 0;
-            background: var(--card-bg);
-            border-radius: 8px;
-            box-shadow: 0 5px 15px var(--shadow);
-            width: 350px;
-            max-height: 400px;
-            overflow-y: auto;
-            display: none;
-            z-index: 1001;
-            margin-top: 5px;
-        }
-
-        .notification-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 15px;
-            border-bottom: 1px solid var(--shadow);
-        }
-
-        .notification-header h4 {
-            margin: 0;
-            color: var(--primary);
-        }
-
-        .mark-all-read-btn {
-            background: var(--primary);
-            color: white;
-            border: none;
-            border-radius: 4px;
-            padding: 5px 10px;
-            cursor: pointer;
-            font-size: 0.8rem;
-            transition: var(--transition);
-        }
-
-        .mark-all-read-btn:hover {
-            background: var(--accent);
-        }
-
-        .notification-item {
-            padding: 15px;
-            border-bottom: 1px solid var(--shadow);
-            display: flex;
-            align-items: flex-start;
-            gap: 10px;
-            color: #dd700a;
-        }
-
-        .notification-item:last-child {
-            border-bottom: none;
-        }
-
-        .notification-item i {
-            color: var(--primary);
-            margin-top: 3px;
-        }
-
-        .notification-item p {
-            margin: 0;
-            flex: 1;
-        }
-
-        .notification-time {
-            font-size: 0.8rem;
-            color: var(--text);
-            opacity: 0.7;
-            margin-top: 5px;
-        }
-
-        .notification-actions {
-            display: flex;
-            gap: 5px;
-        }
-
-        .notification-close, .notification-pin {
-            background: none;
-            border: none;
-            cursor: pointer;
-            color: var(--text);
-            font-size: 0.8rem;
-        }
-
-        .notification-pinned {
-            background: rgba(255, 215, 0, 0.1);
-        }
-
-        .notification-read {
-            opacity: 0.7;
-        }
-
-        .no-notifications {
-            padding: 20px;
-            text-align: center;
-            color: var(--text);
-            opacity: 0.7;
-        }
-
-        .no-notifications i {
-            font-size: 2rem;
-            margin-bottom: 10px;
-        }
-
         /* Animations */
         @keyframes fadeIn {
             from { opacity: 0; }
@@ -1703,7 +1703,7 @@
             100% { transform: translateY(-100%); }
         }
 
-        /* Responsive Design */
+        /* Responsive Design - FIXED MOBILE DISPLAY */
         @media (max-width: 768px) {
             body {
                 padding-top: 120px;
@@ -1724,6 +1724,7 @@
             .controls-right {
                 width: 100%;
                 justify-content: space-between;
+                gap: 5px;
             }
             
             .clock-container {
@@ -1780,8 +1781,8 @@
             }
             
             .notification-container {
-                top: 80px;
-                right: 10px;
+                position: static; /* FIXED: Changed from absolute positioning */
+                margin-left: 5px;
             }
             
             .service-header {
@@ -1813,6 +1814,21 @@
             
             .receipt-actions {
                 flex-direction: column;
+            }
+            
+            /* FIXED: Notification bell positioning on mobile */
+            .notification-bell {
+                position: relative;
+                margin: 0;
+            }
+            
+            .notification-panel {
+                position: fixed;
+                top: 120px;
+                left: 50%;
+                transform: translateX(-50%);
+                width: 90%;
+                max-width: 350px;
             }
         }
 
@@ -1867,6 +1883,12 @@
             
             .service-header h3 {
                 font-size: 1.1rem;
+            }
+            
+            /* FIXED: Notification bell positioning on very small screens */
+            .notification-container {
+                position: static;
+                margin-left: 0;
             }
         }
 
