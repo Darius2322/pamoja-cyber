@@ -6,6 +6,36 @@
     <title>Pamoja Cyber Cafe - Digital Solutions for Kenyans</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
+    <!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-KY9W8YD6WY"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-KY9W8YD6WY');
+</script>
+
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-KY9W8YD6WY"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-KY9W8YD6WY');
+</script>
+
+<!-- Microsoft Clarity -->
+<script type="text/javascript">
+    (function(c,l,a,r,i,t,y){
+        c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
+        t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
+        y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
+    })(window, document, "clarity", "script", "u2tqeej2ft");
+</script>
+
     <style>
         /* All the CSS styles from the original code */
         :root {
@@ -2129,6 +2159,23 @@
                 <label for="deliveryTime">Preferred Delivery Time (Optional)</label>
                 <input type="time" id="deliveryTime">
             </div>
+            <!-- NEW: Delivery Options -->
+            <div class="form-group">
+                <label for="deliveryOption">Delivery Option</label>
+                <select id="deliveryOption">
+                    <option value="pickup">Pick Up at Cafe</option>
+                    <option value="delivery">Home/Office Delivery</option>
+                </select>
+            </div>
+            <div class="form-group" id="deliveryAddressGroup" style="display: none;">
+                <label for="deliveryAddress">Delivery Address</label>
+                <textarea id="deliveryAddress" placeholder="Enter your complete delivery address"></textarea>
+            </div>
+            <div class="form-group" id="deliveryDistanceGroup" style="display: none;">
+                <label for="deliveryDistance">Distance from Cafe (km)</label>
+                <input type="number" id="deliveryDistance" min="1" max="20" value="1">
+                <small>Delivery fee: KSh <span id="deliveryFee">20</span> per km (Max 20km radius)</small>
+            </div>
             <button type="submit" class="submit-btn">Submit Request</button>
         </form>
     </div>
@@ -2733,6 +2780,156 @@
                 image: "https://images.unsplash.com/photo-1547658719-da2b51169166?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80",
                 calcPrice: 1,
                 calcTime: 1
+            },
+            // NEW SERVICES ADDED
+            {
+                id: 10,
+                name: "NTSA Driver's License",
+                description: "Assistance with NTSA driver's license application, renewal, and related services. We help you navigate the NTSA portal and complete all requirements.",
+                price: "KSh 400",
+                icon: "fas fa-id-card-alt",
+                category: "government",
+                requiresId: true,
+                requiresKra: false,
+                image: "https://images.unsplash.com/photo-1554224155-6726b3ff858f?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80",
+                calcPrice: 400,
+                calcTime: 60
+            },
+            {
+                id: 11,
+                name: "NHIF Registration",
+                description: "Help with NHIF registration, card replacement, and contribution queries. We assist with both individual and corporate NHIF services.",
+                price: "KSh 200",
+                icon: "fas fa-heartbeat",
+                category: "government",
+                requiresId: true,
+                requiresKra: false,
+                image: "https://images.unsplash.com/photo-1554224155-6726b3ff858f?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80",
+                calcPrice: 200,
+                calcTime: 30
+            },
+            {
+                id: 12,
+                name: "NSSF Registration",
+                description: "Assistance with NSSF registration, statement requests, and contribution updates. We help both employees and employers with NSSF services.",
+                price: "KSh 250",
+                icon: "fas fa-hand-holding-usd",
+                category: "government",
+                requiresId: true,
+                requiresKra: false,
+                image: "https://images.unsplash.com/photo-1554224155-6726b3ff858f?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80",
+                calcPrice: 250,
+                calcTime: 30
+            },
+            {
+                id: 13,
+                name: "Thesis & Dissertation Formatting",
+                description: "Professional formatting of theses and dissertations according to university guidelines. Includes table of contents, citations, and bibliography.",
+                price: "KSh 1000",
+                icon: "fas fa-graduation-cap",
+                category: "student",
+                requiresId: false,
+                image: "https://images.unsplash.com/photo-1456513080510-7bf3a84b82f8?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80",
+                calcPrice: 1000,
+                calcTime: 120
+            },
+            {
+                id: 14,
+                name: "Academic Poster Design",
+                description: "Design and printing of academic posters for conferences and presentations. Professional layout with high-quality graphics and text.",
+                price: "KSh 800",
+                icon: "fas fa-chart-bar",
+                category: "student",
+                requiresId: false,
+                image: "https://images.unsplash.com/photo-1558655146-9f40138edfeb?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80",
+                calcPrice: 800,
+                calcTime: 90
+            },
+            {
+                id: 15,
+                name: "Online Exam Assistance",
+                description: "Technical support and supervision for online exams. We provide a quiet environment with stable internet connection for your exams.",
+                price: "KSh 300/hr",
+                icon: "fas fa-laptop-code",
+                category: "student",
+                requiresId: true,
+                requiresKra: false,
+                image: "https://images.unsplash.com/photo-1547658719-da2b51169166?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80",
+                calcPrice: 300,
+                calcTime: 60
+            },
+            {
+                id: 16,
+                name: "Photocopying Services",
+                description: "High-quality photocopying in various sizes (A4, A3) and paper types. Fast and reliable copying for all your document needs.",
+                price: "KSh 5/page",
+                icon: "fas fa-copy",
+                category: "individual",
+                requiresId: false,
+                image: "https://images.unsplash.com/photo-1581094794329-c8112a89af12?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80",
+                calcPrice: 5,
+                calcTime: 1
+            },
+            {
+                id: 17,
+                name: "Lamination Services",
+                description: "Document lamination for protection and durability. Available in various sizes including A4, A5, and ID card size.",
+                price: "KSh 50/page",
+                icon: "fas fa-id-badge",
+                category: "individual",
+                requiresId: false,
+                image: "https://images.unsplash.com/photo-1581094794329-c8112a89af12?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80",
+                calcPrice: 50,
+                calcTime: 5
+            },
+            {
+                id: 18,
+                name: "Passport Photo Services",
+                description: "Professional passport photo shooting and printing. We ensure your photos meet all official requirements for passports, IDs, and visas.",
+                price: "KSh 200",
+                icon: "fas fa-camera",
+                category: "individual",
+                requiresId: false,
+                image: "https://images.unsplash.com/photo-1554224155-6726b3ff858f?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80",
+                calcPrice: 200,
+                calcTime: 15
+            },
+            {
+                id: 19,
+                name: "Business Card Design",
+                description: "Professional business card design and printing. Custom layouts with your logo and contact information.",
+                price: "KSh 600",
+                icon: "fas fa-address-card",
+                category: "business",
+                requiresId: false,
+                image: "https://images.unsplash.com/photo-1554224155-6726b3ff858f?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80",
+                calcPrice: 600,
+                calcTime: 60
+            },
+            {
+                id: 20,
+                name: "Flyer & Brochure Design",
+                description: "Creative design and printing of flyers, brochures, and promotional materials. Eye-catching designs for your business marketing.",
+                price: "KSh 800",
+                icon: "fas fa-newspaper",
+                category: "business",
+                requiresId: false,
+                image: "https://images.unsplash.com/photo-1558655146-9f40138edfeb?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80",
+                calcPrice: 800,
+                calcTime: 90
+            },
+            {
+                id: 21,
+                name: "Company Registration",
+                description: "Complete assistance with company registration, name search, and documentation. We handle the entire process from start to finish.",
+                price: "KSh 1500",
+                icon: "fas fa-building",
+                category: "business",
+                requiresId: true,
+                requiresKra: true,
+                image: "https://images.unsplash.com/photo-1556761175-b413da4baf72?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80",
+                calcPrice: 1500,
+                calcTime: 120
             }
         ];
 
@@ -3427,6 +3624,32 @@
             const serviceRequestForm = document.getElementById('serviceRequestForm');
             const preferredDateInput = document.getElementById('preferredDate');
             const deliveryTimeInput = document.getElementById('deliveryTime');
+            const deliveryOption = document.getElementById('deliveryOption');
+            const deliveryAddressGroup = document.getElementById('deliveryAddressGroup');
+            const deliveryDistanceGroup = document.getElementById('deliveryDistanceGroup');
+            const deliveryDistance = document.getElementById('deliveryDistance');
+            const deliveryFee = document.getElementById('deliveryFee');
+
+            // NEW: Handle delivery option changes
+            deliveryOption.addEventListener('change', function() {
+                if (this.value === 'delivery') {
+                    deliveryAddressGroup.style.display = 'block';
+                    deliveryDistanceGroup.style.display = 'block';
+                    updateDeliveryFee();
+                } else {
+                    deliveryAddressGroup.style.display = 'none';
+                    deliveryDistanceGroup.style.display = 'none';
+                }
+            });
+
+            // NEW: Update delivery fee when distance changes
+            deliveryDistance.addEventListener('input', updateDeliveryFee);
+
+            function updateDeliveryFee() {
+                const distance = parseInt(deliveryDistance.value) || 1;
+                const fee = distance * 20;
+                deliveryFee.textContent = fee;
+            }
 
             window.requestService = function(serviceId) {
                 const service = services.find(s => s.id === serviceId);
@@ -3452,6 +3675,11 @@
                     idNumberGroup.style.display = 'none';
                     kraPinGroup.style.display = 'none';
                 }
+                
+                // Reset delivery options
+                deliveryOption.value = 'pickup';
+                deliveryAddressGroup.style.display = 'none';
+                deliveryDistanceGroup.style.display = 'none';
             }
 
             serviceRequestForm.addEventListener('submit', (e) => {
@@ -3468,6 +3696,10 @@
                     instructions: document.getElementById('specialInstructions').value,
                     preferredDate: document.getElementById('preferredDate').value,
                     deliveryTime: document.getElementById('deliveryTime').value,
+                    deliveryOption: document.getElementById('deliveryOption').value,
+                    deliveryAddress: document.getElementById('deliveryAddress').value,
+                    deliveryDistance: document.getElementById('deliveryDistance').value,
+                    deliveryFee: document.getElementById('deliveryFee').textContent,
                     timestamp: new Date().toLocaleString('en-KE')
                 };
                 
@@ -3504,6 +3736,16 @@
                     }
                 }
                 if (formData.instructions) whatsappMessage += `Instructions: ${formData.instructions}%0A`;
+                
+                // NEW: Add delivery information to WhatsApp message
+                whatsappMessage += `%0A*Delivery Information:*%0A`;
+                whatsappMessage += `Delivery Option: ${formData.deliveryOption === 'delivery' ? 'Home/Office Delivery' : 'Pick Up at Cafe'}%0A`;
+                if (formData.deliveryOption === 'delivery') {
+                    whatsappMessage += `Delivery Address: ${formData.deliveryAddress}%0A`;
+                    whatsappMessage += `Distance: ${formData.deliveryDistance} km%0A`;
+                    whatsappMessage += `Delivery Fee: KSh ${formData.deliveryFee}%0A`;
+                }
+                
                 whatsappMessage += `%0A*Request Details:*%0A`;
                 whatsappMessage += `Submitted: ${formData.timestamp}%0A`;
                 whatsappMessage += `%0A_Thank you for choosing Pamoja Cyber Cafe!_`;
@@ -3933,62 +4175,65 @@
                 doc.setLineWidth(1);
                 doc.rect(margin, margin, doc.internal.pageSize.width - 2*margin, doc.internal.pageSize.height - 2*margin);
                 
-                // Add watermark with logo
-                doc.setTextColor(200, 200, 200);
-                doc.setFontSize(40);
-                doc.text('PAMOJA', 105, 80, { align: 'center', angle: 45 });
-                doc.text('CYBER CAFE', 105, 120, { align: 'center', angle: 45 });
+                // Add logo (simulated with text and shapes)
+                doc.setFillColor(primaryColor[0], primaryColor[1], primaryColor[2]);
+                doc.rect(margin + 5, margin + 5, 15, 15, 'F'); // Logo background
                 
-                // Add logo at top
-                doc.setFontSize(20);
+                doc.setTextColor(255, 255, 255);
+                doc.setFontSize(8);
+                doc.text('PC', margin + 8, margin + 12); // Logo text
+                
+                // Add company name
                 doc.setTextColor(primaryColor[0], primaryColor[1], primaryColor[2]);
-                doc.text('PAMOJA CYBER CAFE', 105, margin + 15, { align: 'center' });
+                doc.setFontSize(16);
+                doc.text('PAMOJA CYBER CAFE', margin + 25, margin + 12);
                 
-                // Add gold accent
+                // Add slogan
+                doc.setFontSize(8);
+                doc.text('"Connecting Kenya, One Click at a Time!"', margin + 25, margin + 17);
+                
+                // Add gold accent line
                 doc.setDrawColor(goldColor[0], goldColor[1], goldColor[2]);
-                doc.setLineWidth(2);
-                doc.line(margin + 20, margin + 20, doc.internal.pageSize.width - margin - 20, margin + 20);
-                
-                doc.setFontSize(12);
-                doc.setTextColor(0, 0, 0);
-                doc.text('"Connecting Kenya, One Click at a Time!"', 105, margin + 25, { align: 'center' });
-                
-                doc.text('Nairobi CBD, Moi Avenue', 105, margin + 32, { align: 'center' });
-                doc.text('Prime Plaza, 3rd Floor', 105, margin + 38, { align: 'center' });
+                doc.setLineWidth(1);
+                doc.line(margin, margin + 20, doc.internal.pageSize.width - margin, margin + 20);
                 
                 // Receipt number and date
-                doc.text(`Receipt #: ${receiptNumber}`, margin + 5, margin + 55);
+                doc.setFontSize(10);
+                doc.setTextColor(0, 0, 0);
+                doc.text(`Receipt #: ${receiptNumber}`, margin, margin + 30);
                 const now = new Date();
                 const dayNames = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
                 const dayName = dayNames[now.getDay()];
                 const dateString = now.toLocaleDateString('en-KE', { year: 'numeric', month: 'long', day: 'numeric' });
                 const timeString = now.toLocaleTimeString('en-KE', { hour: '2-digit', minute: '2-digit' });
-                doc.text(`Date: ${dayName}, ${dateString}`, margin + 5, margin + 61);
-                doc.text(`Time: ${timeString}`, margin + 5, margin + 67);
+                doc.text(`Date: ${dayName}, ${dateString}`, margin, margin + 35);
+                doc.text(`Time: ${timeString}`, margin, margin + 40);
                 
                 // Customer information
                 if (currentCustomer) {
-                    doc.text(`Customer: ${currentCustomer.name}`, margin + 5, margin + 77);
+                    doc.text(`Customer: ${currentCustomer.name}`, margin, margin + 50);
                 }
                 
                 // Agent and University information
-                doc.text(`Agent: ${currentAgent}`, margin + 5, margin + 83);
+                doc.text(`Agent: ${currentAgent}`, margin, margin + 55);
                 if (currentUniversity) {
-                    doc.text(`University: ${currentUniversity}`, margin + 5, margin + 89);
+                    doc.text(`University: ${currentUniversity}`, margin, margin + 60);
                 }
                 
-                // Receipt items
-                let yPosition = margin + 100;
-                let total = 0;
+                // Receipt items header
+                let yPosition = margin + 70;
                 
                 doc.setFontSize(10);
-                doc.text('Item', margin + 5, yPosition);
+                doc.text('Item', margin, yPosition);
                 doc.text('Qty', 120, yPosition);
                 doc.text('Amount', 160, yPosition);
                 
                 yPosition += 6;
-                doc.line(margin + 5, yPosition, doc.internal.pageSize.width - margin - 5, yPosition);
+                doc.line(margin, yPosition, doc.internal.pageSize.width - margin, yPosition);
                 yPosition += 10;
+                
+                // Receipt items
+                let total = 0;
                 
                 receiptItems.forEach(item => {
                     const itemTotal = item.price * item.quantity;
@@ -3996,7 +4241,7 @@
                     
                     // Wrap long item names
                     const itemName = doc.splitTextToSize(item.name, 80);
-                    doc.text(itemName, margin + 5, yPosition);
+                    doc.text(itemName, margin, yPosition);
                     doc.text(item.quantity.toString(), 120, yPosition);
                     doc.text(`KSh ${itemTotal}`, 160, yPosition);
                     
@@ -4005,7 +4250,7 @@
                 
                 // Total
                 yPosition += 10;
-                doc.line(margin + 5, yPosition, doc.internal.pageSize.width - margin - 5, yPosition);
+                doc.line(margin, yPosition, doc.internal.pageSize.width - margin, yPosition);
                 yPosition += 10;
                 
                 doc.setFontSize(12);
@@ -4016,9 +4261,13 @@
                 yPosition += 20;
                 doc.setFontSize(10);
                 doc.setTextColor(100, 100, 100);
-                doc.text('Thank you for choosing Pamoja Cyber Cafe!', 105, yPosition, { align: 'center' });
+                doc.text('Thank you for choosing Pamoja Cyber Cafe!', doc.internal.pageSize.width / 2, yPosition, { align: 'center' });
                 yPosition += 6;
-                doc.text('We appreciate your business.', 105, yPosition, { align: 'center' });
+                doc.text('We appreciate your business.', doc.internal.pageSize.width / 2, yPosition, { align: 'center' });
+                yPosition += 6;
+                doc.text('Nairobi CBD, Moi Avenue, Prime Plaza, 3rd Floor', doc.internal.pageSize.width / 2, yPosition, { align: 'center' });
+                yPosition += 6;
+                doc.text('Tel: +254 711 923 477 | WhatsApp: 0111 923 477', doc.internal.pageSize.width / 2, yPosition, { align: 'center' });
                 
                 // Save the PDF
                 const fileName = `Pamoja_Receipt_${receiptNumber}.pdf`;
