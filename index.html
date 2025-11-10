@@ -8,41 +8,29 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 
     <!-- Google tag (gtag.js) -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-KY9W8YD6WY"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-KY9W8YD6WY"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-KY9W8YD6WY');
+    </script>
 
-  gtag('config', 'G-KY9W8YD6WY');
-</script>
+    <!-- Microsoft Clarity -->
+    <script type="text/javascript">
+        (function(c,l,a,r,i,t,y){
+            c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
+            t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
+            y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
+        })(window, document, "clarity", "script", "u2tqeej2ft");
+    </script>
 
-<!-- Google tag (gtag.js) -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-KY9W8YD6WY"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-
-  gtag('config', 'G-KY9W8YD6WY');
-</script>
-
-<!-- Microsoft Clarity -->
-<script type="text/javascript">
-    (function(c,l,a,r,i,t,y){
-        c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
-        t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
-        y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
-    })(window, document, "clarity", "script", "u2tqeej2ft");
-</script>
-
-<!-- Privacy-friendly analytics by Plausible -->
-<script async src="https://plausible.io/js/pa-QdHTigOJ0VWyj3CaW12h6.js"></script>
-<script>
-  window.plausible=window.plausible||function(){(plausible.q=plausible.q||[]).push(arguments)},plausible.init=plausible.init||function(i){plausible.o=i||{}};
-  plausible.init()
-</script>
-
+    <!-- Privacy-friendly analytics by Plausible -->
+    <script async src="https://plausible.io/js/pa-QdHTigOJ0VWyj3CaW12h6.js"></script>
+    <script>
+      window.plausible=window.plausible||function(){(plausible.q=plausible.q||[]).push(arguments)},plausible.init=plausible.init||function(i){plausible.o=i||{}};
+      plausible.init()
+    </script>
 
     <style>
         /* All the CSS styles from the original code */
@@ -285,28 +273,78 @@
             background: var(--accent);
         }
 
-        .control-buttons {
-            display: flex;
-            gap: 8px;
+        /* NEW: Calendar Intro Popup */
+        .calendar-intro-popup {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 3000;
         }
 
-        .theme-toggle, .search-toggle {
-            background: rgba(255, 255, 255, 0.2);
-            color: white;
-            width: 35px;
-            height: 35px;
-            border-radius: 50%;
+        .calendar-intro-popup.show {
             display: flex;
-            align-items: center;
-            justify-content: center;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .calendar-intro-content {
+            background: var(--bg);
+            border-radius: 15px;
+            padding: 30px;
+            max-width: 500px;
+            width: 90%;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            text-align: center;
+        }
+
+        .calendar-intro-content h3 {
+            color: var(--primary);
+            margin-bottom: 15px;
+        }
+
+        .calendar-intro-content p {
+            margin-bottom: 15px;
+            line-height: 1.6;
+        }
+
+        .intro-close-btn {
+            background: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 5px;
+            padding: 10px 20px;
             cursor: pointer;
             transition: var(--transition);
-            flex-shrink: 0;
+            font-weight: bold;
+            margin-top: 10px;
         }
 
-        .theme-toggle:hover, .search-toggle:hover {
-            background: rgba(255, 255, 255, 0.3);
-            transform: scale(1.05);
+        .intro-close-btn:hover {
+            background: var(--accent);
+        }
+
+        /* NEW: Try Calendar Button */
+        .try-calendar-btn {
+            background: var(--secondary);
+            color: var(--dark);
+            border: none;
+            border-radius: 5px;
+            padding: 10px 20px;
+            cursor: pointer;
+            transition: var(--transition);
+            font-weight: bold;
+            margin-top: 10px;
+            margin-left: 10px;
+        }
+
+        .try-calendar-btn:hover {
+            background: var(--primary);
+            color: white;
         }
 
         /* Search Panel */
@@ -638,6 +676,22 @@
         .loyalty-reward.unlocked {
             background: rgba(76, 175, 80, 0.2);
             border-left: 4px solid var(--primary);
+        }
+
+        .loyalty-info-btn {
+            background: rgba(0, 0, 0, 0.7);
+            color: white;
+            border: none;
+            border-radius: 5px;
+            padding: 8px 15px;
+            cursor: pointer;
+            transition: var(--transition);
+            font-weight: bold;
+            margin-top: 10px;
+        }
+
+        .loyalty-info-btn:hover {
+            background: rgba(0, 0, 0, 0.9);
         }
 
         /* NEW: Service Calculator Styles */
@@ -1205,6 +1259,26 @@
             height: 100px;
             resize: vertical;
         }
+        /* Add to your CSS variables */
+:root {
+    --calendar-icon-color: #006400; /* Dark green for light mode */
+}
+
+.dark-theme {
+    --calendar-icon-color: #ffffff; /* White for dark mode */
+}
+
+/* Apply the color to icons */
+.form-group input[type="date"]::-webkit-calendar-picker-indicator,
+.form-group input[type="time"]::-webkit-calendar-picker-indicator {
+    filter: brightness(0) saturate(100%) invert(26%) sepia(99%) saturate(1736%) hue-rotate(101deg) brightness(95%) contrast(101%);
+    cursor: pointer;
+}
+
+.dark-theme .form-group input[type="date"]::-webkit-calendar-picker-indicator,
+.dark-theme .form-group input[type="time"]::-webkit-calendar-picker-indicator {
+    filter: brightness(0) saturate(100%) invert(100%) sepia(100%) saturate(0%) hue-rotate(0deg) brightness(100%) contrast(100%);
+}
 
         .submit-btn {
             background: var(--primary);
@@ -1696,6 +1770,105 @@
             display: block;
             animation: fadeIn 0.5s ease;
         }
+        /* Add these styles to your existing CSS */
+
+/* Theme Toggle Button */
+.theme-toggle, .search-toggle {
+    background: rgba(255, 255, 255, 0.2);
+    color: white;
+    border: none;
+    border-radius: 50%;
+    width: 35px;
+    height: 35px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: var(--transition);
+    font-size: 1rem;
+}
+
+.theme-toggle:hover, .search-toggle:hover {
+    background: rgba(255, 255, 255, 0.3);
+    transform: scale(1.1);
+}
+
+/* Control Buttons Container */
+.control-buttons {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+}
+
+/* Mobile Controls */
+.mobile-controls {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+/* Ensure buttons are visible on all screen sizes */
+@media (max-width: 768px) {
+    .mobile-controls {
+        width: 100%;
+        justify-content: space-between;
+    }
+    
+    .control-buttons {
+        gap: 5px;
+    }
+}
+
+@media (max-width: 480px) {
+    .mobile-controls {
+        flex-direction: row;
+        gap: 8px;
+    }
+    
+    .control-buttons {
+        gap: 5px;
+    }
+    
+    .theme-toggle, .search-toggle {
+        width: 32px;
+        height: 32px;
+        font-size: 0.9rem;
+    }
+}
+
+        /* NEW: Feature Highlight Styles */
+        .feature-highlight {
+            background: var(--card-bg);
+            border-radius: 15px;
+            padding: 25px;
+            margin: 25px 0;
+            box-shadow: 0 5px 15px var(--shadow);
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .feature-icon {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            width: 70px;
+            height: 70px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.8rem;
+            flex-shrink: 0;
+        }
+
+        .feature-content h3 {
+            color: var(--primary);
+            margin-bottom: 10px;
+        }
+
+        .feature-content p {
+            line-height: 1.6;
+        }
 
         /* Animations */
         @keyframes fadeIn {
@@ -1854,6 +2027,17 @@
                 flex-direction: column;
             }
             
+            .feature-highlight {
+                flex-direction: column;
+                text-align: center;
+            }
+            
+            .feature-icon {
+                width: 60px;
+                height: 60px;
+                font-size: 1.5rem;
+            }
+            
             /* FIXED: Notification bell positioning on mobile */
             .notification-bell {
                 position: relative;
@@ -1980,6 +2164,147 @@
             background: var(--bg);
             color: var(--text);
         }
+
+       .delivery-fee-note {
+    color: red;
+    font-weight: bold;
+    font-size: 0.85rem;
+    display: block;
+    margin-top: 5px;
+    text-align: center;
+    width: 100%;
+    padding: 5px 0;
+    animation: bounceTruck 3s infinite ease-in-out;
+}
+
+@keyframes bounceTruck {
+    0%, 100% { transform: translateX(0) scale(1); }
+    25% { transform: translateX(-5px) scale(1.05); }
+    50% { transform: translateX(5px) scale(1.05); }
+    75% { transform: translateX(-3px) scale(1.03); }
+}
+        /* Loyalty Modal Styles */
+.loyalty-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.8);
+    display: none;
+    justify-content: center;
+    align-items: center;
+    z-index: 3000;
+}
+
+.loyalty-modal.show {
+    display: flex;
+    animation: fadeIn 0.3s ease;
+}
+
+.loyalty-modal-content {
+    background: var(--bg);
+    border-radius: 15px;
+    padding: 30px;
+    max-width: 600px;
+    width: 90%;
+    max-height: 90vh;
+    overflow-y: auto;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+}
+
+.loyalty-modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 25px;
+    padding-bottom: 15px;
+    border-bottom: 2px solid var(--primary);
+}
+
+.loyalty-modal-header h3 {
+    color: var(--primary);
+    margin: 0;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.close-loyalty-modal {
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    cursor: pointer;
+    color: var(--text);
+    transition: var(--transition);
+}
+
+.close-loyalty-modal:hover {
+    color: var(--accent);
+}
+
+.loyalty-step {
+    margin-bottom: 25px;
+    padding: 20px;
+    background: var(--card-bg);
+    border-radius: 10px;
+    border-left: 4px solid var(--secondary);
+}
+
+.loyalty-step h4 {
+    color: var(--secondary);
+    margin-bottom: 15px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.loyalty-step ul {
+    padding-left: 20px;
+}
+
+.loyalty-step li {
+    margin-bottom: 8px;
+    line-height: 1.5;
+}
+
+.loyalty-note {
+    background: rgba(255, 215, 0, 0.1);
+    padding: 15px;
+    border-radius: 8px;
+    border-left: 4px solid var(--secondary);
+    margin-top: 20px;
+}
+
+.loyalty-note p {
+    margin: 0;
+    font-size: 0.9rem;
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+}
+
+.loyalty-modal-footer {
+    margin-top: 25px;
+    text-align: center;
+}
+
+.loyalty-close-btn {
+    background: var(--primary);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    padding: 12px 25px;
+    cursor: pointer;
+    transition: var(--transition);
+    font-weight: bold;
+    font-size: 1rem;
+}
+
+.loyalty-close-btn:hover {
+    background: var(--accent);
+    transform: translateY(-2px);
+}
     </style>
 </head>
 <body>
@@ -2015,9 +2340,11 @@
                 </div>
                 <div class="mobile-controls">
                     <div class="control-buttons">
+                        <!-- FIXED: Added theme toggle button -->
                         <button class="theme-toggle" id="themeToggle">
                             <i class="fas fa-moon"></i>
                         </button>
+                        <!-- FIXED: Added search toggle button -->
                         <button class="search-toggle" id="searchToggle">
                             <i class="fas fa-search"></i>
                         </button>
@@ -2058,6 +2385,18 @@
                 </div>
             </div>
         </nav>
+    </div>
+
+    <!-- Calendar Intro Popup -->
+    <div class="calendar-intro-popup" id="calendarIntroPopup">
+        <div class="calendar-intro-content">
+            <h3><i class="fas fa-calendar-alt"></i> Save Important Notes!</h3>
+            <p>You can now save important dates, reminders, and notes by clicking on the time display at the top of the page.</p>
+            <p>Your notes are saved locally in your browser, so you can access them anytime you visit our website.</p>
+            <p>Perfect for remembering service deadlines, appointment dates, or special offers!</p>
+            <button class="intro-close-btn" id="introCloseBtn">Got it!</button>
+            <button class="try-calendar-btn" id="tryCalendarBtn">Try Now!</button>
+        </div>
     </div>
 
     <!-- Search Panel -->
@@ -2182,7 +2521,10 @@
             <div class="form-group" id="deliveryDistanceGroup" style="display: none;">
                 <label for="deliveryDistance">Distance from Cafe (km)</label>
                 <input type="number" id="deliveryDistance" min="1" max="20" value="1">
-                <small>Delivery fee: KSh <span id="deliveryFee">20</span> per km (Max 20km radius)</small>
+                <small class="delivery-fee-note">
+    <i class="fas fa-truck"></i>  Quick Delivery: KSh <span id="deliveryFee">20</span> per km 
+    <i class="fas fa-map-marker-alt"></i>  (Up to 20km radius )<i class="fas fa-thumbtack"></i>
+</small>
             </div>
             <button type="submit" class="submit-btn">Submit Request</button>
         </form>
@@ -2194,37 +2536,89 @@
         <div class="tab-content active" id="home-tab">
             <div class="hero">
                 <h2>Professional Digital Services in Kenya</h2>
-                <p>Your one-stop solution for all digital needs - from student assignments to government services and personal printing</p>
+                <p>Your one-stop solution for all digital needs - from student assignments to government services and personal printing. 
+                <strong>Click the time display</strong> to save important notes and reminders, and <strong>earn loyalty stamps</strong> with every service request for exclusive rewards!</p>
                 <a href="#" class="cta-button" data-tab="services">Explore Our Services</a>
             </div>
 
-            <!-- NEW: Digital Loyalty Card -->
-            <div class="loyalty-card-container">
-                <h2><i class="fas fa-id-card"></i> Digital Loyalty Card</h2>
-                <p>Get a free service after 10 visits!</p>
-                <div class="loyalty-stamps" id="loyaltyStamps">
-                    <!-- Stamps will be generated by JavaScript -->
-                </div>
-                <div class="loyalty-rewards">
-                    <div class="loyalty-reward">
-                        <i class="fas fa-gift"></i>
-                        <span>Free 30min browsing after 5 stamps</span>
-                    </div>
-                    <div class="loyalty-reward">
-                        <i class="fas fa-gift"></i>
-                        <span>50% off printing after 8 stamps</span>
-                    </div>
-                    <div class="loyalty-reward">
-                        <i class="fas fa-gift"></i>
-                        <span>Free CV formatting after 10 stamps</span>
-                    </div>
-                </div>
-                <!-- Add Stamp Demo Button -->
-                <button class="queue-btn demo-btn" id="addStampDemo" style="margin-top: 20px;">
-                    <i class="fas fa-plus-circle"></i> Add Stamp (Demo)
-                </button>
+         <!-- NEW: Loyalty Card Styles -->
+<!-- NEW: Loyalty Card Styles -->
+<div class="loyalty-card-container">
+    <h2><i class="fas fa-id-card"></i> Digital Loyalty Card</h2>
+    <p>Get a free service after 10 visits! Earn one stamp for each service request.</p>
+    <div class="loyalty-stamps" id="loyaltyStamps">
+        <!-- Stamps will be generated by JavaScript -->
+    </div>
+    <div class="loyalty-rewards">
+        <div class="loyalty-reward">
+            <i class="fas fa-gift"></i>
+            <span>Free 30min browsing after 5 stamps</span>
+        </div>
+        <div class="loyalty-reward">
+            <i class="fas fa-gift"></i>
+            <span>50% off printing after 8 stamps</span>
+        </div>
+        <div class="loyalty-reward">
+            <i class="fas fa-gift"></i>
+            <span>Free CV formatting after 10 stamps</span>
+        </div>
+    </div>
+    <!-- Add Stamp Demo Button -->
+    <button class="queue-btn demo-btn" id="addStampDemo" style="margin-top: 20px;">
+        <i class="fas fa-plus-circle"></i> Add Stamp (Demo)
+    </button>
+    <!-- FIXED: How Loyalty Works Button -->
+    <button class="loyalty-info-btn" id="loyaltyInfoBtn">
+        <i class="fas fa-info-circle"></i> How Loyalty Works
+    </button>
+</div>
+<!-- Add this modal to your HTML, just before the closing body tag -->
+    <div class="loyalty-modal" id="loyaltyModal">
+        <div class="loyalty-modal-content">
+            <div class="loyalty-modal-header">
+                <h3><i class="fas fa-id-card"></i> How Our Loyalty Program Works</h3>
+                <button class="close-loyalty-modal" id="closeLoyaltyModal">&times;</button>
             </div>
-
+            
+            <div class="loyalty-step">
+                <h4><i class="fas fa-stamp"></i> Step 1: Earn Stamps</h4>
+                <ul>
+                    <li>Get <strong>1 stamp</strong> for every service request through our website</li>
+                    <li>Maximum <strong>1 stamp per day</strong> to encourage regular visits</li>
+                    <li>Your progress is automatically saved in your browser</li>
+                    <li>Track your stamps on the digital loyalty card on our homepage</li>
+                </ul>
+            </div>
+            
+            <div class="loyalty-step">
+                <h4><i class="fas fa-gift"></i> Step 2: Unlock Rewards</h4>
+                <ul>
+                    <li><strong>5 stamps:</strong> Free 30 minutes of high-speed internet browsing</li>
+                    <li><strong>8 stamps:</strong> 50% discount on all printing services (color and B&W)</li>
+                    <li><strong>10 stamps:</strong> Free professional CV formatting service</li>
+                </ul>
+            </div>
+            
+            <div class="loyalty-step">
+                <h4><i class="fas fa-ticket-alt"></i> Step 3: Redeem Rewards</h4>
+                <ul>
+                    <li>Visit our cafe and show your digital loyalty card</li>
+                    <li>Rewards are automatically applied to your next service</li>
+                    <li>After reaching 10 stamps, your card resets and you start earning again!</li>
+                    <li>Combine loyalty rewards with other promotions for maximum savings</li>
+                </ul>
+            </div>
+            
+            <div class="loyalty-note">
+                <p><i class="fas fa-info-circle"></i> <strong>Note:</strong> Your loyalty progress is saved locally in your browser. If you clear your browser data, your stamps will be reset. For permanent tracking, consider creating an account with us.</p>
+            </div>
+            
+            <div class="loyalty-modal-footer">
+                <button class="loyalty-close-btn" id="loyaltyCloseBtn">Got it! Start Earning Stamps</button>
+            </div>
+        </div>
+    </div>
+    
             <!-- NEW: Service Speed Calculator -->
             <div class="calculator-container">
                 <h2><i class="fas fa-calculator"></i> Service Speed Calculator</h2>
@@ -2289,6 +2683,8 @@
                     <p><i class="fas fa-check-circle" style="color: var(--primary);"></i> Secure and confidential document handling</p>
                     <p><i class="fas fa-check-circle" style="color: var(--primary);"></i> Convenient location in Nairobi CBD</p>
                     <p><i class="fas fa-check-circle" style="color: var(--primary);"></i> Extended working hours for your convenience</p>
+                    <p><i class="fas fa-check-circle" style="color: var(--primary);"></i> <strong>Digital calendar notes</strong> - Click the time display to save important dates and reminders</p>
+                    <p><i class="fas fa-check-circle" style="color: var(--primary);"></i> <strong>Loyalty rewards program</strong> - Earn stamps with every service for exclusive benefits</p>
                 </div>
                 <div class="about-image">
                     <img src="https://images.unsplash.com/photo-1522071820081-009f0129c71c?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80" alt="Cyber Cafe Interior">
@@ -2309,6 +2705,37 @@
                 </div>
                 <div class="about-image">
                     <img src="https://images.unsplash.com/photo-1522071820081-009f0129c71c?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80" alt="Cyber Cafe Interior">
+                </div>
+            </div>
+
+            <!-- NEW: Feature Highlights -->
+            <div class="feature-highlight">
+                <div class="feature-icon">
+                    <i class="fas fa-calendar-alt"></i>
+                </div>
+                <div class="feature-content">
+                    <h3>Digital Calendar Notes</h3>
+                    <p>Click on the time display at the top of the page to open our interactive calendar. You can save important dates, reminders, and notes for any day. Your notes are saved locally in your browser, so you can access them anytime you visit our website. Perfect for remembering service deadlines, appointment dates, or special offers!</p>
+                </div>
+            </div>
+
+            <div class="feature-highlight">
+                <div class="feature-icon">
+                    <i class="fas fa-id-card"></i>
+                </div>
+                <div class="feature-content">
+                    <h3>Digital Loyalty Program</h3>
+                    <p>Earn one loyalty stamp for every service you request through our website. Collect 10 stamps to receive a free service! Our loyalty rewards include free browsing time, printing discounts, and complimentary CV formatting. Your loyalty progress is saved in your browser, so you can track your stamps across multiple visits.</p>
+                </div>
+            </div>
+
+            <div class="feature-highlight">
+                <div class="feature-icon">
+                    <i class="fas fa-calculator"></i>
+                </div>
+                <div class="feature-content">
+                    <h3>Service Calculator</h3>
+                    <p>Use our service calculator to estimate the cost and time required for your projects. Simply select the service type and quantity to get instant pricing and timing estimates. This helps you plan your budget and schedule effectively before making a service request.</p>
                 </div>
             </div>
 
@@ -2789,7 +3216,6 @@
                 calcPrice: 1,
                 calcTime: 1
             },
-            // NEW SERVICES ADDED
             {
                 id: 10,
                 name: "NTSA Driver's License",
@@ -2941,7 +3367,7 @@
             }
         ];
 
-        // University agents data - Updated with agent names
+        // University agents data
         const universityAgents = {
             "kisii": {
                 name: "Kisii University",
@@ -2981,6 +3407,24 @@
             }
         };
 
+        // Global variables
+        let currentMonth = new Date().getMonth();
+        let currentYear = new Date().getFullYear();
+        let selectedCalendarDate = null;
+        let dateNotes = JSON.parse(localStorage.getItem('cyberCafeDateNotes')) || {};
+        let notifications = JSON.parse(localStorage.getItem('cyberCafeNotifications')) || [];
+        let loyaltyData = JSON.parse(localStorage.getItem('pamojaLoyalty')) || { 
+            stamps: 0, 
+            lastVisit: null,
+            visits: []
+        };
+        let receiptItems = JSON.parse(localStorage.getItem('pamojaReceiptItems')) || [];
+        let receiptNumber = localStorage.getItem('pamojaReceiptNumber') || 'PC-2025-001';
+        let downloadedReceipts = JSON.parse(localStorage.getItem('pamojaDownloadedReceipts')) || [];
+        let currentCustomer = null;
+        let currentAgent = "Pamoja Cyber Cafe";
+        let currentUniversity = "";
+
         // Initialize all functionality when DOM is loaded
         document.addEventListener('DOMContentLoaded', function() {
             initializeThemeToggle();
@@ -3002,13 +3446,23 @@
             initializeReceiptSystem();
             initializeNoticeBoard();
             initialize3DExplorer();
+            initializeCalendarIntro();
+            
+            // Initialize loyalty modal
+            initializeLoyaltyModal();
         });
 
-        // ===== EXISTING FUNCTIONALITY =====
-
+        // ===== THEME TOGGLE =====
         function initializeThemeToggle() {
             const themeToggle = document.getElementById('themeToggle');
             const themeIcon = themeToggle.querySelector('i');
+
+            // Load saved theme
+            const savedTheme = localStorage.getItem('theme');
+            if (savedTheme === 'dark') {
+                document.body.classList.add('dark-theme');
+                themeIcon.className = 'fas fa-sun';
+            }
 
             themeToggle.addEventListener('click', () => {
                 document.body.classList.toggle('dark-theme');
@@ -3021,15 +3475,9 @@
                     localStorage.setItem('theme', 'light');
                 }
             });
-
-            // Load saved theme
-            const savedTheme = localStorage.getItem('theme');
-            if (savedTheme === 'dark') {
-                document.body.classList.add('dark-theme');
-                themeIcon.className = 'fas fa-sun';
-            }
         }
 
+        // ===== CLOCK AND CALENDAR =====
         function initializeClockAndCalendar() {
             const clockContainer = document.getElementById('clockContainer');
             const realTimeClock = document.getElementById('realTimeClock');
@@ -3043,12 +3491,6 @@
             const dateNotesInput = document.getElementById('dateNotesInput');
             const saveNoteBtn = document.getElementById('saveNoteBtn');
             const successAnimation = document.getElementById('successAnimation');
-
-            let currentDate = new Date();
-            let currentMonth = currentDate.getMonth();
-            let currentYear = currentDate.getFullYear();
-            let selectedCalendarDate = null;
-            let dateNotes = JSON.parse(localStorage.getItem('cyberCafeDateNotes')) || {};
 
             function updateClock() {
                 const now = new Date();
@@ -3210,9 +3652,10 @@
 
             setInterval(updateClock, 1000);
             updateClock();
-            renderCalendar(currentDate.getMonth(), currentDate.getFullYear());
+            renderCalendar(currentMonth, currentYear);
         }
 
+        // ===== NAVIGATION =====
         function initializeNavigation() {
             const navTabs = document.querySelectorAll('.nav-tab');
             const tabContents = document.querySelectorAll('.tab-content');
@@ -3255,6 +3698,7 @@
             });
         }
 
+        // ===== NOTIFICATIONS =====
         function initializeNotifications() {
             const notificationBell = document.getElementById('notificationBell');
             const notificationPanel = document.getElementById('notificationPanel');
@@ -3262,11 +3706,8 @@
             const noNotifications = document.getElementById('noNotifications');
             const markAllReadBtn = document.getElementById('markAllReadBtn');
 
-            let notifications = JSON.parse(localStorage.getItem('cyberCafeNotifications')) || [];
-            let notificationCount = notifications.filter(n => !n.read).length;
-
             function updateNotificationBadge() {
-                notificationCount = notifications.filter(n => !n.read).length;
+                const notificationCount = notifications.filter(n => !n.read).length;
                 
                 if (notificationCount > 0) {
                     notificationBadge.textContent = notificationCount;
@@ -3407,6 +3848,7 @@
             window.addNotification = addNotification;
         }
 
+        // ===== SEARCH FUNCTIONALITY =====
         function initializeSearch() {
             const searchToggle = document.getElementById('searchToggle');
             const searchPanel = document.getElementById('searchPanel');
@@ -3470,6 +3912,7 @@
             }
         }
 
+        // ===== SERVICES =====
         function initializeServices() {
             const categoryTabs = document.querySelectorAll('.category-tab');
             let servicesLimit = 6;
@@ -3576,6 +4019,7 @@
             updateViewAllButton();
         }
 
+        // ===== SERVICE MODAL =====
         function initializeServiceModal() {
             const serviceModal = document.getElementById('serviceModal');
             const modalServiceName = document.getElementById('modalServiceName');
@@ -3623,6 +4067,7 @@
             });
         }
 
+        // ===== REQUEST FORM =====
         function initializeRequestForm() {
             const requestForm = document.getElementById('requestForm');
             const serviceTypeInput = document.getElementById('serviceType');
@@ -3638,7 +4083,7 @@
             const deliveryDistance = document.getElementById('deliveryDistance');
             const deliveryFee = document.getElementById('deliveryFee');
 
-            // NEW: Handle delivery option changes
+            // Handle delivery option changes
             deliveryOption.addEventListener('change', function() {
                 if (this.value === 'delivery') {
                     deliveryAddressGroup.style.display = 'block';
@@ -3650,7 +4095,7 @@
                 }
             });
 
-            // NEW: Update delivery fee when distance changes
+            // Update delivery fee when distance changes
             deliveryDistance.addEventListener('input', updateDeliveryFee);
 
             function updateDeliveryFee() {
@@ -3745,7 +4190,7 @@
                 }
                 if (formData.instructions) whatsappMessage += `Instructions: ${formData.instructions}%0A`;
                 
-                // NEW: Add delivery information to WhatsApp message
+                // Add delivery information to WhatsApp message
                 whatsappMessage += `%0A*Delivery Information:*%0A`;
                 whatsappMessage += `Delivery Option: ${formData.deliveryOption === 'delivery' ? 'Home/Office Delivery' : 'Pick Up at Cafe'}%0A`;
                 if (formData.deliveryOption === 'delivery') {
@@ -3784,6 +4229,7 @@
             });
         }
 
+        // ===== GALLERY =====
         function initializeGallery() {
             const gallerySlides = document.getElementById('gallerySlides');
             const galleryPrev = document.getElementById('galleryPrev');
@@ -3828,6 +4274,7 @@
             }, 5000);
         }
 
+        // ===== CONTACT FORM =====
         function initializeContactForm() {
             const contactForm = document.getElementById('contactForm');
             contactForm.addEventListener('submit', (e) => {
@@ -3878,6 +4325,7 @@
             });
         }
 
+        // ===== WHATSAPP FUNCTIONALITY =====
         function initializeWhatsApp() {
             const whatsappLoading = document.getElementById('whatsappLoading');
             
@@ -3914,87 +4362,98 @@
             });
         }
 
-        // ===== NEW FEATURES =====
-
-        function initializeLoyaltyCard() {
-            const loyaltyStampsContainer = document.getElementById('loyaltyStamps');
-            const addStampDemoBtn = document.getElementById('addStampDemo');
-            let loyaltyData = JSON.parse(localStorage.getItem('pamojaLoyalty')) || { 
-                stamps: 0, 
-                lastVisit: null,
-                visits: []
-            };
-            
-            function renderLoyaltyCard() {
-                loyaltyStampsContainer.innerHTML = '';
-                for (let i = 1; i <= 10; i++) {
-                    const stamp = document.createElement('div');
-                    stamp.className = 'loyalty-stamp';
-                    if (i <= loyaltyData.stamps) {
-                        stamp.classList.add('filled');
-                        stamp.innerHTML = '<i class="fas fa-check"></i>';
-                    } else {
-                        stamp.textContent = i;
-                    }
-                    loyaltyStampsContainer.appendChild(stamp);
-                }
-                
-                const rewards = document.querySelectorAll('.loyalty-reward');
-                rewards.forEach((reward, index) => {
-                    if (loyaltyData.stamps >= (index + 1) * 3) {
-                        reward.classList.add('unlocked');
-                    } else {
-                        reward.classList.remove('unlocked');
-                    }
-                });
+   
+// ===== LOYALTY CARD =====
+function initializeLoyaltyCard() {
+    console.log("Initializing loyalty card...");
+    
+    const loyaltyStampsContainer = document.getElementById('loyaltyStamps');
+    const addStampDemoBtn = document.getElementById('addStampDemo');
+    const loyaltyInfoBtn = document.getElementById('loyaltyInfoBtn');
+    
+    // Check if elements exist
+    if (!loyaltyStampsContainer) {
+        console.error("Loyalty stamps container not found!");
+        return;
+    }
+    
+    function renderLoyaltyCard() {
+        loyaltyStampsContainer.innerHTML = '';
+        for (let i = 1; i <= 10; i++) {
+            const stamp = document.createElement('div');
+            stamp.className = 'loyalty-stamp';
+            if (i <= loyaltyData.stamps) {
+                stamp.classList.add('filled');
+                stamp.innerHTML = '<i class="fas fa-check"></i>';
+            } else {
+                stamp.textContent = i;
             }
-            
-            function addLoyaltyStamp() {
-                const today = new Date().toDateString();
-                
-                // Check if the user already got a stamp today
-                const todayVisit = loyaltyData.visits.find(visit => 
-                    new Date(visit.date).toDateString() === today
-                );
-                
-                if (!todayVisit) {
-                    if (loyaltyData.stamps < 10) {
-                        loyaltyData.stamps++;
-                        loyaltyData.lastVisit = new Date().toISOString();
-                        loyaltyData.visits.push({
-                            date: new Date().toISOString(),
-                            service: "Service Request"
-                        });
-                        localStorage.setItem('pamojaLoyalty', JSON.stringify(loyaltyData));
-                        renderLoyaltyCard();
-                        showNotification(`Loyalty stamp added! You now have ${loyaltyData.stamps}/10 stamps.`, 'success');
-                        
-                        if (loyaltyData.stamps === 5) {
-                            showNotification('Congratulations! You unlocked free 30min browsing!', 'success');
-                        } else if (loyaltyData.stamps === 8) {
-                            showNotification('Congratulations! You unlocked 50% off printing!', 'success');
-                        } else if (loyaltyData.stamps === 10) {
-                            showNotification('Congratulations! You unlocked free CV formatting!', 'success');
-                        }
-                    } else {
-                        showNotification('You already have all 10 stamps!', 'info');
-                    }
-                } else {
-                    showNotification('You already received a loyalty stamp today!', 'info');
-                }
-            }
-            
-            // Add stamp demo button functionality
-            addStampDemoBtn.addEventListener('click', function() {
-                addLoyaltyStamp();
-            });
-            
-            // Make addLoyaltyStamp globally available
-            window.addLoyaltyStamp = addLoyaltyStamp;
-            
-            renderLoyaltyCard();
+            loyaltyStampsContainer.appendChild(stamp);
         }
+        
+        const rewards = document.querySelectorAll('.loyalty-reward');
+        rewards.forEach((reward, index) => {
+            if (loyaltyData.stamps >= (index + 1) * 3) {
+                reward.classList.add('unlocked');
+            } else {
+                reward.classList.remove('unlocked');
+            }
+        });
+    }
+    
+    function addLoyaltyStamp() {
+        const today = new Date().toDateString();
+        
+        // Check if the user already got a stamp today
+        const todayVisit = loyaltyData.visits.find(visit => 
+            new Date(visit.date).toDateString() === today
+        );
+        
+        if (!todayVisit) {
+            if (loyaltyData.stamps < 10) {
+                loyaltyData.stamps++;
+                loyaltyData.lastVisit = new Date().toISOString();
+                loyaltyData.visits.push({
+                    date: new Date().toISOString(),
+                    service: "Service Request"
+                });
+                localStorage.setItem('pamojaLoyalty', JSON.stringify(loyaltyData));
+                renderLoyaltyCard();
+                showNotification(`Loyalty stamp added! You now have ${loyaltyData.stamps}/10 stamps.`, 'success');
+                
+                if (loyaltyData.stamps === 5) {
+                    showNotification('Congratulations! You unlocked free 30min browsing!', 'success');
+                } else if (loyaltyData.stamps === 8) {
+                    showNotification('Congratulations! You unlocked 50% off printing!', 'success');
+                } else if (loyaltyData.stamps === 10) {
+                    showNotification('Congratulations! You unlocked free CV formatting!', 'success');
+                }
+            } else {
+                showNotification('You already have all 10 stamps!', 'info');
+            }
+        } else {
+            showNotification('You already received a loyalty stamp today!', 'info');
+        }
+    }
+    
+    // Add stamp demo button functionality
+    if (addStampDemoBtn) {
+        addStampDemoBtn.addEventListener('click', function() {
+            console.log("Add stamp button clicked");
+            addLoyaltyStamp();
+        });
+    } else {
+        console.error("Add stamp demo button not found!");
+    }
+    
+    // Make addLoyaltyStamp globally available
+    window.addLoyaltyStamp = addLoyaltyStamp;
+    
+    renderLoyaltyCard();
+    console.log("Loyalty card initialized successfully");
+}
 
+        // ===== SERVICE CALCULATOR =====
         function initializeServiceCalculator() {
             const serviceSelect = document.getElementById('serviceSelect');
             const quantityInput = document.getElementById('quantityInput');
@@ -4033,6 +4492,7 @@
             quantityInput.addEventListener('input', calculateService);
         }
 
+        // ===== VIRTUAL TOUR =====
         function initializeVirtualTour() {
             const hotspots = document.querySelectorAll('.tour-hotspot');
             const tourInfo = document.getElementById('tourInfo');
@@ -4081,14 +4541,8 @@
             });
         }
 
+        // ===== RECEIPT SYSTEM =====
         function initializeReceiptSystem() {
-            let receiptItems = JSON.parse(localStorage.getItem('pamojaReceiptItems')) || [];
-            let receiptNumber = localStorage.getItem('pamojaReceiptNumber') || 'PC-2025-001';
-            let currentCustomer = null;
-            let currentAgent = "Pamoja Cyber Cafe";
-            let currentUniversity = "";
-            let downloadedReceipts = JSON.parse(localStorage.getItem('pamojaDownloadedReceipts')) || [];
-            
             function renderReceipt() {
                 const receiptItemsContainer = document.getElementById('receiptItems');
                 const receiptTotalElement = document.getElementById('receiptTotal');
@@ -4348,6 +4802,7 @@
             renderReceipt();
         }
 
+        // ===== NOTICE BOARD =====
         function initializeNoticeBoard() {
             // Notice board is mostly static, but we can add some interactivity
             const noticeItems = document.querySelectorAll('.notice-item');
@@ -4361,6 +4816,7 @@
             });
         }
 
+        // ===== 3D EXPLORER =====
         function initialize3DExplorer() {
             const service3dCard = document.querySelector('.service-3d-card');
             const detailBtn = service3dCard.querySelector('.detail-btn');
@@ -4374,9 +4830,99 @@
             });
         }
 
-        // Helper function to show notifications
+        // ===== CALENDAR INTRO POPUP =====
+        function initializeCalendarIntro() {
+            const calendarIntroPopup = document.getElementById('calendarIntroPopup');
+            const introCloseBtn = document.getElementById('introCloseBtn');
+            const tryCalendarBtn = document.getElementById('tryCalendarBtn');
+            
+            // Check if user has seen the popup before
+            let calendarIntroCount = parseInt(localStorage.getItem('calendarIntroCount')) || 0;
+            
+            // Show popup only if user has seen it less than 5 times
+            if (calendarIntroCount < 5) {
+                // Show popup after a short delay
+                setTimeout(() => {
+                    calendarIntroPopup.classList.add('show');
+                    // Increment counter
+                    calendarIntroCount++;
+                    localStorage.setItem('calendarIntroCount', calendarIntroCount.toString());
+                }, 2000);
+            }
+            
+            // Close popup when close button is clicked
+            introCloseBtn.addEventListener('click', () => {
+                calendarIntroPopup.classList.remove('show');
+            });
+            
+            // Try Now button functionality
+            tryCalendarBtn.addEventListener('click', () => {
+                calendarIntroPopup.classList.remove('show');
+                // Open the calendar popup
+                document.getElementById('clockContainer').click();
+                
+                // Show a helpful notification
+                showNotification('Click on any date to select it, then add your note!', 'info');
+            });
+            
+            // Close popup when clicking outside
+            calendarIntroPopup.addEventListener('click', (e) => {
+                if (e.target === calendarIntroPopup) {
+                    calendarIntroPopup.classList.remove('show');
+                }
+            });
+        }
+
+        // ===== LOYALTY MODAL =====
+        function initializeLoyaltyModal() {
+            const loyaltyModal = document.getElementById('loyaltyModal');
+            const loyaltyInfoBtn = document.getElementById('loyaltyInfoBtn');
+            const closeLoyaltyModal = document.getElementById('closeLoyaltyModal');
+            const loyaltyCloseBtn = document.getElementById('loyaltyCloseBtn');
+            
+            // Open modal when "How Loyalty Works" button is clicked
+            if (loyaltyInfoBtn) {
+                loyaltyInfoBtn.addEventListener('click', function() {
+                    loyaltyModal.classList.add('show');
+                });
+            }
+            
+            // Close modal when X button is clicked
+            if (closeLoyaltyModal) {
+                closeLoyaltyModal.addEventListener('click', function() {
+                    loyaltyModal.classList.remove('show');
+                });
+            }
+            
+            // Close modal when "Got it" button is clicked
+            if (loyaltyCloseBtn) {
+                loyaltyCloseBtn.addEventListener('click', function() {
+                    loyaltyModal.classList.remove('show');
+                    // Optionally, scroll to the loyalty card
+                    document.querySelector('.loyalty-card-container').scrollIntoView({ 
+                        behavior: 'smooth' 
+                    });
+                });
+            }
+            
+            // Close modal when clicking outside the content
+            loyaltyModal.addEventListener('click', function(e) {
+                if (e.target === loyaltyModal) {
+                    loyaltyModal.classList.remove('show');
+                }
+            });
+            
+            // Close modal with Escape key
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'Escape' && loyaltyModal.classList.contains('show')) {
+                    loyaltyModal.classList.remove('show');
+                }
+            });
+        }
+
+        // ===== NOTIFICATION HELPER =====
         function showNotification(message, type = 'info') {
-            // Create a simple notification (could be enhanced with a proper notification system)
+            // Create a simple notification
             const notification = document.createElement('div');
             notification.style.cssText = `
                 position: fixed;
@@ -4388,9 +4934,11 @@
                 border-radius: 5px;
                 box-shadow: 0 4px 12px rgba(0,0,0,0.15);
                 z-index: 10000;
-                max-width: 300px;
+                max-width: 400px;
                 animation: slideIn 0.3s ease;
+                word-wrap: break-word;
             `;
+            
             notification.innerHTML = `
                 <div style="display: flex; align-items: center; gap: 10px;">
                     <i class="fas fa-${type === 'success' ? 'check-circle' : type === 'warning' ? 'exclamation-triangle' : 'info-circle'}"></i>
@@ -4407,7 +4955,7 @@
                         notification.parentNode.removeChild(notification);
                     }
                 }, 300);
-            }, 4000);
+            }, 5000);
         }
 
         // Add CSS for notifications
